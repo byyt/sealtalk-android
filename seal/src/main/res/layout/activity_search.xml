@@ -40,7 +40,7 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <cn.rongcloud.im.server.widget.SelectableRoundedImageView
+        <cn.yunchuang.im.server.widget.SelectableRoundedImageView
             android:id="@+id/search_header"
             android:layout_width="60dp"
             android:layout_height="60dp"

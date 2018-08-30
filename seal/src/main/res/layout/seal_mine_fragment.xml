@@ -15,7 +15,7 @@
         android:clickable="true"
         android:orientation="horizontal">
 
-        <cn.rongcloud.im.server.widget.SelectableRoundedImageView
+        <cn.yunchuang.im.server.widget.SelectableRoundedImageView
             android:id="@+id/mine_header"
             android:layout_width="64dp"
             android:layout_height="64dp"

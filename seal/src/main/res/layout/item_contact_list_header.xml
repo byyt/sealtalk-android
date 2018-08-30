@@ -13,7 +13,7 @@
         android:background="@drawable/btn_list_item_bg"
         android:clickable="true">
 
-        <cn.rongcloud.im.server.widget.SelectableRoundedImageView
+        <cn.yunchuang.im.server.widget.SelectableRoundedImageView
             android:id="@+id/iv_avatar"
             android:layout_width="36dp"
             android:layout_height="36dp"
@@ -66,7 +66,7 @@
         android:background="@drawable/btn_list_item_bg"
         android:clickable="true">
 
-        <cn.rongcloud.im.server.widget.SelectableRoundedImageView
+        <cn.yunchuang.im.server.widget.SelectableRoundedImageView
             android:id="@+id/iv_avatar2"
             android:layout_width="36dp"
             android:layout_height="36dp"
@@ -106,7 +106,7 @@
         android:background="@drawable/btn_list_item_bg"
         android:clickable="true">
 
-        <cn.rongcloud.im.server.widget.SelectableRoundedImageView
+        <cn.yunchuang.im.server.widget.SelectableRoundedImageView
             android:id="@+id/iv_avatar4"
             android:layout_width="36dp"
             android:layout_height="36dp"
@@ -146,7 +146,7 @@
         android:background="@drawable/btn_list_item_bg"
         android:clickable="true">
 
-        <cn.rongcloud.im.server.widget.SelectableRoundedImageView
+        <cn.yunchuang.im.server.widget.SelectableRoundedImageView
             android:id="@+id/contact_me_img"
             android:layout_width="36dp"
             android:layout_height="36dp"
