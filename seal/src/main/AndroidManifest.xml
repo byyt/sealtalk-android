@@ -87,8 +87,11 @@
 
         <activity
             android:name=".ui.activity.LoginActivity_new"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activity.LoginActivityTest"
+            android:screenOrientation="portrait"/>
 
         <!--主页面-->
         <activity

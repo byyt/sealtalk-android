@@ -3,6 +3,7 @@ package cn.yunchuang.im.ui.activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,11 +12,13 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import cn.yunchuang.im.R;
@@ -64,6 +67,9 @@ public class LoginActivity_new extends BaseActivity implements View.OnClickListe
         sp = getSharedPreferences("config", MODE_PRIVATE);
         editor = sp.edit();
 //        initView();
+        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.activity_login_root_layout);
+        TextView textViewSure = (TextView) findViewById(R.id.activity_login_sure);
+        addLayoutListener(rootLayout, textViewSure);
     }
 
     private void initView() {
@@ -341,5 +347,35 @@ public class LoginActivity_new extends BaseActivity implements View.OnClickListe
         NToast.shortToast(mContext, R.string.login_success);
         startActivity(new Intent(LoginActivity_new.this, MainActivity.class));
         finish();
+    }
+
+    /**
+     * 实现键盘不遮挡登录按钮
+     * 1、获取main在窗体的可视区域
+     * 2、获取main在窗体的不可视区域高度
+     * 3、判断不可视区域高度
+     * 1、大于100:键盘显示 获取Scroll的窗体坐标 * 算出main需要滚动的高度,使scroll显示。
+     * 2、小于100:键盘隐藏
+     *
+     * @param main   根布局
+     * @param scroll 需要显示的最下方View
+     */
+    public void addLayoutListener(final View main, final View scroll) {
+        main.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect rect = new Rect();
+                main.getWindowVisibleDisplayFrame(rect);
+                int mainInvisibleHeight = main.getRootView().getHeight() - rect.bottom;
+                if (mainInvisibleHeight > 100) {
+                    int[] location = new int[2];
+                    scroll.getLocationInWindow(location);
+                    int srollHeight = (location[1] + scroll.getHeight()) - rect.bottom;
+                    main.scrollTo(0, srollHeight + (int) CommonUtils.dpToPixel((float) 2, LoginActivity_new.this));
+                } else {
+                    main.scrollTo(0, 0);
+                }
+            }
+        });
     }
 }
