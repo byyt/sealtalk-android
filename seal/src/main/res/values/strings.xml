@@ -91,6 +91,7 @@
     <string name="message_frequency">短信发送频率超限</string>
     <string name="captcha_overdue">验证码过期,请重新请求</string>
     <string name="verification_code_error">验证码错误</string>
+    <string name="code_error_or_overdue">验证码错误或已过期</string>
     <string name="register_success">注册成功</string>
     <string name="forgot_password">找回密码</string>
     <string name="new_user">新用户</string>
@@ -322,7 +323,7 @@
     <string name="fr_chat_room_three">聊天室 III</string>
     <string name="fr_chat_room_four">聊天室 IV</string>
     <string name="fr_chat_room_join_failure">加入聊天室失败</string>
-    
+
     <string name="ac_new_friend_list_no_data">暂无数据</string>
     <string name="share_dialog_share">分享</string>
     <string name="share_dialog_cancel">取消</string>

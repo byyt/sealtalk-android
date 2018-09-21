@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -14,12 +13,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.SealConst;
@@ -28,12 +25,15 @@ import cn.yunchuang.im.server.network.http.HttpException;
 import cn.yunchuang.im.server.response.GetTokenResponse;
 import cn.yunchuang.im.server.response.GetUserInfoByIdResponse;
 import cn.yunchuang.im.server.response.LoginResponse;
+import cn.yunchuang.im.server.response.SendCodeResponse;
+import cn.yunchuang.im.server.response.VerifyCodeResponse;
 import cn.yunchuang.im.server.utils.AMUtils;
 import cn.yunchuang.im.server.utils.CommonUtils;
 import cn.yunchuang.im.server.utils.NLog;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.server.utils.RongGenerate;
-import cn.yunchuang.im.server.widget.ClearWriteEditText;
+import cn.yunchuang.im.server.utils.downtime.DownTimer;
+import cn.yunchuang.im.server.utils.downtime.DownTimerListener;
 import cn.yunchuang.im.server.widget.LoadDialog;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
@@ -42,53 +42,50 @@ import io.rong.imlib.model.UserInfo;
 /**
  * Created by AMing on 16/1/15.
  * Company RongCloud
+ * 验证码登录界面
  */
-public class LoginActivity_new extends BaseActivity implements View.OnClickListener {
+@SuppressWarnings("deprecation")
+public class LoginActivity_Code extends BaseActivity implements View.OnClickListener, DownTimerListener {
 
     private final static String TAG = "LoginActivity";
-    private static final int LOGIN = 5;
+    private static final int SEND_CODE = 2;
+    private static final int VERIFY_CODE = 3;
+    private static final int CODE_LOGIN = 5;
     private static final int GET_TOKEN = 6;
     private static final int SYNC_USER_INFO = 9;
 
-    private ImageView mImg_Background;
-    private ClearWriteEditText mPhoneEdit, mPasswordEdit;
+    private EditText mPhoneEdit, mCodeEdit;
+    private TextView mGetCode, mConfirm;
     private String phoneString;
-    private String passwordString;
+    private String codeString;
     private String connectResultId;
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
-    private String loginToken;
+    private String mCodeToken, loginToken;
+    private boolean isBright = true;
+    private boolean isRequestCode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_new);
+        setContentView(R.layout.activity_login_code);
         setHeadVisibility(View.GONE);
         sp = getSharedPreferences("config", MODE_PRIVATE);
         editor = sp.edit();
-//        initView();
+        initView();
         LinearLayout rootLayout = (LinearLayout) findViewById(R.id.activity_login_root_layout);
         TextView textViewSure = (TextView) findViewById(R.id.activity_login_sure);
         addLayoutListener(rootLayout, textViewSure);
     }
 
     private void initView() {
-        mPhoneEdit = (ClearWriteEditText) findViewById(R.id.activity_login_phone_num);
-        mPasswordEdit = (ClearWriteEditText) findViewById(R.id.de_login_password);
-        Button mConfirm = (Button) findViewById(R.id.de_login_sign);
-        TextView mRegister = (TextView) findViewById(R.id.de_login_register);
-        TextView forgetPassword = (TextView) findViewById(R.id.de_login_forgot);
-        forgetPassword.setOnClickListener(this);
+        mPhoneEdit = (EditText) findViewById(R.id.activity_login_phone_num);
+        mCodeEdit = (EditText) findViewById(R.id.activity_login_verification_code);
+        mGetCode = (TextView) findViewById(R.id.activity_login_get_verification_code);
+        mConfirm = (TextView) findViewById(R.id.activity_login_sure);
+        mGetCode.setOnClickListener(this);
+        mGetCode.setClickable(false);
         mConfirm.setOnClickListener(this);
-        mRegister.setOnClickListener(this);
-        mImg_Background = (ImageView) findViewById(R.id.de_img_backgroud);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Animation animation = AnimationUtils.loadAnimation(LoginActivity_new.this, R.anim.translate_anim);
-                mImg_Background.startAnimation(animation);
-            }
-        }, 200);
         mPhoneEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -97,8 +94,18 @@ public class LoginActivity_new extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 11) {
-                    AMUtils.onInactive(mContext, mPhoneEdit);
+                if (s.length() == 11 && isBright) {
+                    if (AMUtils.isMobile(s.toString().trim())) {
+                        phoneString = s.toString().trim();
+                        AMUtils.onInactive(mContext, mPhoneEdit);
+                        mGetCode.setClickable(true);
+                        mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_blue));
+                    } else {
+                        Toast.makeText(mContext, R.string.Illegal_phone_number, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    mGetCode.setClickable(false);
+                    mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_gray));
                 }
             }
 
@@ -109,15 +116,13 @@ public class LoginActivity_new extends BaseActivity implements View.OnClickListe
         });
 
         String oldPhone = sp.getString(SealConst.SEALTALK_LOGING_PHONE, "");
-        String oldPassword = sp.getString(SealConst.SEALTALK_LOGING_PASSWORD, "");
 
-        if (!TextUtils.isEmpty(oldPhone) && !TextUtils.isEmpty(oldPassword)) {
+        if (!TextUtils.isEmpty(oldPhone)) {
             mPhoneEdit.setText(oldPhone);
-            mPasswordEdit.setText(oldPassword);
         }
 
         if (getIntent().getBooleanExtra("kickedByOtherClient", false)) {
-            final AlertDialog dlg = new AlertDialog.Builder(LoginActivity_new.this).create();
+            final AlertDialog dlg = new AlertDialog.Builder(LoginActivity_Code.this).create();
             dlg.show();
             Window window = dlg.getWindow();
             window.setContentView(R.layout.other_devices);
@@ -134,43 +139,46 @@ public class LoginActivity_new extends BaseActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.de_login_sign:
+            case R.id.activity_login_get_verification_code:
+                if (TextUtils.isEmpty(mPhoneEdit.getText().toString().trim())) {
+                    NToast.longToast(mContext, R.string.phone_number_is_null);
+                } else {
+                    isRequestCode = true;
+                    DownTimer downTimer = new DownTimer();
+                    downTimer.setListener(this);
+                    downTimer.startDown(60 * 1000);
+                    request(SEND_CODE);
+                }
+                break;
+            case R.id.activity_login_sure:
                 phoneString = mPhoneEdit.getText().toString().trim();
-                passwordString = mPasswordEdit.getText().toString().trim();
+                codeString = mCodeEdit.getText().toString().trim();
 
                 if (TextUtils.isEmpty(phoneString)) {
                     NToast.shortToast(mContext, R.string.phone_number_is_null);
-                    mPhoneEdit.setShakeAnimation();
-                    return;
-                }
-
-//                if (!AMUtils.isMobile(phoneString)) {
-//                    NToast.shortToast(mContext, R.string.Illegal_phone_number);
 //                    mPhoneEdit.setShakeAnimation();
-//                    return;
-//                }
-
-                if (TextUtils.isEmpty(passwordString)) {
-                    NToast.shortToast(mContext, R.string.password_is_null);
-                    mPasswordEdit.setShakeAnimation();
                     return;
                 }
-                if (passwordString.contains(" ")) {
-                    NToast.shortToast(mContext, R.string.password_cannot_contain_spaces);
-                    mPasswordEdit.setShakeAnimation();
+
+                if (!AMUtils.isMobile(phoneString)) {
+                    NToast.shortToast(mContext, R.string.Illegal_phone_number);
+//                    mPhoneEdit.setShakeAnimation();
+                    return;
+                }
+
+                if (TextUtils.isEmpty(codeString)) {
+                    NToast.shortToast(mContext, R.string.code_is_null);
+//                    mCodeEdit.setShakeAnimation();
+                    return;
+                }
+                if (!isRequestCode) {
+                    NToast.shortToast(mContext, getString(R.string.not_send_code));
                     return;
                 }
                 LoadDialog.show(mContext);
                 editor.putBoolean("exit", false);
                 editor.commit();
-                String oldPhone = sp.getString(SealConst.SEALTALK_LOGING_PHONE, "");
-                request(LOGIN, true);
-                break;
-            case R.id.de_login_register:
-                startActivityForResult(new Intent(this, RegisterActivity.class), 1);
-                break;
-            case R.id.de_login_forgot:
-                startActivityForResult(new Intent(this, ForgetPasswordActivity.class), 2);
+                request(VERIFY_CODE, true);
                 break;
         }
     }
@@ -182,7 +190,7 @@ public class LoginActivity_new extends BaseActivity implements View.OnClickListe
             String phone = data.getStringExtra("phone");
             String password = data.getStringExtra("password");
             mPhoneEdit.setText(phone);
-            mPasswordEdit.setText(password);
+            mCodeEdit.setText(password);
         } else if (data != null && requestCode == 1) {
             String phone = data.getStringExtra("phone");
             String password = data.getStringExtra("password");
@@ -190,7 +198,7 @@ public class LoginActivity_new extends BaseActivity implements View.OnClickListe
             String nickname = data.getStringExtra("nickname");
             if (!TextUtils.isEmpty(phone) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(id) && !TextUtils.isEmpty(nickname)) {
                 mPhoneEdit.setText(phone);
-                mPasswordEdit.setText(password);
+                mCodeEdit.setText(password);
                 editor.putString(SealConst.SEALTALK_LOGING_PHONE, phone);
                 editor.putString(SealConst.SEALTALK_LOGING_PASSWORD, password);
                 editor.putString(SealConst.SEALTALK_LOGIN_ID, id);
@@ -206,8 +214,12 @@ public class LoginActivity_new extends BaseActivity implements View.OnClickListe
     @Override
     public Object doInBackground(int requestCode, String id) throws HttpException {
         switch (requestCode) {
-            case LOGIN:
-                return action.login("86", phoneString, passwordString);
+            case SEND_CODE:
+                return action.sendCode("86", phoneString);
+            case VERIFY_CODE:
+                return action.verifyCode("86", phoneString, codeString);
+            case CODE_LOGIN:
+                return action.codeLogin("86", phoneString, mCodeToken);
             case GET_TOKEN:
                 return action.getToken();
             case SYNC_USER_INFO:
@@ -220,7 +232,39 @@ public class LoginActivity_new extends BaseActivity implements View.OnClickListe
     public void onSuccess(int requestCode, Object result) {
         if (result != null) {
             switch (requestCode) {
-                case LOGIN:
+                case SEND_CODE:
+                    SendCodeResponse scrres = (SendCodeResponse) result;
+                    if (scrres.getCode() == 200) {
+                        NToast.shortToast(mContext, R.string.messge_send);
+                    } else if (scrres.getCode() == 5000) {
+                        NToast.shortToast(mContext, R.string.message_frequency);
+                    }
+                    break;
+                case VERIFY_CODE:
+                    VerifyCodeResponse vcres = (VerifyCodeResponse) result;
+                    switch (vcres.getCode()) {
+                        case 200:
+                            mCodeToken = vcres.getResult().getVerification_token();
+                            if (!TextUtils.isEmpty(mCodeToken)) {
+                                request(CODE_LOGIN);
+                            } else {
+                                NToast.shortToast(mContext, "code token is null");
+                                LoadDialog.dismiss(mContext);
+                            }
+                            break;
+                        case 1000:
+                            //验证码错误
+                            NToast.shortToast(mContext, R.string.verification_code_error);
+                            LoadDialog.dismiss(mContext);
+                            break;
+                        case 2000:
+                            //验证码过期
+                            NToast.shortToast(mContext, R.string.captcha_overdue);
+                            LoadDialog.dismiss(mContext);
+                            break;
+                    }
+                    break;
+                case CODE_LOGIN:
                     LoginResponse loginResponse = (LoginResponse) result;
                     if (loginResponse.getCode() == 200) {
                         loginToken = loginResponse.getResult().getToken();
@@ -248,12 +292,11 @@ public class LoginActivity_new extends BaseActivity implements View.OnClickListe
                                 }
                             });
                         }
-                    } else if (loginResponse.getCode() == 100) {
+                    } else if (loginResponse.getCode() == 3000) {
+                        startActivityForResult(new Intent(this, RegisterActivity.class), 1);
+                    } else {
                         LoadDialog.dismiss(mContext);
-                        NToast.shortToast(mContext, R.string.phone_or_psw_error);
-                    } else if (loginResponse.getCode() == 1000) {
-                        LoadDialog.dismiss(mContext);
-                        NToast.shortToast(mContext, R.string.phone_or_psw_error);
+                        NToast.shortToast(mContext, R.string.code_error_or_overdue);
                     }
                     break;
                 case SYNC_USER_INFO:
@@ -304,6 +347,7 @@ public class LoginActivity_new extends BaseActivity implements View.OnClickListe
                     break;
             }
         }
+
     }
 
     private void reGetToken() {
@@ -318,7 +362,14 @@ public class LoginActivity_new extends BaseActivity implements View.OnClickListe
             return;
         }
         switch (requestCode) {
-            case LOGIN:
+            case SEND_CODE:
+                NToast.shortToast(mContext, "获取验证码请求失败");
+                break;
+            case VERIFY_CODE:
+                LoadDialog.dismiss(mContext);
+                NToast.shortToast(mContext, "验证码是否可用请求失败");
+                break;
+            case CODE_LOGIN:
                 LoadDialog.dismiss(mContext);
                 NToast.shortToast(mContext, R.string.login_api_fail);
                 break;
@@ -341,13 +392,30 @@ public class LoginActivity_new extends BaseActivity implements View.OnClickListe
     private void goToMain() {
         editor.putString("loginToken", loginToken);
         editor.putString(SealConst.SEALTALK_LOGING_PHONE, phoneString);
-        editor.putString(SealConst.SEALTALK_LOGING_PASSWORD, passwordString);
+        editor.putString(SealConst.SEALTALK_LOGING_PASSWORD, codeString);
         editor.commit();
         LoadDialog.dismiss(mContext);
         NToast.shortToast(mContext, R.string.login_success);
-        startActivity(new Intent(LoginActivity_new.this, MainActivity.class));
+        startActivity(new Intent(LoginActivity_Code.this, MainActivity.class));
         finish();
     }
+
+    @Override
+    public void onTick(long millisUntilFinished) {
+        mGetCode.setText(String.valueOf(millisUntilFinished / 1000) + "s");
+        mGetCode.setClickable(false);
+        mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_gray));
+        isBright = false;
+    }
+
+    @Override
+    public void onFinish() {
+        mGetCode.setText(R.string.get_code);
+        mGetCode.setClickable(true);
+        mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_blue));
+        isBright = true;
+    }
+
 
     /**
      * 实现键盘不遮挡登录按钮
@@ -371,7 +439,7 @@ public class LoginActivity_new extends BaseActivity implements View.OnClickListe
                     int[] location = new int[2];
                     scroll.getLocationInWindow(location);
                     int srollHeight = (location[1] + scroll.getHeight()) - rect.bottom;
-                    main.scrollTo(0, srollHeight + (int) CommonUtils.dpToPixel((float) 2, LoginActivity_new.this));
+                    main.scrollTo(0, srollHeight + (int) CommonUtils.dpToPixel((float) 2, LoginActivity_Code.this));
                 } else {
                     main.scrollTo(0, 0);
                 }

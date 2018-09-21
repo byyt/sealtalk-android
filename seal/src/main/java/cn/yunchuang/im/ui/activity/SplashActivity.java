@@ -57,7 +57,7 @@ public class SplashActivity extends Activity {
     }
 
     private void goToLogin() {
-        startActivity(new Intent(context, LoginActivity_new.class));
+        startActivity(new Intent(context, LoginActivity_Code.class));
         finish();
     }
 

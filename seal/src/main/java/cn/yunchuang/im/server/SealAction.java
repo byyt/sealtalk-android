@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-
 import org.apache.http.entity.StringEntity;
 
 import java.io.UnsupportedEncodingException;
@@ -16,6 +15,7 @@ import cn.yunchuang.im.server.request.AddToBlackListRequest;
 import cn.yunchuang.im.server.request.AgreeFriendsRequest;
 import cn.yunchuang.im.server.request.ChangePasswordRequest;
 import cn.yunchuang.im.server.request.CheckPhoneRequest;
+import cn.yunchuang.im.server.request.CodeLoginRequest;
 import cn.yunchuang.im.server.request.CreateGroupRequest;
 import cn.yunchuang.im.server.request.DeleteFriendRequest;
 import cn.yunchuang.im.server.request.DeleteGroupMemberRequest;
@@ -65,13 +65,13 @@ import cn.yunchuang.im.server.response.RestPasswordResponse;
 import cn.yunchuang.im.server.response.SendCodeResponse;
 import cn.yunchuang.im.server.response.SetFriendDisplayNameResponse;
 import cn.yunchuang.im.server.response.SetGroupDisplayNameResponse;
+import cn.yunchuang.im.server.response.SetGroupNameResponse;
 import cn.yunchuang.im.server.response.SetGroupPortraitResponse;
 import cn.yunchuang.im.server.response.SetNameResponse;
 import cn.yunchuang.im.server.response.SetPortraitResponse;
 import cn.yunchuang.im.server.response.SyncTotalDataResponse;
 import cn.yunchuang.im.server.response.UserRelationshipResponse;
 import cn.yunchuang.im.server.response.VerifyCodeResponse;
-import cn.yunchuang.im.server.response.SetGroupNameResponse;
 import cn.yunchuang.im.server.response.VersionResponse;
 import cn.yunchuang.im.server.utils.NLog;
 import cn.yunchuang.im.server.utils.json.JsonMananger;
@@ -208,6 +208,35 @@ public class SealAction extends BaseAction {
     }
 
     /**
+     * 验证码登录: 登录成功后，会设置 Cookie，后续接口调用需要登录的权限都依赖于 Cookie。
+     *
+     * @param region
+     * @param phone
+     * @param verification_token
+     * @return
+     * @throws HttpException
+     */
+    public LoginResponse codeLogin(String region, String phone, String verification_token) throws HttpException {
+        String uri = getURL("user/code_login");
+        String json = JsonMananger.beanToJson(new CodeLoginRequest(region, phone, verification_token));
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(json, ENCODING);
+            entity.setContentType(CONTENT_TYPE);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String result = httpManager.post(mContext, uri, entity, CONTENT_TYPE);
+        LoginResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            NLog.e("LoginResponse", result);
+            response = JsonMananger.jsonToBean(result, LoginResponse.class);
+        }
+        return response;
+    }
+
+
+    /**
      * 登录: 登录成功后，会设置 Cookie，后续接口调用需要登录的权限都依赖于 Cookie。
      *
      * @param region   国家码
@@ -233,7 +262,6 @@ public class SealAction extends BaseAction {
         }
         return response;
     }
-
 
     /**
      * 获取 token 前置条件需要登录   502 坏的网关 测试环境用户已达上限

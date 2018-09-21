@@ -3,7 +3,7 @@
     android:id="@+id/activity_login_root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <TextView
@@ -86,7 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:background="#EFF059"
+            android:background="@drawable/rs_select_btn_gray"
             android:text="点击获取"
             android:textColor="@color/color_000000"
             android:textSize="@dimen/text_px30" />
