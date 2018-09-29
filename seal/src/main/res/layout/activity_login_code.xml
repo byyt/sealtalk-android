@@ -83,8 +83,9 @@
 
         <TextView
             android:id="@+id/activity_login_get_verification_code"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/px200"
+            android:layout_height="@dimen/px50"
+            android:gravity="center"
             android:layout_alignParentRight="true"
             android:background="@drawable/rs_select_btn_gray"
             android:text="点击获取"
