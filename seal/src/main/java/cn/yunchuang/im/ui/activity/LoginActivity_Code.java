@@ -47,7 +47,7 @@ import io.rong.imlib.model.UserInfo;
 @SuppressWarnings("deprecation")
 public class LoginActivity_Code extends BaseActivity implements View.OnClickListener, DownTimerListener {
 
-    private final static String TAG = "LoginActivity";
+    private final static String TAG = "LoginActivity_Code";
     private static final int SEND_CODE = 2;
     private static final int VERIFY_CODE = 3;
     private static final int CODE_LOGIN = 5;
@@ -293,7 +293,12 @@ public class LoginActivity_Code extends BaseActivity implements View.OnClickList
                             });
                         }
                     } else if (loginResponse.getCode() == 3000) {
-                        startActivityForResult(new Intent(this, RegisterActivity.class), 1);
+                        //用户未注册，进入到完善个人资料页面
+                        LoadDialog.dismiss(mContext);
+                        Intent intent = new Intent(this, RegisterActivity_Code.class);
+                        intent.putExtra("phone",mPhoneEdit.getText().toString().trim());
+                        intent.putExtra("verification_token",mCodeToken);//
+                        startActivityForResult(intent, 1);
                     } else {
                         LoadDialog.dismiss(mContext);
                         NToast.shortToast(mContext, R.string.code_error_or_overdue);
@@ -392,7 +397,7 @@ public class LoginActivity_Code extends BaseActivity implements View.OnClickList
     private void goToMain() {
         editor.putString("loginToken", loginToken);
         editor.putString(SealConst.SEALTALK_LOGING_PHONE, phoneString);
-        editor.putString(SealConst.SEALTALK_LOGING_PASSWORD, codeString);
+//        editor.putString(SealConst.SEALTALK_LOGING_PASSWORD, codeString); //保存密码，按理说，验证码登录不用保存密码
         editor.commit();
         LoadDialog.dismiss(mContext);
         NToast.shortToast(mContext, R.string.login_success);

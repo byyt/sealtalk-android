@@ -53,7 +53,10 @@
 
 
     <color name="color_000000">#000000</color>
-
+    <color name="color_FFFFFF">#FFFFFF</color>
+    <color name="color_030303">#030303</color>
+    <color name="color_C1C2C8">#C1C2C8</color>
+    <color name="color_FCE446">#FCE446</color>
 
 
     <!--  -->

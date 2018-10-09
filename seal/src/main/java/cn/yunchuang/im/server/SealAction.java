@@ -208,6 +208,31 @@ public class SealAction extends BaseAction {
     }
 
     /**
+     * 完善个人资料（实际上就是注册，资料填写成功之后直接登录）
+     *
+     * @param nickname           昵称
+     * @param password           密码
+     * @param verification_token 验证码
+     * @throws HttpException
+     */
+    public RegisterResponse codeRegister(String nickname, String password, String verification_token) throws HttpException {
+        String url = getURL("user/register_code");
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(JsonMananger.beanToJson(new RegisterRequest(nickname, password, verification_token)), ENCODING);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        RegisterResponse response = null;
+        String result = httpManager.post(mContext, url, entity, CONTENT_TYPE);
+        if (!TextUtils.isEmpty(result)) {
+            NLog.e("RegisterResponse", result);
+            response = jsonToBean(result, RegisterResponse.class);
+        }
+        return response;
+    }
+
+    /**
      * 验证码登录: 登录成功后，会设置 Cookie，后续接口调用需要登录的权限都依赖于 Cookie。
      *
      * @param region

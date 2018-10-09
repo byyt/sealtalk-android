@@ -122,6 +122,11 @@
             android:name="cn.yunchuang.im.ui.activity.RegisterActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <!--完善个人资料页面，仿造上面的注册页面-->
+        <activity
+            android:name="cn.yunchuang.im.ui.activity.RegisterActivity_Code"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <!--发起聊天页面-->
 
 
