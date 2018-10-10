@@ -45,17 +45,18 @@ import io.rong.imlib.model.UserInfo;
  * 验证码登录界面
  */
 @SuppressWarnings("deprecation")
-public class LoginActivity_Code extends BaseActivity implements View.OnClickListener, DownTimerListener {
+public class LoginActivity_Code_PassWord extends BaseActivity implements View.OnClickListener, DownTimerListener {
 
-    private final static String TAG = "LoginActivity_Code";
+    private final static String TAG = "LoginActivity";
     private static final int SEND_CODE = 2;
     private static final int VERIFY_CODE = 3;
-    private static final int CODE_LOGIN = 5;
+    private static final int CODE_LOGIN = 4;
+    private static final int LOGIN = 5;
     private static final int GET_TOKEN = 6;
     private static final int SYNC_USER_INFO = 9;
 
     private EditText mPhoneEdit, mCodeEdit;
-    private TextView mGetCode, mConfirm, mPassWordLogin;
+    private TextView mGetCode, mConfirm, mSwitchLogin, mForgetPassword;
     private String phoneString;
     private String codeString;
     private String connectResultId;
@@ -64,11 +65,12 @@ public class LoginActivity_Code extends BaseActivity implements View.OnClickList
     private String mCodeToken, loginToken;
     private boolean isBright = true;
     private boolean isRequestCode = false;
+    private boolean isCodeLogin = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_code);
+        setContentView(R.layout.activity_login_code_password);
         setHeadVisibility(View.GONE);
         sp = getSharedPreferences("config", MODE_PRIVATE);
         editor = sp.edit();
@@ -83,11 +85,13 @@ public class LoginActivity_Code extends BaseActivity implements View.OnClickList
         mCodeEdit = (EditText) findViewById(R.id.activity_login_verification_code);
         mGetCode = (TextView) findViewById(R.id.activity_login_get_verification_code);
         mConfirm = (TextView) findViewById(R.id.activity_login_sure);
-        mPassWordLogin = (TextView) findViewById(R.id.activity_login_password_login);
+        mSwitchLogin = (TextView) findViewById(R.id.activity_login_password_login);
+        mForgetPassword = (TextView) findViewById(R.id.activity_forget_password);
         mGetCode.setOnClickListener(this);
         mGetCode.setClickable(false);
         mConfirm.setOnClickListener(this);
-        mPassWordLogin.setOnClickListener(this);
+        mSwitchLogin.setOnClickListener(this);
+        mForgetPassword.setOnClickListener(this);
         mPhoneEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -124,7 +128,7 @@ public class LoginActivity_Code extends BaseActivity implements View.OnClickList
         }
 
         if (getIntent().getBooleanExtra("kickedByOtherClient", false)) {
-            final AlertDialog dlg = new AlertDialog.Builder(LoginActivity_Code.this).create();
+            final AlertDialog dlg = new AlertDialog.Builder(LoginActivity_Code_PassWord.this).create();
             dlg.show();
             Window window = dlg.getWindow();
             window.setContentView(R.layout.other_devices);
@@ -136,6 +140,7 @@ public class LoginActivity_Code extends BaseActivity implements View.OnClickList
                 }
             });
         }
+        setCodeOrPasswordStatus();
     }
 
     @Override
@@ -153,37 +158,16 @@ public class LoginActivity_Code extends BaseActivity implements View.OnClickList
                 }
                 break;
             case R.id.activity_login_sure:
-                phoneString = mPhoneEdit.getText().toString().trim();
-                codeString = mCodeEdit.getText().toString().trim();
-
-                if (TextUtils.isEmpty(phoneString)) {
-                    NToast.shortToast(mContext, R.string.phone_number_is_null);
-//                    mPhoneEdit.setShakeAnimation();
-                    return;
+                if (isCodeLogin) {
+                    codeLogin();
+                } else {
+                    passwordLogin();
                 }
-
-                if (!AMUtils.isMobile(phoneString)) {
-                    NToast.shortToast(mContext, R.string.Illegal_phone_number);
-//                    mPhoneEdit.setShakeAnimation();
-                    return;
-                }
-
-                if (TextUtils.isEmpty(codeString)) {
-                    NToast.shortToast(mContext, R.string.code_is_null);
-//                    mCodeEdit.setShakeAnimation();
-                    return;
-                }
-                if (!isRequestCode) {
-                    NToast.shortToast(mContext, getString(R.string.not_send_code));
-                    return;
-                }
-                LoadDialog.show(mContext);
-                editor.putBoolean("exit", false);
-                editor.commit();
-                request(VERIFY_CODE, true);
                 break;
             case R.id.activity_login_password_login:
-                startActivity(new Intent(LoginActivity_Code.this, LoginActivity_Code_PassWord.class));
+                switchCodeOrPassword();
+                break;
+            case R.id.activity_forget_password:
                 break;
         }
     }
@@ -225,6 +209,8 @@ public class LoginActivity_Code extends BaseActivity implements View.OnClickList
                 return action.verifyCode("86", phoneString, codeString);
             case CODE_LOGIN:
                 return action.codeLogin("86", phoneString, mCodeToken);
+            case LOGIN:
+                return action.login("86", phoneString, codeString);
             case GET_TOKEN:
                 return action.getToken();
             case SYNC_USER_INFO:
@@ -294,6 +280,8 @@ public class LoginActivity_Code extends BaseActivity implements View.OnClickList
                                 @Override
                                 public void onError(RongIMClient.ErrorCode errorCode) {
                                     NLog.e("connect", "onError errorcode:" + errorCode.getValue());
+                                    LoadDialog.dismiss(mContext);
+                                    NToast.shortToast(mContext, "连接出错");
                                 }
                             });
                         }
@@ -307,6 +295,44 @@ public class LoginActivity_Code extends BaseActivity implements View.OnClickList
                     } else {
                         LoadDialog.dismiss(mContext);
                         NToast.shortToast(mContext, R.string.code_error_or_overdue);
+                    }
+                    break;
+                case LOGIN:
+                    LoginResponse loginResponseP = (LoginResponse) result;
+                    if (loginResponseP.getCode() == 200) {
+                        loginToken = loginResponseP.getResult().getToken();
+                        if (!TextUtils.isEmpty(loginToken)) {
+                            RongIM.connect(loginToken, new RongIMClient.ConnectCallback() {
+                                @Override
+                                public void onTokenIncorrect() {
+                                    NLog.e("connect", "onTokenIncorrect");
+                                    reGetToken();
+                                }
+
+                                @Override
+                                public void onSuccess(String s) {
+                                    connectResultId = s;
+                                    NLog.e("connect", "onSuccess userid:" + s);
+                                    editor.putString(SealConst.SEALTALK_LOGIN_ID, s);
+                                    editor.commit();
+                                    SealUserInfoManager.getInstance().openDB();
+                                    request(SYNC_USER_INFO, true);
+                                }
+
+                                @Override
+                                public void onError(RongIMClient.ErrorCode errorCode) {
+                                    NLog.e("connect", "onError errorcode:" + errorCode.getValue());
+                                    LoadDialog.dismiss(mContext);
+                                    NToast.shortToast(mContext, "连接出错");
+                                }
+                            });
+                        }
+                    } else if (loginResponseP.getCode() == 100) {
+                        LoadDialog.dismiss(mContext);
+                        NToast.shortToast(mContext, R.string.phone_or_psw_error);
+                    } else if (loginResponseP.getCode() == 1000) {
+                        LoadDialog.dismiss(mContext);
+                        NToast.shortToast(mContext, R.string.phone_or_psw_error);
                     }
                     break;
                 case SYNC_USER_INFO:
@@ -383,6 +409,10 @@ public class LoginActivity_Code extends BaseActivity implements View.OnClickList
                 LoadDialog.dismiss(mContext);
                 NToast.shortToast(mContext, R.string.login_api_fail);
                 break;
+            case LOGIN:
+                LoadDialog.dismiss(mContext);
+                NToast.shortToast(mContext, R.string.login_api_fail);
+                break;
             case SYNC_USER_INFO:
                 LoadDialog.dismiss(mContext);
                 NToast.shortToast(mContext, R.string.sync_userinfo_api_fail);
@@ -406,7 +436,7 @@ public class LoginActivity_Code extends BaseActivity implements View.OnClickList
         editor.commit();
         LoadDialog.dismiss(mContext);
         NToast.shortToast(mContext, R.string.login_success);
-        startActivity(new Intent(LoginActivity_Code.this, MainActivity.class));
+        startActivity(new Intent(LoginActivity_Code_PassWord.this, MainActivity.class));
         finish();
     }
 
@@ -426,6 +456,88 @@ public class LoginActivity_Code extends BaseActivity implements View.OnClickList
         isBright = true;
     }
 
+    private void switchCodeOrPassword() {
+        isCodeLogin = !isCodeLogin;
+        setCodeOrPasswordStatus();
+    }
+
+    private void setCodeOrPasswordStatus() {
+        if (isCodeLogin) {
+            mSwitchLogin.setText("密码登录");
+            mGetCode.setVisibility(View.VISIBLE);
+            mCodeEdit.setHint("输入验证码");
+            mForgetPassword.setVisibility(View.GONE);
+        } else {
+            mSwitchLogin.setText("验证码登录");
+            mGetCode.setVisibility(View.GONE);
+            mCodeEdit.setHint("输入密码");
+            mForgetPassword.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void codeLogin() {
+        phoneString = mPhoneEdit.getText().toString().trim();
+        codeString = mCodeEdit.getText().toString().trim();
+
+        if (TextUtils.isEmpty(phoneString)) {
+            NToast.shortToast(mContext, R.string.phone_number_is_null);
+//                    mPhoneEdit.setShakeAnimation();
+            return;
+        }
+
+        if (!AMUtils.isMobile(phoneString)) {
+            NToast.shortToast(mContext, R.string.Illegal_phone_number);
+//                    mPhoneEdit.setShakeAnimation();
+            return;
+        }
+
+        if (TextUtils.isEmpty(codeString)) {
+            NToast.shortToast(mContext, R.string.code_is_null);
+//                    mCodeEdit.setShakeAnimation();
+            return;
+        }
+        if (!isRequestCode) {
+            NToast.shortToast(mContext, getString(R.string.not_send_code));
+            return;
+        }
+        LoadDialog.show(mContext);
+        editor.putBoolean("exit", false);
+        editor.commit();
+        request(VERIFY_CODE, true);
+    }
+
+    private void passwordLogin() {
+        phoneString = mPhoneEdit.getText().toString().trim();
+        codeString = mCodeEdit.getText().toString().trim();
+
+        if (TextUtils.isEmpty(phoneString)) {
+            NToast.shortToast(mContext, R.string.phone_number_is_null);
+//            mPhoneEdit.setShakeAnimation();
+            return;
+        }
+
+        if (!AMUtils.isMobile(phoneString)) {
+            NToast.shortToast(mContext, R.string.Illegal_phone_number);
+//                    mPhoneEdit.setShakeAnimation();
+            return;
+        }
+
+        if (TextUtils.isEmpty(codeString)) {
+            NToast.shortToast(mContext, R.string.password_is_null);
+//            mCodeEdit.setShakeAnimation();
+            return;
+        }
+        if (codeString.contains(" ")) {
+            NToast.shortToast(mContext, R.string.password_cannot_contain_spaces);
+//            mCodeEdit.setShakeAnimation();
+            return;
+        }
+        LoadDialog.show(mContext);
+        editor.putBoolean("exit", false);
+        editor.commit();
+        String oldPhone = sp.getString(SealConst.SEALTALK_LOGING_PHONE, "");
+        request(LOGIN, true);
+    }
 
     /**
      * 实现键盘不遮挡登录按钮
@@ -449,7 +561,7 @@ public class LoginActivity_Code extends BaseActivity implements View.OnClickList
                     int[] location = new int[2];
                     scroll.getLocationInWindow(location);
                     int srollHeight = (location[1] + scroll.getHeight()) - rect.bottom;
-                    main.scrollTo(0, srollHeight + (int) CommonUtils.dpToPixel((float) 2, LoginActivity_Code.this));
+                    main.scrollTo(0, srollHeight + (int) CommonUtils.dpToPixel((float) 2, LoginActivity_Code_PassWord.this));
                 } else {
                     main.scrollTo(0, 0);
                 }
