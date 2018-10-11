@@ -91,6 +91,7 @@
 
         <activity
             android:name="cn.yunchuang.im.ui.activity.LoginActivity_Code_PassWord"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
 
@@ -222,6 +223,15 @@
         <activity
             android:name="cn.yunchuang.im.ui.activity.ForgetPasswordActivity"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name="cn.yunchuang.im.ui.activity.ForgetPasswordActivity_New"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="cn.yunchuang.im.ui.activity.ForgetPasswordActivity_Reset"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name="cn.yunchuang.im.ui.activity.GroupNoticeActivity"
             android:screenOrientation="portrait" />

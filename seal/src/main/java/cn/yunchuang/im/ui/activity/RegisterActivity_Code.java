@@ -40,10 +40,9 @@ public class RegisterActivity_Code extends BaseActivity implements View.OnClickL
     private static final int CODE_LOGIN = 5;
     private static final int GET_TOKEN = 6;
     private static final int SYNC_USER_INFO = 9;
-    private static final int REGISTER_BACK = 1001;
     private EditText mNickEdit;
     private TextView mConfirm;
-    private String mPhone, mNickName, mPassword, mCodeToken, loginToken;
+    private String mPhone, mNickName, mPassword, mCodeToken, loginToken, mLoginType;
     private String connectResultId;
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
@@ -61,10 +60,18 @@ public class RegisterActivity_Code extends BaseActivity implements View.OnClickL
     private void initView() {
         mPhone = getIntent().getStringExtra("phone");
         mCodeToken = getIntent().getStringExtra("verification_token");
-        mPassword = getRandomString(6); //随机生成一串6位密码
+        mLoginType = getIntent().getStringExtra("loginType");
         mNickEdit = (EditText) findViewById(R.id.register_code_username);
         mConfirm = (TextView) findViewById(R.id.register_code_sure);
         mConfirm.setOnClickListener(this);
+
+        if ("code_login".equals(mLoginType)) {
+            mPassword = getRandomString(16); //如果是验证码登录，随机生成一串16位密码（确保不被盗密码）
+            mConfirm.setText("确认");
+        } else if ("forget_password".equals(mLoginType)) {
+            mPassword = "";
+            mConfirm.setText("下一步");
+        }
     }
 
     @Override
@@ -193,7 +200,7 @@ public class RegisterActivity_Code extends BaseActivity implements View.OnClickL
         switch (requestCode) {
             case REGISTER:
                 LoadDialog.dismiss(mContext);
-                NToast.shortToast(mContext, "登录失败，请重新检查网络哦");
+                NToast.shortToast(mContext, "注册失败，请重新检查网络哦");
                 break;
             case CODE_LOGIN:
                 LoadDialog.dismiss(mContext);
@@ -231,8 +238,19 @@ public class RegisterActivity_Code extends BaseActivity implements View.OnClickL
 //                    mNickEdit.setShakeAnimation();
                     return;
                 }
-                LoadDialog.show(mContext);
-                request(REGISTER, true);
+                if ("code_login".equals(mLoginType)) {
+                    //验证码登录，完善资料后直接登录
+                    LoadDialog.show(mContext);
+                    request(REGISTER, true);
+                } else if ("forget_password".equals(mLoginType)) {
+                    //忘记密码，完善资料后进入设置密码界面
+                    Intent intent = new Intent(this, ForgetPasswordActivity_Reset.class);
+                    intent.putExtra("phone", mPhone);
+                    intent.putExtra("verification_token", mCodeToken);
+                    intent.putExtra("resetType","not_register");
+                    intent.putExtra("nickName",mNickName);
+                    startActivity(intent);
+                }
                 break;
         }
     }

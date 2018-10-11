@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/px180"
-        android:text="完善个人信息"
+        android:text="请先完善个人资料哦～"
         android:textColor="@color/color_030303"
         android:textSize="@dimen/text_px50" />
 

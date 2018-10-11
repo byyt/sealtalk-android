@@ -7,6 +7,8 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -34,6 +36,7 @@ import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.server.utils.RongGenerate;
 import cn.yunchuang.im.server.utils.downtime.DownTimer;
 import cn.yunchuang.im.server.utils.downtime.DownTimerListener;
+import cn.yunchuang.im.server.widget.ClearWriteEditText;
 import cn.yunchuang.im.server.widget.LoadDialog;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
@@ -55,7 +58,7 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
     private static final int GET_TOKEN = 6;
     private static final int SYNC_USER_INFO = 9;
 
-    private EditText mPhoneEdit, mCodeEdit;
+    private ClearWriteEditText mPhoneEdit, mCodeEdit;
     private TextView mGetCode, mConfirm, mSwitchLogin, mForgetPassword;
     private String phoneString;
     private String codeString;
@@ -75,14 +78,35 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
         sp = getSharedPreferences("config", MODE_PRIVATE);
         editor = sp.edit();
         initView();
-        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.activity_login_root_layout);
-        TextView textViewSure = (TextView) findViewById(R.id.activity_login_sure);
-        addLayoutListener(rootLayout, textViewSure);
+    }
+
+    //LoginActivity_Code_PassWord类设置为singleTask模式，在比如修改密码等界面中可以直接回到本登录界面，调用此函数
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent != null) {
+            //只有在设置密码跳回登录页时才进行下面的操作
+            if (!"forget_password".equals(intent.getStringExtra("loginType"))) {
+                return;
+            }
+            isCodeLogin = false; //切为密码登录
+            setCodeOrPasswordStatus();
+            if (!TextUtils.isEmpty(intent.getStringExtra("phone"))) {
+                phoneString = intent.getStringExtra("phone");
+                mPhoneEdit.setText(phoneString);
+            }
+            if (!TextUtils.isEmpty(intent.getStringExtra("password"))) {
+                codeString = intent.getStringExtra("password");
+                mCodeEdit.setText(codeString);
+            }
+        }
+        mPhoneEdit.setSelection(mPhoneEdit.getText().length());
+        mCodeEdit.setSelection(mCodeEdit.getText().length());
     }
 
     private void initView() {
-        mPhoneEdit = (EditText) findViewById(R.id.activity_login_phone_num);
-        mCodeEdit = (EditText) findViewById(R.id.activity_login_verification_code);
+        mPhoneEdit = (ClearWriteEditText) findViewById(R.id.activity_login_phone_num);
+        mCodeEdit = (ClearWriteEditText) findViewById(R.id.activity_login_verification_code);
         mGetCode = (TextView) findViewById(R.id.activity_login_get_verification_code);
         mConfirm = (TextView) findViewById(R.id.activity_login_sure);
         mSwitchLogin = (TextView) findViewById(R.id.activity_login_password_login);
@@ -108,6 +132,8 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                         mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_blue));
                     } else {
                         Toast.makeText(mContext, R.string.Illegal_phone_number, Toast.LENGTH_SHORT).show();
+                        mGetCode.setClickable(false);
+                        mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_gray));
                     }
                 } else {
                     mGetCode.setClickable(false);
@@ -122,10 +148,10 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
         });
 
         String oldPhone = sp.getString(SealConst.SEALTALK_LOGING_PHONE, "");
-
         if (!TextUtils.isEmpty(oldPhone)) {
             mPhoneEdit.setText(oldPhone);
         }
+        mPhoneEdit.setSelection(mPhoneEdit.getText().length());
 
         if (getIntent().getBooleanExtra("kickedByOtherClient", false)) {
             final AlertDialog dlg = new AlertDialog.Builder(LoginActivity_Code_PassWord.this).create();
@@ -141,6 +167,8 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
             });
         }
         setCodeOrPasswordStatus();
+        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.activity_login_root_layout);
+        addLayoutListener(rootLayout, mForgetPassword);
     }
 
     @Override
@@ -168,6 +196,9 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                 switchCodeOrPassword();
                 break;
             case R.id.activity_forget_password:
+                Intent intent = new Intent(this, ForgetPasswordActivity_New.class);
+                intent.putExtra("phone", mPhoneEdit.getText().toString().trim());
+                startActivityForResult(intent, 2);
                 break;
         }
     }
@@ -290,7 +321,8 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                         LoadDialog.dismiss(mContext);
                         Intent intent = new Intent(this, RegisterActivity_Code.class);
                         intent.putExtra("phone", mPhoneEdit.getText().toString().trim());
-                        intent.putExtra("verification_token", mCodeToken);//
+                        intent.putExtra("verification_token", mCodeToken);
+                        intent.putExtra("loginType", "code_login");
                         startActivityForResult(intent, 1);
                     } else {
                         LoadDialog.dismiss(mContext);
@@ -465,12 +497,18 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
         if (isCodeLogin) {
             mSwitchLogin.setText("密码登录");
             mGetCode.setVisibility(View.VISIBLE);
+            mCodeEdit.setText("");
             mCodeEdit.setHint("输入验证码");
+            mCodeEdit.setInputType(InputType.TYPE_CLASS_NUMBER);
+            mCodeEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(6)});
             mForgetPassword.setVisibility(View.GONE);
         } else {
             mSwitchLogin.setText("验证码登录");
             mGetCode.setVisibility(View.GONE);
+            mCodeEdit.setText("");
             mCodeEdit.setHint("输入密码");
+            mCodeEdit.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            mCodeEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16)});
             mForgetPassword.setVisibility(View.VISIBLE);
         }
     }
@@ -561,7 +599,9 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                     int[] location = new int[2];
                     scroll.getLocationInWindow(location);
                     int srollHeight = (location[1] + scroll.getHeight()) - rect.bottom;
-                    main.scrollTo(0, srollHeight + (int) CommonUtils.dpToPixel((float) 2, LoginActivity_Code_PassWord.this));
+                    //scrollTo，x为正时向左移动，y为正时向上移动，这里不再移动到某个控件下方（因为在移动中控件位置容易不定），而是往上移动一定的距离200dp
+//                    main.scrollTo(0, srollHeight + (int) CommonUtils.dpToPixel((float) 5, LoginActivity_Code_PassWord.this));
+                    main.scrollTo(0, (int) CommonUtils.dpToPixel((float) 200, LoginActivity_Code_PassWord.this));
                 } else {
                     main.scrollTo(0, 0);
                 }
