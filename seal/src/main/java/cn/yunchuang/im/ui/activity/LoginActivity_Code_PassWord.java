@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,7 +66,6 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
     private SharedPreferences.Editor editor;
     private String mCodeToken, loginToken;
     private boolean isBright = true;
-    private boolean isRequestCode = false;
     private boolean isCodeLogin = true;
 
     @Override
@@ -127,14 +125,12 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                 if (s.length() == 11 && isBright) {
                     if (AMUtils.isMobile(s.toString().trim())) {
                         phoneString = s.toString().trim();
-                        AMUtils.onInactive(mContext, mPhoneEdit);
-                        mGetCode.setClickable(true);
-                        mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_blue));
+//                        AMUtils.onInactive(mContext, mPhoneEdit);//收起键盘，模仿请吃饭，不用收起键盘，点击发送验证码后，直接输入验证码
                     } else {
-                        Toast.makeText(mContext, R.string.Illegal_phone_number, Toast.LENGTH_SHORT).show();
-                        mGetCode.setClickable(false);
-                        mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_gray));
+                        Toast.makeText(mContext, "请填写正确的手机号码", Toast.LENGTH_SHORT).show();
                     }
+                    mGetCode.setClickable(true);
+                    mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_blue));
                 } else {
                     mGetCode.setClickable(false);
                     mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_gray));
@@ -175,15 +171,18 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activity_login_get_verification_code:
-                if (TextUtils.isEmpty(mPhoneEdit.getText().toString().trim())) {
-                    NToast.longToast(mContext, R.string.phone_number_is_null);
-                } else {
-                    isRequestCode = true;
-                    DownTimer downTimer = new DownTimer();
-                    downTimer.setListener(this);
-                    downTimer.startDown(60 * 1000);
-                    request(SEND_CODE);
+                if (!AMUtils.isMobile(mPhoneEdit.getText().toString().trim())) {
+                    Toast.makeText(mContext, "请填写正确的手机号码", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                if (!CommonUtils.isNetworkConnected(mContext)) {
+                    NToast.shortToast(mContext, getString(R.string.network_not_available));
+                    return;
+                }
+                DownTimer downTimer = new DownTimer();
+                downTimer.setListener(this);
+                downTimer.startDown(60 * 1000);
+                request(SEND_CODE);
                 break;
             case R.id.activity_login_sure:
                 if (isCodeLogin) {
@@ -260,6 +259,8 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                         NToast.shortToast(mContext, R.string.messge_send);
                     } else if (scrres.getCode() == 5000) {
                         NToast.shortToast(mContext, R.string.message_frequency);
+                    } else {
+                        NToast.shortToast(mContext, "获取验证码失败，请稍后重试～");
                     }
                     break;
                 case VERIFY_CODE:
@@ -270,18 +271,18 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                             if (!TextUtils.isEmpty(mCodeToken)) {
                                 request(CODE_LOGIN);
                             } else {
-                                NToast.shortToast(mContext, "code token is null");
+                                NToast.shortToast(mContext, "验证码错误或已过期");
                                 LoadDialog.dismiss(mContext);
                             }
                             break;
                         case 1000:
                             //验证码错误
-                            NToast.shortToast(mContext, R.string.verification_code_error);
+                            NToast.shortToast(mContext, "验证码错误或已过期");
                             LoadDialog.dismiss(mContext);
                             break;
                         case 2000:
                             //验证码过期
-                            NToast.shortToast(mContext, R.string.captcha_overdue);
+                            NToast.shortToast(mContext, "验证码错误或已过期");
                             LoadDialog.dismiss(mContext);
                             break;
                     }
@@ -431,11 +432,11 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
         }
         switch (requestCode) {
             case SEND_CODE:
-                NToast.shortToast(mContext, "获取验证码请求失败");
+                NToast.shortToast(mContext, "获取验证码失败，请稍后重试～");
                 break;
             case VERIFY_CODE:
                 LoadDialog.dismiss(mContext);
-                NToast.shortToast(mContext, "验证码是否可用请求失败");
+                NToast.shortToast(mContext, "验证码错误或已过期");
                 break;
             case CODE_LOGIN:
                 LoadDialog.dismiss(mContext);
@@ -517,27 +518,18 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
         phoneString = mPhoneEdit.getText().toString().trim();
         codeString = mCodeEdit.getText().toString().trim();
 
-        if (TextUtils.isEmpty(phoneString)) {
-            NToast.shortToast(mContext, R.string.phone_number_is_null);
-//                    mPhoneEdit.setShakeAnimation();
+        if (TextUtils.isEmpty(phoneString) || !AMUtils.isMobile(phoneString)) {
+            NToast.shortToast(mContext, "请填写正确的手机号码");
+            mPhoneEdit.setShakeAnimation();
             return;
         }
 
-        if (!AMUtils.isMobile(phoneString)) {
-            NToast.shortToast(mContext, R.string.Illegal_phone_number);
-//                    mPhoneEdit.setShakeAnimation();
+        if (TextUtils.isEmpty(codeString) || codeString.length() < 4 || codeString.length() > 6) {
+            NToast.shortToast(mContext, "请填写4-6位数字验证码");
+            mCodeEdit.setShakeAnimation();
             return;
         }
 
-        if (TextUtils.isEmpty(codeString)) {
-            NToast.shortToast(mContext, R.string.code_is_null);
-//                    mCodeEdit.setShakeAnimation();
-            return;
-        }
-        if (!isRequestCode) {
-            NToast.shortToast(mContext, getString(R.string.not_send_code));
-            return;
-        }
         LoadDialog.show(mContext);
         editor.putBoolean("exit", false);
         editor.commit();
