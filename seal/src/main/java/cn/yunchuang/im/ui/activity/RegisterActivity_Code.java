@@ -36,7 +36,7 @@ import io.rong.imlib.model.UserInfo;
 public class RegisterActivity_Code extends BaseActivity implements View.OnClickListener {
 
     private final static String TAG = "RegisterActivity_Code";
-    private static final int REGISTER = 4;
+    private static final int CODE_REGISTER = 4;
     private static final int CODE_LOGIN = 5;
     private static final int GET_TOKEN = 6;
     private static final int SYNC_USER_INFO = 9;
@@ -77,7 +77,7 @@ public class RegisterActivity_Code extends BaseActivity implements View.OnClickL
     @Override
     public Object doInBackground(int requestCode, String id) throws HttpException {
         switch (requestCode) {
-            case REGISTER:
+            case CODE_REGISTER:
                 return action.codeRegister(mNickName, mPassword, mCodeToken);
             case CODE_LOGIN:
                 return action.codeLogin("86", mPhone, mCodeToken);
@@ -93,7 +93,7 @@ public class RegisterActivity_Code extends BaseActivity implements View.OnClickL
     public void onSuccess(int requestCode, Object result) {
         if (result != null) {
             switch (requestCode) {
-                case REGISTER:
+                case CODE_REGISTER:
                     RegisterResponse rres = (RegisterResponse) result;
                     switch (rres.getCode()) {
                         case 200:
@@ -198,7 +198,7 @@ public class RegisterActivity_Code extends BaseActivity implements View.OnClickL
     @Override
     public void onFailure(int requestCode, int state, Object result) {
         switch (requestCode) {
-            case REGISTER:
+            case CODE_REGISTER:
                 LoadDialog.dismiss(mContext);
                 NToast.shortToast(mContext, "注册失败，请重新检查网络哦");
                 break;
@@ -241,7 +241,7 @@ public class RegisterActivity_Code extends BaseActivity implements View.OnClickL
                 if ("code_login".equals(mLoginType)) {
                     //验证码登录，完善资料后直接登录
                     LoadDialog.show(mContext);
-                    request(REGISTER, true);
+                    request(CODE_REGISTER, true);
                 } else if ("forget_password".equals(mLoginType)) {
                     //忘记密码，完善资料后进入设置密码界面
                     Intent intent = new Intent(this, ForgetPasswordActivity_Reset.class);

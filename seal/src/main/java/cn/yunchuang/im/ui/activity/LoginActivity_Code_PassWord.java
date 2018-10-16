@@ -53,7 +53,7 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
     private static final int SEND_CODE = 2;
     private static final int VERIFY_CODE = 3;
     private static final int CODE_LOGIN = 4;
-    private static final int LOGIN = 5;
+    private static final int PASSWORD_LOGIN = 5;
     private static final int GET_TOKEN = 6;
     private static final int SYNC_USER_INFO = 9;
 
@@ -239,7 +239,7 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                 return action.verifyCode("86", phoneString, codeString);
             case CODE_LOGIN:
                 return action.codeLogin("86", phoneString, mCodeToken);
-            case LOGIN:
+            case PASSWORD_LOGIN:
                 return action.login("86", phoneString, codeString);
             case GET_TOKEN:
                 return action.getToken();
@@ -271,6 +271,7 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                             if (!TextUtils.isEmpty(mCodeToken)) {
                                 request(CODE_LOGIN);
                             } else {
+                                //token为空
                                 NToast.shortToast(mContext, "验证码错误或已过期");
                                 LoadDialog.dismiss(mContext);
                             }
@@ -313,7 +314,7 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                                 public void onError(RongIMClient.ErrorCode errorCode) {
                                     NLog.e("connect", "onError errorcode:" + errorCode.getValue());
                                     LoadDialog.dismiss(mContext);
-                                    NToast.shortToast(mContext, "连接出错");
+                                    NToast.shortToast(mContext, "登录失败，请稍后重试");
                                 }
                             });
                         }
@@ -327,10 +328,10 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                         startActivityForResult(intent, 1);
                     } else {
                         LoadDialog.dismiss(mContext);
-                        NToast.shortToast(mContext, R.string.code_error_or_overdue);
+                        NToast.shortToast(mContext, "登录失败，请稍后重试");
                     }
                     break;
-                case LOGIN:
+                case PASSWORD_LOGIN:
                     LoginResponse loginResponseP = (LoginResponse) result;
                     if (loginResponseP.getCode() == 200) {
                         loginToken = loginResponseP.getResult().getToken();
@@ -356,16 +357,16 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                                 public void onError(RongIMClient.ErrorCode errorCode) {
                                     NLog.e("connect", "onError errorcode:" + errorCode.getValue());
                                     LoadDialog.dismiss(mContext);
-                                    NToast.shortToast(mContext, "连接出错");
+                                    NToast.shortToast(mContext, "登录失败，请稍后重试");
                                 }
                             });
                         }
-                    } else if (loginResponseP.getCode() == 100) {
-                        LoadDialog.dismiss(mContext);
-                        NToast.shortToast(mContext, R.string.phone_or_psw_error);
                     } else if (loginResponseP.getCode() == 1000) {
                         LoadDialog.dismiss(mContext);
-                        NToast.shortToast(mContext, R.string.phone_or_psw_error);
+                        NToast.shortToast(mContext, "密码错误");
+                    } else {
+                        LoadDialog.dismiss(mContext);
+                        NToast.shortToast(mContext, "登录失败，请稍后重试");
                     }
                     break;
                 case SYNC_USER_INFO:
@@ -380,6 +381,10 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                         editor.putString(SealConst.SEALTALK_LOGING_PORTRAIT, portraitUri);
                         editor.commit();
                         RongIM.getInstance().refreshUserInfoCache(new UserInfo(connectResultId, nickName, Uri.parse(portraitUri)));
+                    } else {
+                        LoadDialog.dismiss(mContext);
+                        NToast.shortToast(mContext, "登录失败，请稍后重试");
+                        return;
                     }
                     //不继续在login界面同步好友,群组,群组成员信息
                     SealUserInfoManager.getInstance().getAllUserInfo();
@@ -394,6 +399,8 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                                 @Override
                                 public void onTokenIncorrect() {
                                     Log.e(TAG, "reToken Incorrect");
+                                    LoadDialog.dismiss(mContext);
+                                    NToast.shortToast(mContext, "登录失败，请稍后重试");
                                 }
 
                                 @Override
@@ -408,7 +415,9 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
 
                                 @Override
                                 public void onError(RongIMClient.ErrorCode e) {
-
+                                    Log.e(TAG, "reToken onError");
+                                    LoadDialog.dismiss(mContext);
+                                    NToast.shortToast(mContext, "登录失败，请稍后重试");
                                 }
                             });
                         }
@@ -440,19 +449,19 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                 break;
             case CODE_LOGIN:
                 LoadDialog.dismiss(mContext);
-                NToast.shortToast(mContext, R.string.login_api_fail);
+                NToast.shortToast(mContext, "登录失败，请稍后重试");
                 break;
-            case LOGIN:
+            case PASSWORD_LOGIN:
                 LoadDialog.dismiss(mContext);
-                NToast.shortToast(mContext, R.string.login_api_fail);
+                NToast.shortToast(mContext, "登录失败，请稍后重试");
                 break;
             case SYNC_USER_INFO:
                 LoadDialog.dismiss(mContext);
-                NToast.shortToast(mContext, R.string.sync_userinfo_api_fail);
+                NToast.shortToast(mContext, "登录失败，请稍后重试");
                 break;
             case GET_TOKEN:
                 LoadDialog.dismiss(mContext);
-                NToast.shortToast(mContext, R.string.get_token_api_fail);
+                NToast.shortToast(mContext, "登录失败，请稍后重试");
                 break;
         }
     }
@@ -540,33 +549,27 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
         phoneString = mPhoneEdit.getText().toString().trim();
         codeString = mCodeEdit.getText().toString().trim();
 
-        if (TextUtils.isEmpty(phoneString)) {
-            NToast.shortToast(mContext, R.string.phone_number_is_null);
-//            mPhoneEdit.setShakeAnimation();
+        if (TextUtils.isEmpty(phoneString) || !AMUtils.isMobile(phoneString)) {
+            NToast.shortToast(mContext, "请填写正确的手机号码");
+            mPhoneEdit.setShakeAnimation();
             return;
         }
 
-        if (!AMUtils.isMobile(phoneString)) {
-            NToast.shortToast(mContext, R.string.Illegal_phone_number);
-//                    mPhoneEdit.setShakeAnimation();
-            return;
-        }
-
-        if (TextUtils.isEmpty(codeString)) {
-            NToast.shortToast(mContext, R.string.password_is_null);
-//            mCodeEdit.setShakeAnimation();
+        if (TextUtils.isEmpty(codeString) || codeString.length() < 6) {
+            NToast.shortToast(mContext, "密码为6-16字符");
+            mCodeEdit.setShakeAnimation();
             return;
         }
         if (codeString.contains(" ")) {
-            NToast.shortToast(mContext, R.string.password_cannot_contain_spaces);
-//            mCodeEdit.setShakeAnimation();
+            NToast.shortToast(mContext, "密码不能包含空格");
+            mCodeEdit.setShakeAnimation();
             return;
         }
         LoadDialog.show(mContext);
         editor.putBoolean("exit", false);
         editor.commit();
         String oldPhone = sp.getString(SealConst.SEALTALK_LOGING_PHONE, "");
-        request(LOGIN, true);
+        request(PASSWORD_LOGIN, true);
     }
 
     /**
