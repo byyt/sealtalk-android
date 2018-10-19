@@ -55,6 +55,7 @@ import cn.yunchuang.im.server.response.GetTokenResponse;
 import cn.yunchuang.im.server.response.GetUserInfoByIdResponse;
 import cn.yunchuang.im.server.response.GetUserInfoByPhoneResponse;
 import cn.yunchuang.im.server.response.GetUserInfosResponse;
+import cn.yunchuang.im.server.response.HomepageResponse;
 import cn.yunchuang.im.server.response.JoinGroupResponse;
 import cn.yunchuang.im.server.response.LoginResponse;
 import cn.yunchuang.im.server.response.QiNiuTokenResponse;
@@ -300,6 +301,21 @@ public class SealAction extends BaseAction {
         if (!TextUtils.isEmpty(result)) {
             NLog.e("GetTokenResponse", result);
             response = jsonToBean(result, GetTokenResponse.class);
+        }
+        return response;
+    }
+
+    /**
+     * 首页拉取数据
+     *
+     * @throws HttpException
+     */
+    public HomepageResponse getRecommendUsers() throws HttpException {
+        String url = getURL("user/get_recommend_users");
+        String result = httpManager.get(url);
+        HomepageResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            response = jsonToBean(result, HomepageResponse.class);
         }
         return response;
     }

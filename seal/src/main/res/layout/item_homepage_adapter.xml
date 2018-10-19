@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/homepage_adapter_item_portrait"
+        android:layout_width="@dimen/px50"
+        android:layout_height="@dimen/px50"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/de_default_portrait" />
+
+    <TextView
+        android:id="@+id/homepage_adabpter_item_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/px30"
+        android:text="名字" />
+
+</LinearLayout>

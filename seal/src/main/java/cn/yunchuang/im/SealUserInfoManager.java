@@ -38,6 +38,7 @@ import cn.yunchuang.im.server.response.GetGroupInfoResponse;
 import cn.yunchuang.im.server.response.GetGroupMemberResponse;
 import cn.yunchuang.im.server.response.GetGroupResponse;
 import cn.yunchuang.im.server.response.GetTokenResponse;
+import cn.yunchuang.im.server.response.HomepageResponse;
 import cn.yunchuang.im.server.response.UserRelationshipResponse;
 import cn.yunchuang.im.server.utils.NLog;
 import cn.yunchuang.im.server.utils.RongGenerate;
@@ -288,6 +289,7 @@ public class SealUserInfoManager implements OnDataListener {
         mWorkHandler.post(new Runnable() {
             @Override
             public void run() {
+                //下面的
                 try {
                     doingGetAllUserInfo = true;
                     //在获取用户信息时无论哪一个步骤出错,都不继续往下执行,因为网络出错,很可能再次的网络访问还是有问题
@@ -1684,6 +1686,13 @@ public class SealUserInfoManager implements OnDataListener {
         }
     }
 
+    //重写一个，返回错误信息
+    private void onCallBackFail(ResultCallback<?> callback,String errString) {
+        if (callback != null) {
+            callback.onFail(errString);
+        }
+    }
+
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
@@ -1834,5 +1843,37 @@ public class SealUserInfoManager implements OnDataListener {
             }
         }
         return null;
+    }
+
+
+    //以下是新加
+    // 这个类里面的请求，都是在一个handlerThread上运行的，（同时发起多个请求是不是就不适合在这个类里面写）
+    //fragment里的请求可以考虑写到这个类里面，activity的请求已经封装好了
+    /**
+     * 异步接口,获取首页推荐用户
+     *
+     * @param callback 获取首页推荐用户的回调
+     */
+    public void getRecommendUsers(final ResultCallback<HomepageResponse> callback) {
+        mWorkHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                HomepageResponse homepageResponse = null;
+                if (!isNetworkConnected()) {
+                    onCallBackFail(callback,"网络未连接");
+                    return;
+                }
+                try {
+                    homepageResponse = action.getRecommendUsers();
+                } catch (Exception e){
+                    onCallBackFail(callback);
+                    NLog.e(TAG, "getRecommendUsers occurs Exception e=" + e.toString());
+                    return;
+                }
+                if (callback != null) {
+                    callback.onCallback(homepageResponse);
+                }
+            }
+        });
     }
 }

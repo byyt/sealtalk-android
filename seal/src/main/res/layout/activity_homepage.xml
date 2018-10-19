@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/view_operation_card_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <cn.yunchuang.im.pulltorefresh.recyclerview.PullToRefreshMRecyclerView
+        android:id="@+id/homepage_pull_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#f7f7f7"
+        app:ptrAnimationStyle="flip" />
+
+    <TextView
+        android:id="@+id/homepage_pull_test"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/px50"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/px40"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="点击拉去数据" />
+
+</LinearLayout>
