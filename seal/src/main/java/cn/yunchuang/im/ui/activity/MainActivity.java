@@ -31,8 +31,7 @@ import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.server.widget.LoadDialog;
 import cn.yunchuang.im.ui.adapter.ConversationListAdapterEx;
 import cn.yunchuang.im.ui.fragment.ContactsFragment;
-import cn.yunchuang.im.ui.fragment.ContactsFragment_New;
-import cn.yunchuang.im.ui.fragment.DiscoverFragment;
+import cn.yunchuang.im.ui.fragment.HomepageFragment;
 import cn.yunchuang.im.ui.fragment.MineFragment;
 import cn.yunchuang.im.ui.widget.DragPointView;
 import cn.yunchuang.im.ui.widget.MorePopWindow;
@@ -129,7 +128,7 @@ public class MainActivity extends FragmentActivity implements
         mFragment.add(conversationList);
         mFragment.add(new ContactsFragment());
 //        mFragment.add(new DiscoverFragment());
-        mFragment.add(new ContactsFragment_New());
+        mFragment.add(new HomepageFragment());
         mFragment.add(new MineFragment());
         FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override

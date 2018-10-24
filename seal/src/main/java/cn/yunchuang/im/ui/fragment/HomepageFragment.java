@@ -31,11 +31,10 @@ import cn.yunchuang.im.utils.DpOrSp2PxUtil;
  * tab 2 通讯录的 Fragment
  * Created by Bob on 2015/1/25.
  */
-public class ContactsFragment_New extends Fragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener<ObservableRecyclerView> {
+public class HomepageFragment extends Fragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener<ObservableRecyclerView> {
 
     private PullToRefreshMRecyclerView pullToRefreshMRecyclerView;
     private HomepageAdapter mHomepageAdapter;
-    private List<HomepageModel> mHomepageModelList;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_homepage, container, false);
@@ -72,7 +71,7 @@ public class ContactsFragment_New extends Fragment implements View.OnClickListen
     }
 
     private void initData() {
-
+        getData();
     }
 
     @Override
@@ -106,7 +105,7 @@ public class ContactsFragment_New extends Fragment implements View.OnClickListen
             public void onSuccess(HomepageResponse homepageResponse) {
                 Log.e("xxxxxx", "getData onSuccess");
                 if(homepageResponse!=null){
-                    mHomepageModelList = homepageResponse.getResult();
+                    mHomepageAdapter.setData(homepageResponse.getResult());
                 }
                 if (pullToRefreshMRecyclerView != null) {
                     pullToRefreshMRecyclerView.onRefreshComplete();
