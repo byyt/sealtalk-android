@@ -21,7 +21,7 @@ import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
 
 
-public class DiscoverFragment extends Fragment implements View.OnClickListener, OnDataListener {
+public class DiscoverFragment extends BaseFragment implements View.OnClickListener, OnDataListener {
 
     private static final int GETDEFCONVERSATION = 333;
     private AsyncTaskManager atm = AsyncTaskManager.getInstance(getActivity());

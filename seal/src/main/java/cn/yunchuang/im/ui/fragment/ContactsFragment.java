@@ -47,7 +47,7 @@ import io.rong.imlib.model.UserInfo;
  * tab 2 通讯录的 Fragment
  * Created by Bob on 2015/1/25.
  */
-public class ContactsFragment extends Fragment implements View.OnClickListener {
+public class ContactsFragment extends BaseFragment implements View.OnClickListener {
 
     private SelectableRoundedImageView mSelectableRoundedImageView;
     private TextView mNameTextView;

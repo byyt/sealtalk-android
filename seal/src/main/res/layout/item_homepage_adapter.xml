@@ -9,6 +9,7 @@
         android:id="@+id/homepage_adapter_item_portrait"
         android:layout_width="@dimen/px50"
         android:layout_height="@dimen/px50"
+        android:layout_marginLeft="@dimen/px30"
         android:layout_gravity="center_vertical"
         android:src="@drawable/de_default_portrait" />
 

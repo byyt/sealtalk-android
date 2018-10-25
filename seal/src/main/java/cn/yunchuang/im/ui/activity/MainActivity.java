@@ -65,12 +65,16 @@ public class MainActivity extends FragmentActivity implements
     private boolean isDebug;
     private Context mContext;
     private Conversation.ConversationType[] mConversationsTypes = null;
+    //其他fragment
+    private ContactsFragment mContactsFragment = null;
+    private HomepageFragment mHomepageFragment = null;
+    private MineFragment mMineFragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
-            RLog.d("MainActivity","onCreate intent flag FLAG_ACTIVITY_BROUGHT_TO_FRONT");
+        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
+            RLog.d("MainActivity", "onCreate intent flag FLAG_ACTIVITY_BROUGHT_TO_FRONT");
             finish();
             return;
         }
@@ -119,6 +123,10 @@ public class MainActivity extends FragmentActivity implements
 
     private void initMainViewPager() {
         Fragment conversationList = initConversationList();
+        mContactsFragment = new ContactsFragment();
+        mHomepageFragment = new HomepageFragment();
+        mMineFragment = new MineFragment();
+
         mViewPager = (ViewPager) findViewById(R.id.main_viewpager);
 
         mUnreadNumView = (DragPointView) findViewById(R.id.seal_num);
@@ -126,10 +134,10 @@ public class MainActivity extends FragmentActivity implements
         mUnreadNumView.setDragListencer(this);
 
         mFragment.add(conversationList);
-        mFragment.add(new ContactsFragment());
+        mFragment.add(mContactsFragment);
 //        mFragment.add(new DiscoverFragment());
-        mFragment.add(new HomepageFragment());
-        mFragment.add(new MineFragment());
+        mFragment.add(mHomepageFragment);
+        mFragment.add(mMineFragment);
         FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
@@ -271,13 +279,16 @@ public class MainActivity extends FragmentActivity implements
                 break;
             case R.id.seal_contact_list:
                 mViewPager.setCurrentItem(1, false);
+                mContactsFragment.fragmentShow();
                 break;
             case R.id.seal_find:
                 mViewPager.setCurrentItem(2, false);
+                mHomepageFragment.fragmentShow();
                 break;
             case R.id.seal_me:
                 mViewPager.setCurrentItem(3, false);
                 mMineRed.setVisibility(View.GONE);
+                mMineFragment.fragmentShow();
                 break;
             case R.id.seal_more:
                 MorePopWindow morePopWindow = new MorePopWindow(MainActivity.this);
@@ -452,6 +463,7 @@ public class MainActivity extends FragmentActivity implements
     }
 
     private HomeWatcherReceiver mHomeKeyReceiver = null;
+
     //如果遇见 Android 7.0 系统切换到后台回来无效的情况 把下面注册广播相关代码注释或者删除即可解决。下面广播重写 home 键是为了解决三星 note3 按 home 键花屏的一个问题
     private void registerHomeKeyReceiver(Context context) {
         if (mHomeKeyReceiver == null) {

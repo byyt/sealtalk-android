@@ -1,7 +1,7 @@
 package cn.yunchuang.im.ui.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.os.Handler;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.util.Log;
@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import java.util.List;
 
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.SealAppContext;
@@ -21,7 +19,6 @@ import cn.yunchuang.im.pulltorefresh.recyclerview.ObservableRecyclerView;
 import cn.yunchuang.im.pulltorefresh.recyclerview.PullToRefreshMRecyclerView;
 import cn.yunchuang.im.pulltorefresh.recyclerview.RecycleViewDivider;
 import cn.yunchuang.im.server.broadcast.BroadcastManager;
-import cn.yunchuang.im.server.response.HomepageModel;
 import cn.yunchuang.im.server.response.HomepageResponse;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.ui.adapter.HomepageAdapter;
@@ -31,17 +28,29 @@ import cn.yunchuang.im.utils.DpOrSp2PxUtil;
  * tab 2 通讯录的 Fragment
  * Created by Bob on 2015/1/25.
  */
-public class HomepageFragment extends Fragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener<ObservableRecyclerView> {
+public class HomepageFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener<ObservableRecyclerView> {
 
     private PullToRefreshMRecyclerView pullToRefreshMRecyclerView;
     private HomepageAdapter mHomepageAdapter;
 
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_homepage, container, false);
         initView(view);
-        initData();
 
         return view;
+    }
+
+    @Override
+    public void fragmentShow() {
+        super.fragmentShow();
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                pullToRefreshMRecyclerView.setRefreshing(true);  //需要延迟调用，直接调用没有用
+            }
+        }, 100);
     }
 
     private void initView(View view) {
@@ -68,10 +77,6 @@ public class HomepageFragment extends Fragment implements View.OnClickListener, 
             }
         });
 
-    }
-
-    private void initData() {
-        getData();
     }
 
     @Override
@@ -104,7 +109,7 @@ public class HomepageFragment extends Fragment implements View.OnClickListener, 
             @Override
             public void onSuccess(HomepageResponse homepageResponse) {
                 Log.e("xxxxxx", "getData onSuccess");
-                if(homepageResponse!=null){
+                if (homepageResponse != null) {
                     mHomepageAdapter.setData(homepageResponse.getResult());
                 }
                 if (pullToRefreshMRecyclerView != null) {
