@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:slide="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/seal_bg"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <cn.yunchuang.im.widget.banner.Banner
+            android:id="@+id/auto_slide_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            slide:banner_height_percent="600"
+            slide:banner_width_percent="690"
+            slide:image_scale_type="fit_xy"
+            slide:indicator_drawable_selected="@drawable/homepage_banner_selected_point_bg"
+            slide:indicator_drawable_unselected="@drawable/homepage_banner_unselected_point_bg"
+            slide:indicator_margin="@dimen/px16"
+            slide:indicator_selected_height="@dimen/px8"
+            slide:indicator_selected_width="@dimen/px40"
+            slide:indicator_unselected_height="@dimen/px8"
+            slide:indicator_unselected_width="@dimen/px8" />
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

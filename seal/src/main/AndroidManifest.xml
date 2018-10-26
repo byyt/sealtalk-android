@@ -367,6 +367,11 @@
         <activity
             android:name=".ui.activity.UserDetailActivity"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activity.UserDetailActivity_New"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.activity.SharedReceiverActivity"
             android:screenOrientation="portrait">

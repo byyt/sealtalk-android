@@ -51,13 +51,13 @@
     <color name="cs_evaluate_edittext_background">#f1f3f5</color>
     <color name="cs_evaluate_edittext_textcolor">#939dab</color>
 
-
     <color name="color_000000">#000000</color>
     <color name="color_FFFFFF">#FFFFFF</color>
     <color name="color_030303">#030303</color>
     <color name="color_C1C2C8">#C1C2C8</color>
     <color name="color_FCE446">#FCE446</color>
 
+    <color name="color_99FFFFFF">#99FFFFFF</color>
 
     <!--  -->
 </resources>

@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.WindowManager;
 
@@ -165,6 +166,14 @@ public class CommonUtils {
     public static int dip2pix(Context context, int dips) {
         int densityDpi = context.getResources().getDisplayMetrics().densityDpi;
         return (dips * densityDpi) / 160;
+    }
+
+    /**
+     * 判断是否在当前主线程
+     * @return
+     */
+    public static boolean isOnMainThread(){
+        return Thread.currentThread() == Looper.getMainLooper().getThread();
     }
 
 }
