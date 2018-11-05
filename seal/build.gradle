@@ -70,8 +70,14 @@ dependencies {
     compile project(':RedPacket')
     compile 'com.huawei.android.hms:push:2.5.3.305'
 
-    //图片加载
-    compile 'com.github.bumptech.glide:glide:4.2.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
+    //Glide框架的引入在CallKit模块中
+    //图片自动轮播框架
+    compile 'com.youth.banner:banner:1.4.10'
+    //图片浏览框架
+    compile 'com.ycjiang:ImagePreview:2.2.2'
+    //recyclerView的adapter框架
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
+    //Glide模糊效果的框架
+    compile 'jp.wasabeef:glide-transformations:3.0.0'
 }
 apply plugin: 'com.google.gms.google-services'

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:slide="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/user_detail_new_root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/seal_bg"
@@ -10,21 +10,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <cn.yunchuang.im.widget.banner.Banner
-            android:id="@+id/auto_slide_view"
+        <ImageView
+            android:id="@+id/user_detail_new_top_img"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            slide:banner_height_percent="600"
-            slide:banner_width_percent="690"
-            slide:image_scale_type="fit_xy"
-            slide:indicator_drawable_selected="@drawable/homepage_banner_selected_point_bg"
-            slide:indicator_drawable_unselected="@drawable/homepage_banner_unselected_point_bg"
-            slide:indicator_margin="@dimen/px16"
-            slide:indicator_selected_height="@dimen/px8"
-            slide:indicator_selected_width="@dimen/px40"
-            slide:indicator_unselected_height="@dimen/px8"
-            slide:indicator_unselected_width="@dimen/px8" />
+            android:layout_height="@dimen/px500"
+            android:scaleType="fitXY"
+            android:src="@drawable/de_default_portrait" />
 
+        <cn.yunchuang.im.widget.ObservableScrollView
+            android:id="@+id/user_detail_new_top_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px200"
+            android:layout_marginTop="@dimen/px400"
+            android:scrollbars="none"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/user_detail_new_top_list_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" />
+
+        </cn.yunchuang.im.widget.ObservableScrollView>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/user_detail_new_top_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px200"
+            android:layout_marginTop="@dimen/px400" />
 
     </RelativeLayout>
 

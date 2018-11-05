@@ -58,6 +58,7 @@ import cn.yunchuang.im.server.response.GetUserInfosResponse;
 import cn.yunchuang.im.server.response.HomepageResponse;
 import cn.yunchuang.im.server.response.JoinGroupResponse;
 import cn.yunchuang.im.server.response.LoginResponse;
+import cn.yunchuang.im.server.response.PayImgListResponse;
 import cn.yunchuang.im.server.response.QiNiuTokenResponse;
 import cn.yunchuang.im.server.response.QuitGroupResponse;
 import cn.yunchuang.im.server.response.RegisterResponse;
@@ -316,6 +317,36 @@ public class SealAction extends BaseAction {
         HomepageResponse response = null;
         if (!TextUtils.isEmpty(result)) {
             response = jsonToBean(result, HomepageResponse.class);
+        }
+        return response;
+    }
+
+    /**
+     * 用户详情页拉取数据
+     *
+     * @throws HttpException
+     */
+    public HomepageResponse getUserDetails() throws HttpException {
+        String url = getURL("user/get_recommend_users");
+        String result = httpManager.get(url);
+        HomepageResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            response = jsonToBean(result, HomepageResponse.class);
+        }
+        return response;
+    }
+
+    /**
+     * 用户详情页需要支付的图片查询是否已支付，即图片是否能展示给用户看
+     *
+     * @throws HttpException
+     */
+    public PayImgListResponse getHashPayedImgList() throws HttpException {
+        String url = getURL("payimglist/get_imgpay_info");
+        String result = httpManager.get(url);
+        PayImgListResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            response = jsonToBean(result, PayImgListResponse.class);
         }
         return response;
     }

@@ -50,7 +50,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             public void run() {
                 pullToRefreshMRecyclerView.setRefreshing(true);  //需要延迟调用，直接调用没有用
             }
-        }, 100);
+        }, 600);
     }
 
     private void initView(View view) {

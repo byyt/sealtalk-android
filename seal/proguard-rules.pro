@@ -51,13 +51,22 @@
 -keep amap.api.location.** {*;}
 
 
+# gilde
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+# for DexGuard only
+-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 
-# gilde 4
- -keep public class * implements com.bumptech.glide.module.GlideModule
- -keep public class * extends com.bumptech.glide.module.AppGlideModule
- -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
-   **[] $VALUES;
-   public *;
- }
- # for DexGuard only
- #-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
+#CymChad/BaseRecyclerViewAdapterHelper
+-keep class com.chad.library.adapter.** {
+*;
+}
+-keep public class * extends com.chad.library.adapter.base.BaseQuickAdapter
+-keep public class * extends com.chad.library.adapter.base.BaseViewHolder
+-keepclassmembers  class **$** extends com.chad.library.adapter.base.BaseViewHolder {
+     <init>(...);
+}

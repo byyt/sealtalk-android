@@ -14,6 +14,7 @@ import com.facebook.stetho.Stetho;
 import com.facebook.stetho.dumpapp.DumperPlugin;
 import com.facebook.stetho.inspector.database.DefaultDatabaseConnectionProvider;
 import com.facebook.stetho.inspector.protocol.ChromeDevtoolsDomain;
+import com.previewlibrary.ZoomMediaLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ import cn.yunchuang.im.stetho.RongDatabaseFilesProvider;
 import cn.yunchuang.im.stetho.RongDbFilesDumperPlugin;
 import cn.yunchuang.im.ui.activity.UserDetailActivity;
 import cn.yunchuang.im.utils.SharedPreferencesContext;
+import cn.yunchuang.im.widget.TestImageLoader;
 import io.rong.imageloader.core.DisplayImageOptions;
 import io.rong.imageloader.core.display.FadeInBitmapDisplayer;
 import io.rong.imkit.RongExtensionManager;
@@ -183,6 +185,9 @@ public class App extends MultiDexApplication {
                 }
             }));
             RongExtensionManager.getInstance().registerExtensionModule(new RecognizeExtensionModule());
+
+            //图片浏览框架
+            ZoomMediaLoader.getInstance().init(new TestImageLoader());
         }
     }
 

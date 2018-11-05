@@ -56,8 +56,9 @@
     <color name="color_030303">#030303</color>
     <color name="color_C1C2C8">#C1C2C8</color>
     <color name="color_FCE446">#FCE446</color>
-
+    <color name="color_5CB85C">#5CB85C</color>
     <color name="color_99FFFFFF">#99FFFFFF</color>
+
 
     <!--  -->
 </resources>

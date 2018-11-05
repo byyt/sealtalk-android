@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/user_detail_new_root_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/user_detail_new_pic_item_img"
+        android:layout_width="@dimen/px200"
+        android:layout_height="@dimen/px200"
+        android:scaleType="centerCrop"
+        android:src="@drawable/de_default_portrait" />
+
+</FrameLayout>

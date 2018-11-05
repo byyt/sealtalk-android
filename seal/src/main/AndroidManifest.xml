@@ -373,6 +373,10 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".ui.activity.PictureBrowseActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".ui.activity.SharedReceiverActivity"
             android:screenOrientation="portrait">
             <intent-filter>
