@@ -9,6 +9,6 @@
         android:layout_width="@dimen/px200"
         android:layout_height="@dimen/px200"
         android:scaleType="centerCrop"
-        android:src="@drawable/de_default_portrait" />
+        android:src="@drawable/ic_iamge_zhanwei" />
 
 </FrameLayout>

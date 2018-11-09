@@ -63,7 +63,9 @@ public class HomepageAdapter extends MRecyclerViewAdapter<HomepageModel, Homepag
 //                    } else {
 //                        RongIM.getInstance().startPrivateChat(mContext, homepageModel.getId(), homepageModel.getNickname());
 //                    }
-                    mContext.startActivity(new Intent(mContext, UserDetailActivity_New.class));
+                    Intent intent = new Intent(mContext, UserDetailActivity_New.class);
+                    intent.putExtra("userId",homepageModel.getId());
+                    mContext.startActivity(intent);
 
                 }
             });

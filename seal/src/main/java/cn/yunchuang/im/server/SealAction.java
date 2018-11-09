@@ -52,6 +52,7 @@ import cn.yunchuang.im.server.response.GetGroupInfoResponse;
 import cn.yunchuang.im.server.response.GetGroupMemberResponse;
 import cn.yunchuang.im.server.response.GetGroupResponse;
 import cn.yunchuang.im.server.response.GetTokenResponse;
+import cn.yunchuang.im.server.response.GetUserDetailResponse;
 import cn.yunchuang.im.server.response.GetUserInfoByIdResponse;
 import cn.yunchuang.im.server.response.GetUserInfoByPhoneResponse;
 import cn.yunchuang.im.server.response.GetUserInfosResponse;
@@ -326,12 +327,17 @@ public class SealAction extends BaseAction {
      *
      * @throws HttpException
      */
-    public HomepageResponse getUserDetails() throws HttpException {
-        String url = getURL("user/get_recommend_users");
-        String result = httpManager.get(url);
-        HomepageResponse response = null;
+    public GetUserDetailResponse getUserDetails(String userId) throws HttpException {
+        String url = getURL("user/get_user_detail?");
+        StringBuilder sb = new StringBuilder();
+        sb.append("id=");
+        sb.append(userId);
+        String stringRequest = sb.toString();
+        String newUrl = url + stringRequest;
+        String result = httpManager.get(mContext, newUrl);
+        GetUserDetailResponse response = null;
         if (!TextUtils.isEmpty(result)) {
-            response = jsonToBean(result, HomepageResponse.class);
+            response = jsonToBean(result, GetUserDetailResponse.class);
         }
         return response;
     }
