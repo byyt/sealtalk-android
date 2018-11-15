@@ -2,11 +2,13 @@ package cn.yunchuang.im.server.response;
 
 import java.util.List;
 
-public class GetUserDetailModel {
+public class GetUserDetailModelOne {
     private String id;
     private String phone;
     private String nickname;
     private String portraitUri;
+    private String weChat; //微信号
+    private int weChatPrice; //微信号价格
     private String freeImgList; //免费图片列表，是一个json数组的字符串
     private List<ImageModel> payImgList; //付费图片列表，是一个json数组
 
@@ -40,6 +42,22 @@ public class GetUserDetailModel {
 
     public void setPortraitUri(String portraitUri) {
         this.portraitUri = portraitUri;
+    }
+
+    public String getWeChat() {
+        return weChat;
+    }
+
+    public void setWeChat(String weChat) {
+        this.weChat = weChat;
+    }
+
+    public int getWeChatPrice() {
+        return weChatPrice;
+    }
+
+    public void setWeChatPrice(int weChatPrice) {
+        this.weChatPrice = weChatPrice;
     }
 
     public String getFreeImgList() {

@@ -23,6 +23,8 @@ import cn.yunchuang.im.server.request.DismissGroupRequest;
 import cn.yunchuang.im.server.request.FriendInvitationRequest;
 import cn.yunchuang.im.server.request.JoinGroupRequest;
 import cn.yunchuang.im.server.request.LoginRequest;
+import cn.yunchuang.im.server.request.PayImgRequest;
+import cn.yunchuang.im.server.request.PayWeChatRequest;
 import cn.yunchuang.im.server.request.QuitGroupRequest;
 import cn.yunchuang.im.server.request.RegisterRequest;
 import cn.yunchuang.im.server.request.RemoveFromBlacklistRequest;
@@ -38,6 +40,7 @@ import cn.yunchuang.im.server.request.VerifyCodeRequest;
 import cn.yunchuang.im.server.response.AddGroupMemberResponse;
 import cn.yunchuang.im.server.response.AddToBlackListResponse;
 import cn.yunchuang.im.server.response.AgreeFriendsResponse;
+import cn.yunchuang.im.server.response.BaseResponse;
 import cn.yunchuang.im.server.response.ChangePasswordResponse;
 import cn.yunchuang.im.server.response.CheckPhoneResponse;
 import cn.yunchuang.im.server.response.CreateGroupResponse;
@@ -52,7 +55,8 @@ import cn.yunchuang.im.server.response.GetGroupInfoResponse;
 import cn.yunchuang.im.server.response.GetGroupMemberResponse;
 import cn.yunchuang.im.server.response.GetGroupResponse;
 import cn.yunchuang.im.server.response.GetTokenResponse;
-import cn.yunchuang.im.server.response.GetUserDetailResponse;
+import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
+import cn.yunchuang.im.server.response.GetUserDetailTwoResponse;
 import cn.yunchuang.im.server.response.GetUserInfoByIdResponse;
 import cn.yunchuang.im.server.response.GetUserInfoByPhoneResponse;
 import cn.yunchuang.im.server.response.GetUserInfosResponse;
@@ -323,21 +327,91 @@ public class SealAction extends BaseAction {
     }
 
     /**
-     * 用户详情页拉取数据
+     * 用户详情页拉取数据1
      *
      * @throws HttpException
      */
-    public GetUserDetailResponse getUserDetails(String userId) throws HttpException {
-        String url = getURL("user/get_user_detail?");
+    public GetUserDetailOneResponse getUserDetailOne(String userId) throws HttpException {
+        String url = getURL("user/get_user_detail_one?");
         StringBuilder sb = new StringBuilder();
         sb.append("id=");
         sb.append(userId);
         String stringRequest = sb.toString();
         String newUrl = url + stringRequest;
         String result = httpManager.get(mContext, newUrl);
-        GetUserDetailResponse response = null;
+        GetUserDetailOneResponse response = null;
         if (!TextUtils.isEmpty(result)) {
-            response = jsonToBean(result, GetUserDetailResponse.class);
+            response = jsonToBean(result, GetUserDetailOneResponse.class);
+        }
+        return response;
+    }
+
+    /**
+     * 用户详情页拉取数据2
+     *
+     * @throws HttpException
+     */
+    public GetUserDetailTwoResponse getUserDetailTwo(String userId) throws HttpException {
+        String url = getURL("user/get_user_detail_two?");
+        StringBuilder sb = new StringBuilder();
+        sb.append("id=");
+        sb.append(userId);
+        String stringRequest = sb.toString();
+        String newUrl = url + stringRequest;
+        String result = httpManager.get(mContext, newUrl);
+        GetUserDetailTwoResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            response = jsonToBean(result, GetUserDetailTwoResponse.class);
+        }
+        return response;
+    }
+
+    /**
+     * 支付付费图片
+     *
+     * @param imgId
+     * @return
+     * @throws HttpException
+     */
+    public BaseResponse payImg(String imgId) throws HttpException {
+        String uri = getURL("user/user_pay_img");
+        String json = JsonMananger.beanToJson(new PayImgRequest(imgId));
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(json, ENCODING);
+            entity.setContentType(CONTENT_TYPE);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String result = httpManager.post(mContext, uri, entity, CONTENT_TYPE);
+        BaseResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            response = JsonMananger.jsonToBean(result, BaseResponse.class);
+        }
+        return response;
+    }
+
+    /**
+     * 支付微信号
+     *
+     * @param weChat
+     * @return
+     * @throws HttpException
+     */
+    public BaseResponse payWeChat(String weChat, int weChatPrice) throws HttpException {
+        String uri = getURL("user/user_pay_wechat");
+        String json = JsonMananger.beanToJson(new PayWeChatRequest(weChat, weChatPrice));
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(json, ENCODING);
+            entity.setContentType(CONTENT_TYPE);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String result = httpManager.post(mContext, uri, entity, CONTENT_TYPE);
+        BaseResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            response = JsonMananger.jsonToBean(result, BaseResponse.class);
         }
         return response;
     }

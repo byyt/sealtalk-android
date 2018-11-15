@@ -41,5 +41,30 @@
 
     </RelativeLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/px30">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="@dimen/px30"
+            android:text="Ta的微信号"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_px36" />
+
+        <TextView
+            android:id="@+id/user_detail_new_see_wechat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="@dimen/px30"
+            android:text="查看"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_px36" />
+
+    </FrameLayout>
 
 </LinearLayout>
