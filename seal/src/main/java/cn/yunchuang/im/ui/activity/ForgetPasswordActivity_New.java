@@ -6,25 +6,21 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.yunchuang.im.R;
-import cn.yunchuang.im.SealConst;
-import cn.yunchuang.im.SealUserInfoManager;
 import cn.yunchuang.im.server.network.http.HttpException;
 import cn.yunchuang.im.server.response.LoginResponse;
 import cn.yunchuang.im.server.response.SendCodeResponse;
 import cn.yunchuang.im.server.response.VerifyCodeResponse;
 import cn.yunchuang.im.server.utils.AMUtils;
-import cn.yunchuang.im.server.utils.NLog;
+import cn.yunchuang.im.server.utils.CommonUtils;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.server.utils.downtime.DownTimer;
 import cn.yunchuang.im.server.utils.downtime.DownTimerListener;
 import cn.yunchuang.im.server.widget.ClearWriteEditText;
 import cn.yunchuang.im.server.widget.LoadDialog;
-import io.rong.imkit.RongIM;
-import io.rong.imlib.RongIMClient;
 
 /**
  * Created by AMing on 16/2/2.
@@ -37,24 +33,28 @@ public class ForgetPasswordActivity_New extends BaseActivity implements View.OnC
     private static final int VERIFY_CODE = 3;
     private static final int CODE_LOGIN = 4;
     private ClearWriteEditText mPhoneEdit, mCodeEdit;
-    private Button mGetCode, mConfirm;
-    private String phoneString, mCodeToken;
+    private TextView mTitleBack, mGetCode, mConfirm;
+    private String phoneString, codeString, mCodeToken;
+    private boolean isBright = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget_new);
-        setTitle(R.string.forget_password);
+        setHeadVisibility(View.GONE);
         initView();
 
     }
 
     private void initView() {
-        mPhoneEdit = (ClearWriteEditText) findViewById(R.id.forget_phone);
-        mCodeEdit = (ClearWriteEditText) findViewById(R.id.forget_code);
-        mGetCode = (Button) findViewById(R.id.forget_getcode);
-        mConfirm = (Button) findViewById(R.id.forget_button);
+        mTitleBack = (TextView) findViewById(R.id.forget_title_back);
+        mPhoneEdit = (ClearWriteEditText) findViewById(R.id.activity_forget_phone);
+        mCodeEdit = (ClearWriteEditText) findViewById(R.id.activity_forget_code);
+        mGetCode = (TextView) findViewById(R.id.activity_forget_getcode);
+        mConfirm = (TextView) findViewById(R.id.activty_forget_next);
+        mTitleBack.setOnClickListener(this);
         mGetCode.setOnClickListener(this);
+        mGetCode.setEnabled(false);
         mConfirm.setOnClickListener(this);
         mPhoneEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -64,20 +64,16 @@ public class ForgetPasswordActivity_New extends BaseActivity implements View.OnC
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 11) {
+                if (s.length() == 11 && isBright) {
                     if (AMUtils.isMobile(s.toString().trim())) {
-                        phoneString = mPhoneEdit.getText().toString().trim();
-                        AMUtils.onInactive(mContext, mPhoneEdit);
-                        mGetCode.setClickable(true);
-                        mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_blue));
+                        phoneString = s.toString().trim();
+//                        AMUtils.onInactive(mContext, mPhoneEdit);//收起键盘，模仿请吃饭，不用收起键盘，点击发送验证码后，直接输入验证码
                     } else {
-                        Toast.makeText(mContext, R.string.Illegal_phone_number, Toast.LENGTH_SHORT).show();
-                        mGetCode.setClickable(false);
-                        mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_gray));
+                        Toast.makeText(mContext, "请填写正确的手机号码", Toast.LENGTH_SHORT).show();
                     }
+                    mGetCode.setEnabled(true);
                 } else {
-                    mGetCode.setClickable(false);
-                    mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_gray));
+                    mGetCode.setEnabled(false);
                 }
             }
 
@@ -92,30 +88,6 @@ public class ForgetPasswordActivity_New extends BaseActivity implements View.OnC
             mPhoneEdit.setText(oldPhone);
         }
         mPhoneEdit.setSelection(mPhoneEdit.getText().length());
-
-        mCodeEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 6 || s.length() == 4) { //验证码位数，这个后期需要确定
-                    AMUtils.onInactive(mContext, mCodeEdit);
-                    mConfirm.setClickable(true);
-                    mConfirm.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_blue));
-                } else {
-                    mConfirm.setClickable(false);
-                    mConfirm.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_gray));
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
     }
 
     @Override
@@ -125,7 +97,7 @@ public class ForgetPasswordActivity_New extends BaseActivity implements View.OnC
                 return action.sendCode("86", phoneString);
             case VERIFY_CODE:
                 return action.verifyCode("86", phoneString, mCodeEdit.getText().toString());
-            case CODE_LOGIN:
+            case CODE_LOGIN: //请求登录接口，目的是为了判断账户是否已经注册
                 return action.codeLogin("86", phoneString, mCodeToken);
         }
         return super.doInBackground(requestCode, id);
@@ -167,7 +139,7 @@ public class ForgetPasswordActivity_New extends BaseActivity implements View.OnC
                             break;
                     }
                     break;
-                case CODE_LOGIN:
+                case CODE_LOGIN: //请求登录接口，目的是为了判断账户是否已经注册
                     LoginResponse loginResponse = (LoginResponse) result;
                     if (loginResponse.getCode() == 200) {
                         //已经注册过，可以进入修改密码界面
@@ -175,7 +147,7 @@ public class ForgetPasswordActivity_New extends BaseActivity implements View.OnC
                         Intent intent = new Intent(this, ForgetPasswordActivity_Reset.class);
                         intent.putExtra("phone", phoneString);
                         intent.putExtra("verification_token", mCodeToken);
-                        intent.putExtra("resetType","has_register");
+                        intent.putExtra("resetType", "has_register");
                         startActivityForResult(intent, 1);
 
                     } else if (loginResponse.getCode() == 3000) {
@@ -200,15 +172,15 @@ public class ForgetPasswordActivity_New extends BaseActivity implements View.OnC
         switch (requestCode) {
             case SEND_CODE:
                 LoadDialog.dismiss(mContext);
-                NToast.shortToast(mContext, "获取验证码请求失败");
+                NToast.shortToast(mContext, "获取验证码失败，请稍后重试");
                 break;
             case VERIFY_CODE:
                 LoadDialog.dismiss(mContext);
-                NToast.shortToast(mContext, "验证码是否可用请求失败");
+                NToast.shortToast(mContext, "验证码错误或已过期");
                 break;
-            case CODE_LOGIN:
+            case CODE_LOGIN: //请求登录接口，目的是为了判断账户是否已经注册
                 LoadDialog.dismiss(mContext);
-                NToast.shortToast(mContext, R.string.login_api_fail);
+                NToast.shortToast(mContext, "未知错误，请稍后重试");
                 break;
         }
     }
@@ -216,29 +188,37 @@ public class ForgetPasswordActivity_New extends BaseActivity implements View.OnC
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.forget_getcode:
-                if (TextUtils.isEmpty(mPhoneEdit.getText().toString().trim())) {
-                    NToast.longToast(mContext, getString(R.string.phone_number_is_null));
-                } else {
-                    DownTimer downTimer = new DownTimer();
-                    downTimer.setListener(this);
-                    downTimer.startDown(60 * 1000);
-                    request(SEND_CODE);
-                }
+            case R.id.forget_title_back:
+                finish();
                 break;
-            case R.id.forget_button:
-                if (TextUtils.isEmpty(mPhoneEdit.getText().toString())) {
-                    NToast.shortToast(mContext, getString(R.string.phone_number_is_null));
+            case R.id.activity_forget_getcode:
+                if (!AMUtils.isMobile(mPhoneEdit.getText().toString().trim())) {
+                    Toast.makeText(mContext, "请填写正确的手机号码", Toast.LENGTH_SHORT).show();
                     mPhoneEdit.setShakeAnimation();
                     return;
                 }
-
-                if (TextUtils.isEmpty(mCodeEdit.getText().toString())) {
-                    NToast.shortToast(mContext, getString(R.string.code_is_null));
+                if (!CommonUtils.isNetworkConnected(mContext)) {
+                    NToast.shortToast(mContext, getString(R.string.network_not_available));
+                    return;
+                }
+                DownTimer downTimer = new DownTimer();
+                downTimer.setListener(this);
+                downTimer.startDown(60 * 1000);
+                request(SEND_CODE);
+                break;
+            case R.id.activty_forget_next:
+                phoneString = mPhoneEdit.getText().toString().trim();
+                codeString = mCodeEdit.getText().toString().trim();
+                if (TextUtils.isEmpty(phoneString) || !AMUtils.isMobile(phoneString)) {
+                    NToast.shortToast(mContext, "请填写正确的手机号码");
+                    mPhoneEdit.setShakeAnimation();
+                    return;
+                }
+                if (TextUtils.isEmpty(codeString) || codeString.length() < 4 || codeString.length() > 6) {
+                    NToast.shortToast(mContext, "请填写4-6位数字验证码");
                     mCodeEdit.setShakeAnimation();
                     return;
                 }
-
                 LoadDialog.show(mContext);
                 request(VERIFY_CODE);
                 break;
@@ -254,15 +234,15 @@ public class ForgetPasswordActivity_New extends BaseActivity implements View.OnC
 
     @Override
     public void onTick(long millisUntilFinished) {
-        mGetCode.setText("seconds:" + String.valueOf(millisUntilFinished / 1000));
-        mGetCode.setClickable(false);
-        mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_gray));
+        mGetCode.setText(String.valueOf(millisUntilFinished / 1000) + "秒后获取");
+        mGetCode.setEnabled(false);
+        isBright = false;
     }
 
     @Override
     public void onFinish() {
         mGetCode.setText(R.string.get_code);
-        mGetCode.setClickable(true);
-        mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_blue));
+        mGetCode.setEnabled(true);
+        isBright = true;
     }
 }

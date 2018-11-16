@@ -628,6 +628,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/rc_file_path" />
         </provider>
+
+        <!-- 沉浸式标题栏 https://www.jianshu.com/p/2a884e211a62 -->
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.4" />
     </application>
 
 

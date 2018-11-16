@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gyf.barlibrary.ImmersionBar;
+
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.SealConst;
 import cn.yunchuang.im.SealUserInfoManager;
@@ -58,7 +60,7 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
     private static final int SYNC_USER_INFO = 9;
 
     private ClearWriteEditText mPhoneEdit, mCodeEdit;
-    private TextView mGetCode, mConfirm, mSwitchLogin, mForgetPassword;
+    private TextView mTitleBack, mGetCode, mConfirm, mSwitchLogin, mForgetPassword;
     private String phoneString;
     private String codeString;
     private String connectResultId;
@@ -71,6 +73,11 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ImmersionBar.with(this)
+                .statusBarColor(R.drawable.common_gradient_color)
+                .statusBa
+                .fitsSystemWindows(true)  //使用该属性必须指定状态栏的颜色，不然状态栏透明，很难看
+                .init();
         setContentView(R.layout.activity_login_code_password);
         setHeadVisibility(View.GONE);
         sp = getSharedPreferences("config", MODE_PRIVATE);
@@ -103,14 +110,17 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
     }
 
     private void initView() {
+        mTitleBack = (TextView) findViewById(R.id.login_title_back);
         mPhoneEdit = (ClearWriteEditText) findViewById(R.id.activity_login_phone_num);
         mCodeEdit = (ClearWriteEditText) findViewById(R.id.activity_login_verification_code);
         mGetCode = (TextView) findViewById(R.id.activity_login_get_verification_code);
         mConfirm = (TextView) findViewById(R.id.activity_login_sure);
         mSwitchLogin = (TextView) findViewById(R.id.activity_login_password_login);
         mForgetPassword = (TextView) findViewById(R.id.activity_forget_password);
+        mTitleBack.setOnClickListener(this);
         mGetCode.setOnClickListener(this);
-        mGetCode.setClickable(false);
+//        mGetCode.setClickable(false);
+        mGetCode.setEnabled(false);
         mConfirm.setOnClickListener(this);
         mSwitchLogin.setOnClickListener(this);
         mForgetPassword.setOnClickListener(this);
@@ -129,11 +139,9 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                     } else {
                         Toast.makeText(mContext, "请填写正确的手机号码", Toast.LENGTH_SHORT).show();
                     }
-                    mGetCode.setClickable(true);
-                    mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_blue));
+                    mGetCode.setEnabled(true);
                 } else {
-                    mGetCode.setClickable(false);
-                    mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_gray));
+                    mGetCode.setEnabled(false);
                 }
             }
 
@@ -164,15 +172,19 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
         }
         setCodeOrPasswordStatus();
         LinearLayout rootLayout = (LinearLayout) findViewById(R.id.activity_login_root_layout);
-        addLayoutListener(rootLayout, mForgetPassword);
+//        addLayoutListener(rootLayout, mForgetPassword);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.login_title_back:
+                finish();
+                break;
             case R.id.activity_login_get_verification_code:
                 if (!AMUtils.isMobile(mPhoneEdit.getText().toString().trim())) {
                     Toast.makeText(mContext, "请填写正确的手机号码", Toast.LENGTH_SHORT).show();
+                    mPhoneEdit.setShakeAnimation();
                     return;
                 }
                 if (!CommonUtils.isNetworkConnected(mContext)) {
@@ -441,7 +453,7 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
         }
         switch (requestCode) {
             case SEND_CODE:
-                NToast.shortToast(mContext, "获取验证码失败，请稍后重试～");
+                NToast.shortToast(mContext, "获取验证码失败，请稍后重试");
                 break;
             case VERIFY_CODE:
                 LoadDialog.dismiss(mContext);
@@ -484,17 +496,15 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
 
     @Override
     public void onTick(long millisUntilFinished) {
-        mGetCode.setText(String.valueOf(millisUntilFinished / 1000) + "s");
-        mGetCode.setClickable(false);
-        mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_gray));
+        mGetCode.setText(String.valueOf(millisUntilFinished / 1000) + "秒后获取");
+        mGetCode.setEnabled(false);
         isBright = false;
     }
 
     @Override
     public void onFinish() {
         mGetCode.setText(R.string.get_code);
-        mGetCode.setClickable(true);
-        mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_blue));
+        mGetCode.setEnabled(true);
         isBright = true;
     }
 
@@ -512,6 +522,7 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
             mCodeEdit.setInputType(InputType.TYPE_CLASS_NUMBER);
             mCodeEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(6)});
             mForgetPassword.setVisibility(View.GONE);
+//            mForgetPassword.setVisibility(View.VISIBLE);
         } else {
             mSwitchLogin.setText("验证码登录");
             mGetCode.setVisibility(View.GONE);

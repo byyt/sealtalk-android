@@ -79,5 +79,7 @@ dependencies {
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
     //Glide模糊效果的框架
     compile 'jp.wasabeef:glide-transformations:3.0.0'
+    //沉浸式标题栏，即状态栏颜色跟标题栏颜色一致
+    compile 'com.gyf.immersionbar:immersionbar:2.3.2-beta04'
 }
 apply plugin: 'com.google.gms.google-services'
