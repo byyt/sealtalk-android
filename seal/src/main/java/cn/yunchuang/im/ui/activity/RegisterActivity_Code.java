@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Random;
@@ -44,6 +45,8 @@ public class RegisterActivity_Code extends BaseActivity implements View.OnClickL
     private TextView mConfirm;
     private String mPhone, mNickName, mPassword, mCodeToken, loginToken, mLoginType;
     private String connectResultId;
+    private ImageView mManIv, mWomanIv;
+    private int mSex = -1;
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
 
@@ -64,6 +67,12 @@ public class RegisterActivity_Code extends BaseActivity implements View.OnClickL
         mNickEdit = (EditText) findViewById(R.id.register_code_username);
         mConfirm = (TextView) findViewById(R.id.register_code_sure);
         mConfirm.setOnClickListener(this);
+        mManIv = (ImageView) findViewById(R.id.register_code_sex_man);
+        mManIv.setImageResource(R.drawable.register_man_normal);
+        mManIv.setOnClickListener(this);
+        mWomanIv = (ImageView) findViewById(R.id.register_code_sex_woman);
+        mWomanIv.setImageResource(R.drawable.register_woman_normal);
+        mWomanIv.setOnClickListener(this);
 
         if ("code_login".equals(mLoginType)) {
             mPassword = getRandomString(16); //如果是验证码登录，随机生成一串16位密码（确保不被盗密码）
@@ -78,7 +87,7 @@ public class RegisterActivity_Code extends BaseActivity implements View.OnClickL
     public Object doInBackground(int requestCode, String id) throws HttpException {
         switch (requestCode) {
             case CODE_REGISTER:
-                return action.codeRegister(mNickName, mPassword, mCodeToken);
+                return action.codeRegister(mNickName, mPassword, mCodeToken, mSex);
             case CODE_LOGIN:
                 return action.codeLogin("86", mPhone, mCodeToken);
             case GET_TOKEN:
@@ -227,17 +236,23 @@ public class RegisterActivity_Code extends BaseActivity implements View.OnClickL
         switch (v.getId()) {
             case R.id.register_code_sure:
                 mNickName = mNickEdit.getText().toString().trim();
-
+                //昵称合法性验证
                 if (TextUtils.isEmpty(mNickName)) {
                     NToast.shortToast(mContext, getString(R.string.name_is_null));
-//                    mNickEdit.setShakeAnimation();
                     return;
                 }
                 if (mNickName.contains(" ")) {
                     NToast.shortToast(mContext, getString(R.string.name_contain_spaces));
-//                    mNickEdit.setShakeAnimation();
                     return;
                 }
+                //头像合法性验证
+                //性别合法性认证
+                if (mSex == -1) {
+                    NToast.shortToast(mContext, "请选择性别");
+                    return;
+                }
+
+                //登录
                 if ("code_login".equals(mLoginType)) {
                     //验证码登录，完善资料后直接登录
                     LoadDialog.show(mContext);
@@ -247,11 +262,23 @@ public class RegisterActivity_Code extends BaseActivity implements View.OnClickL
                     Intent intent = new Intent(this, ForgetPasswordActivity_Reset.class);
                     intent.putExtra("phone", mPhone);
                     intent.putExtra("verification_token", mCodeToken);
-                    intent.putExtra("resetType","not_register");
-                    intent.putExtra("nickName",mNickName);
+                    intent.putExtra("resetType", "not_register");
+                    intent.putExtra("nickName", mNickName);
+                    intent.putExtra("sex", mSex);
                     startActivity(intent);
                 }
                 break;
+            case R.id.register_code_sex_man:
+                mSex = 0;
+                mManIv.setImageResource(R.drawable.register_man_selected);
+                mWomanIv.setImageResource(R.drawable.register_woman_normal);
+                break;
+            case R.id.register_code_sex_woman:
+                mSex = 1;
+                mManIv.setImageResource(R.drawable.register_man_normal);
+                mWomanIv.setImageResource(R.drawable.register_woman_selected);
+                break;
+
         }
     }
 

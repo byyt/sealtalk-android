@@ -53,6 +53,16 @@ public class App extends MultiDexApplication {
 
     private static DisplayImageOptions options;
 
+    private static App instance;
+
+    public static App getInstance() {
+        return instance;
+    }
+
+    public static Context getAppContext() {
+        return App.getInstance().getApplicationContext();
+    }
+
     @Override
     public void onCreate() {
 
@@ -189,6 +199,9 @@ public class App extends MultiDexApplication {
             //图片浏览框架
             ZoomMediaLoader.getInstance().init(new TestImageLoader());
         }
+
+        instance = this;
+
     }
 
     public static DisplayImageOptions getOptions() {

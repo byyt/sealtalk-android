@@ -1687,7 +1687,7 @@ public class SealUserInfoManager implements OnDataListener {
     }
 
     //重写一个，返回错误信息
-    private void onCallBackFail(ResultCallback<?> callback,String errString) {
+    private void onCallBackFail(ResultCallback<?> callback, String errString) {
         if (callback != null) {
             callback.onFail(errString);
         }
@@ -1850,22 +1850,25 @@ public class SealUserInfoManager implements OnDataListener {
     // 这个类里面的请求，都是在一个handlerThread上运行的，（同时发起多个请求是不是就不适合在这个类里面写）
     //fragment里的请求可以考虑写到这个类里面，activity的请求已经封装好了
     /**
-     * 异步接口,获取首页推荐用户
+     * 异步接口,获取首页推荐用户，分页加载
      *
-     * @param callback 获取首页推荐用户的回调
+     * @param startIndex  起始页
+     * @param pageSize    页面大小
+     * @param callback    获取首页推荐用户的回调
      */
-    public void getRecommendUsers(final ResultCallback<HomepageResponse> callback) {
+    public void getRecommendUsers(final int startIndex, final int pageSize, final ResultCallback<HomepageResponse> callback) {
         mWorkHandler.post(new Runnable() {
             @Override
             public void run() {
                 HomepageResponse homepageResponse = null;
                 if (!isNetworkConnected()) {
-                    onCallBackFail(callback,"网络未连接");
+                    onCallBackFail(callback, "网络未连接");
                     return;
                 }
                 try {
-                    homepageResponse = action.getRecommendUsers();
-                } catch (Exception e){
+//                    homepageResponse = action.getRecommendUsers();
+                    homepageResponse = action.getRecommendUsers(startIndex, pageSize);
+                } catch (Exception e) {
                     onCallBackFail(callback);
                     NLog.e(TAG, "getRecommendUsers occurs Exception e=" + e.toString());
                     return;

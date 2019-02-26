@@ -27,6 +27,7 @@ import cn.yunchuang.im.server.request.PayImgRequest;
 import cn.yunchuang.im.server.request.PayWeChatRequest;
 import cn.yunchuang.im.server.request.QuitGroupRequest;
 import cn.yunchuang.im.server.request.RegisterRequest;
+import cn.yunchuang.im.server.request.RegisterRequestNew;
 import cn.yunchuang.im.server.request.RemoveFromBlacklistRequest;
 import cn.yunchuang.im.server.request.RestPasswordRequest;
 import cn.yunchuang.im.server.request.SendCodeRequest;
@@ -222,11 +223,12 @@ public class SealAction extends BaseAction {
      * @param verification_token 验证码
      * @throws HttpException
      */
-    public RegisterResponse codeRegister(String nickname, String password, String verification_token) throws HttpException {
+    public RegisterResponse codeRegister(String nickname, String password,
+                                         String verification_token, int sex) throws HttpException {
         String url = getURL("user/register_code");
         StringEntity entity = null;
         try {
-            entity = new StringEntity(JsonMananger.beanToJson(new RegisterRequest(nickname, password, verification_token)), ENCODING);
+            entity = new StringEntity(JsonMananger.beanToJson(new RegisterRequestNew(nickname, password, verification_token, sex)), ENCODING);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -319,6 +321,22 @@ public class SealAction extends BaseAction {
     public HomepageResponse getRecommendUsers() throws HttpException {
         String url = getURL("user/get_recommend_users");
         String result = httpManager.get(url);
+        HomepageResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            response = jsonToBean(result, HomepageResponse.class);
+        }
+        return response;
+    }
+
+    /**
+     * 首页分页拉取数据
+     *
+     * @throws HttpException
+     */
+    public HomepageResponse getRecommendUsers(int startIndex, int pageSize) throws HttpException {
+        String url = getURL("user/get_recommend_users?");
+        String newUrl = url + "startIndex=" + startIndex + "&pageSize=" + pageSize;
+        String result = httpManager.get(mContext, newUrl);
         HomepageResponse response = null;
         if (!TextUtils.isEmpty(result)) {
             response = jsonToBean(result, HomepageResponse.class);

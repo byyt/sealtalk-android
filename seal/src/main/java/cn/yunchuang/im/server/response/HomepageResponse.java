@@ -11,7 +11,7 @@ public class HomepageResponse {
 
     private int code;
 
-    private List<HomepageModel> result;
+    private ResultEntity result;
 
     public int getCode() {
         return code;
@@ -21,12 +21,33 @@ public class HomepageResponse {
         this.code = code;
     }
 
-    public List<HomepageModel> getResult() {
+    public ResultEntity getResult() {
         return result;
     }
 
-    public void setResult(List<HomepageModel> result) {
+    public void setResult(ResultEntity result) {
         this.result = result;
+    }
+
+    public static class ResultEntity {
+        private List<HomepageModel> data;
+        private int nextIndex;
+
+        public List<HomepageModel> getData() {
+            return data;
+        }
+
+        public void setData(List<HomepageModel> data) {
+            this.data = data;
+        }
+
+        public int getNextIndex() {
+            return nextIndex;
+        }
+
+        public void setNextIndex(int nextIndex) {
+            this.nextIndex = nextIndex;
+        }
     }
 
 }

@@ -15,7 +15,8 @@ import cn.yunchuang.im.server.utils.json.JsonMananger;
 public class BaseAction {
 
 //    private static final String DOMAIN = "http://api.sealtalk.im";
-    private static final String DOMAIN = "http://192.168.1.236:8585";
+    public static final String DOMAIN = "http://192.168.0.103:8585";
+    public static final String DOMAIN_PIC = "http://192.168.0.103:8081";
     protected Context mContext;
     protected SyncHttpClient httpManager;
 

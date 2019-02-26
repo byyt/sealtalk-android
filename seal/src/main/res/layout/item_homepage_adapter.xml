@@ -1,24 +1,255 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/homepage_adabpter_item_root_layout"
-    android:layout_height="64dp"
-    android:orientation="horizontal">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/homepage_adapter_item_portrait"
-        android:layout_width="@dimen/px50"
-        android:layout_height="@dimen/px50"
+    <LinearLayout
+        android:layout_marginEnd="@dimen/px30"
+        android:layout_marginRight="@dimen/px30"
+        android:layout_marginStart="@dimen/px30"
         android:layout_marginLeft="@dimen/px30"
-        android:layout_gravity="center_vertical"
-        android:src="@drawable/de_default_portrait" />
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px110"
+        android:layout_marginBottom="@dimen/px30"
+        android:layout_marginTop="@dimen/px30"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/homepage_adapter_item_portrait"
+            android:layout_width="@dimen/px110"
+            android:layout_height="@dimen/px110"
+            android:src="@drawable/de_default_portrait" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/px36"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/homepage_adabpter_item_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/px16"
+                android:textColor="@color/color_9B999F"
+                android:textSize="@dimen/text_px30"
+                tools:text="小明同学" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/homepage_adapter_item_shen_fen_zheng_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/px24"
+                    android:layout_marginRight="@dimen/px24"
+                    android:src="@drawable/ic_shen_fen_zheng" />
+
+
+                <ImageView
+                    android:id="@+id/homepage_adapter_item_wei_xin_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_wei_xin" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginEnd="@dimen/px30"
+        android:layout_marginRight="@dimen/px30"
+        android:layout_marginStart="@dimen/px30"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <cn.yunchuang.im.zmico.SquareLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/px22"
+            android:layout_marginRight="@dimen/px22"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/homepage_adapter_item_tu_pian_one"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/de_default_portrait" />
+
+        </cn.yunchuang.im.zmico.SquareLayout>
+
+        <cn.yunchuang.im.zmico.SquareLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/px22"
+            android:layout_marginRight="@dimen/px22"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/homepage_adapter_item_tu_pian_two"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/de_default_portrait" />
+
+        </cn.yunchuang.im.zmico.SquareLayout>
+
+        <cn.yunchuang.im.zmico.SquareLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/homepage_adapter_item_tu_pian_three"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/de_default_portrait" />
+
+        </cn.yunchuang.im.zmico.SquareLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_marginEnd="@dimen/px30"
+        android:layout_marginRight="@dimen/px30"
+        android:layout_marginStart="@dimen/px30"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px1"
+        android:layout_marginBottom="@dimen/px24"
+        android:layout_marginTop="@dimen/px30"
+        android:background="@color/color_E4E4E4" />
 
     <TextView
-        android:id="@+id/homepage_adabpter_item_nickname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="@dimen/px30"
+        android:layout_marginRight="@dimen/px30"
+        android:layout_marginStart="@dimen/px30"
         android:layout_marginLeft="@dimen/px30"
-        android:text="名字" />
+        android:id="@+id/homepage_adapter_item_qian_ming"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="随着时间和个人的成长，每个人喜欢的东西不一样…"
+        android:textColor="@color/color_9B999F"
+        android:textSize="@dimen/text_px28" />
+
+    <LinearLayout
+        android:layout_marginEnd="@dimen/px30"
+        android:layout_marginRight="@dimen/px30"
+        android:layout_marginStart="@dimen/px30"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/text_px20"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/homepage_adapter_item_yue_lei_xing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/px8"
+            android:layout_marginRight="@dimen/px10"
+            android:text="运动"
+            android:textColor="@color/color_000000"
+            android:textSize="@dimen/text_px28" />
+
+        <TextView
+            android:id="@+id/homepage_adapter_item_yue_jia_ge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="288元/小时"
+            android:textColor="@color/color_000000"
+            android:textSize="@dimen/text_px28" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/homepage_adapter_item_shipin_jia_ge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/px24"
+            android:layout_marginRight="@dimen/px24"
+            android:text="8元/分钟"
+            android:textColor="@color/color_000000"
+            android:textSize="@dimen/text_px28" />
+
+        <ImageView
+            android:id="@+id/homepage_adapter_item_shi_pin_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/shou_ye_shi_pin_tu_biao" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginEnd="@dimen/px30"
+        android:layout_marginRight="@dimen/px30"
+        android:layout_marginStart="@dimen/px30"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px50"
+        android:layout_marginTop="@dimen/text_px26"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/homepage_adapter_item_yue_ta_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_yue_ta" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/homepage_adapter_item_si_xin_ta_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_si_xin_ta" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/homepage_adapter_item_da_shang_ta_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_da_shang_ta" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/homepage_adapter_item_shi_pin_ta_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_shi_pin_ta" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_marginTop="@dimen/px30"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px10"
+        android:background="@color/color_F6F5F4" />
 
 </LinearLayout>

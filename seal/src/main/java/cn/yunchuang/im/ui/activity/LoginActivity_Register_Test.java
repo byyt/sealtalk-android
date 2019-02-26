@@ -19,8 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gyf.barlibrary.ImmersionBar;
-
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.SealConst;
 import cn.yunchuang.im.SealUserInfoManager;
@@ -28,6 +26,7 @@ import cn.yunchuang.im.server.network.http.HttpException;
 import cn.yunchuang.im.server.response.GetTokenResponse;
 import cn.yunchuang.im.server.response.GetUserInfoByIdResponse;
 import cn.yunchuang.im.server.response.LoginResponse;
+import cn.yunchuang.im.server.response.RegisterResponse;
 import cn.yunchuang.im.server.response.SendCodeResponse;
 import cn.yunchuang.im.server.response.VerifyCodeResponse;
 import cn.yunchuang.im.server.utils.AMUtils;
@@ -46,10 +45,10 @@ import io.rong.imlib.model.UserInfo;
 /**
  * Created by AMing on 16/1/15.
  * Company RongCloud
- * 验证码登录界面
+ * 用来注册一百个测试账号的类，发送验证码、验证码登录、注册流程一体化
  */
 @SuppressWarnings("deprecation")
-public class LoginActivity_Code_PassWord extends BaseActivity implements View.OnClickListener, DownTimerListener {
+public class LoginActivity_Register_Test extends BaseActivity implements View.OnClickListener, DownTimerListener {
 
     private final static String TAG = "LoginActivity";
     private static final int SEND_CODE = 2;
@@ -58,6 +57,8 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
     private static final int PASSWORD_LOGIN = 5;
     private static final int GET_TOKEN = 6;
     private static final int SYNC_USER_INFO = 9;
+
+    private static final int CODE_REGISTER = 10;
 
     private ClearWriteEditText mPhoneEdit, mCodeEdit;
     private TextView mTitleBack, mGetCode, mConfirm, mSwitchLogin, mForgetPassword;
@@ -70,6 +71,13 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
     private boolean isBright = true;
     private boolean isCodeLogin = true;
 
+    private int EndNum = 5064;
+    private String testPhoneString;
+    private String testCodeString;
+    private String testNickName;
+    private String testPassword;
+    private int testSex;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +86,7 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
 //                .statusBa
 //                .fitsSystemWindows(true)  //使用该属性必须指定状态栏的颜色，不然状态栏透明，很难看
 //                .init();
-        setContentView(R.layout.activity_login_code_password);
+        setContentView(R.layout.activity_login_register_test);
         setHeadVisibility(View.GONE);
         sp = getSharedPreferences("config", MODE_PRIVATE);
         editor = sp.edit();
@@ -158,7 +166,7 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
         mPhoneEdit.setSelection(mPhoneEdit.getText().length());
 
         if (getIntent().getBooleanExtra("kickedByOtherClient", false)) {
-            final AlertDialog dlg = new AlertDialog.Builder(LoginActivity_Code_PassWord.this).create();
+            final AlertDialog dlg = new AlertDialog.Builder(LoginActivity_Register_Test.this).create();
             dlg.show();
             Window window = dlg.getWindow();
             window.setContentView(R.layout.other_devices);
@@ -197,11 +205,21 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                 request(SEND_CODE);
                 break;
             case R.id.activity_login_sure:
-                if (isCodeLogin) {
-                    codeLogin();
-                } else {
-                    passwordLogin();
-                }
+
+                //这里开始，test
+                testPhoneString = "1521050" + EndNum;
+                testCodeString = "9999";
+                testNickName = "b"+EndNum;
+                testPassword = "test123";
+                testSex = 1;
+                request(SEND_CODE);
+
+
+//                if (isCodeLogin) {
+//                    codeLogin();
+//                } else {
+//                    passwordLogin();
+//                }
                 break;
             case R.id.activity_login_password_login:
                 switchCodeOrPassword();
@@ -246,17 +264,24 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
     public Object doInBackground(int requestCode, String id) throws HttpException {
         switch (requestCode) {
             case SEND_CODE:
-                return action.sendCode("86", phoneString);
+//                return action.sendCode("86", phoneString);
+                return action.sendCode("86", testPhoneString);
             case VERIFY_CODE:
-                return action.verifyCode("86", phoneString, codeString);
+//                return action.verifyCode("86", phoneString, codeString);
+                return action.verifyCode("86", testPhoneString, testCodeString);
             case CODE_LOGIN:
-                return action.codeLogin("86", phoneString, mCodeToken);
+//                return action.codeLogin("86", phoneString, mCodeToken);
+                return action.codeLogin("86", testPhoneString, mCodeToken);
             case PASSWORD_LOGIN:
                 return action.login("86", phoneString, codeString);
             case GET_TOKEN:
                 return action.getToken();
             case SYNC_USER_INFO:
                 return action.getUserInfoById(connectResultId);
+
+
+            case CODE_REGISTER:
+                return action.codeRegister(testNickName, testPassword, mCodeToken, testSex);
         }
         return null;
     }
@@ -269,6 +294,10 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                     SendCodeResponse scrres = (SendCodeResponse) result;
                     if (scrres.getCode() == 200) {
                         NToast.shortToast(mContext, R.string.messge_send);
+
+                        //test
+                        request(VERIFY_CODE, true);
+
                     } else if (scrres.getCode() == 5000) {
                         NToast.shortToast(mContext, R.string.message_frequency);
                     } else {
@@ -281,7 +310,10 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                         case 200:
                             mCodeToken = vcres.getResult().getVerification_token();
                             if (!TextUtils.isEmpty(mCodeToken)) {
+
+                                //test
                                 request(CODE_LOGIN);
+
                             } else {
                                 //token为空
                                 NToast.shortToast(mContext, "验证码错误或已过期");
@@ -332,12 +364,17 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                         }
                     } else if (loginResponse.getCode() == 3000) {
                         //用户未注册，进入到完善个人资料页面
-                        LoadDialog.dismiss(mContext);
-                        Intent intent = new Intent(this, RegisterActivity_Code.class);
-                        intent.putExtra("phone", mPhoneEdit.getText().toString().trim());
-                        intent.putExtra("verification_token", mCodeToken);
-                        intent.putExtra("loginType", "code_login");
-                        startActivityForResult(intent, 1);
+//                        LoadDialog.dismiss(mContext);
+//                        Intent intent = new Intent(this, RegisterActivity_Code.class);
+//                        intent.putExtra("phone", mPhoneEdit.getText().toString().trim());
+//                        intent.putExtra("verification_token", mCodeToken);
+//                        intent.putExtra("loginType", "code_login");
+//                        startActivityForResult(intent, 1);
+
+                        //test
+                        LoadDialog.show(mContext);
+                        request(CODE_REGISTER, true);
+
                     } else {
                         LoadDialog.dismiss(mContext);
                         NToast.shortToast(mContext, "登录失败，请稍后重试");
@@ -435,6 +472,40 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                         }
                     }
                     break;
+
+                    //test
+                case CODE_REGISTER:
+                    RegisterResponse rres = (RegisterResponse) result;
+                    switch (rres.getCode()) {
+                        case 200:
+//                            request(CODE_LOGIN);
+
+                            LoadDialog.dismiss(mContext);
+
+                            if(EndNum<=5070) {
+
+                                EndNum++;
+
+                                testPhoneString = "1521050" + EndNum;
+                                testCodeString = "9999";
+                                testNickName = "b" + EndNum;
+                                testPassword = "test123";
+                                testSex = 1;
+                            }
+
+
+                            break;
+                        case 400://后边的错误，最后要统一弹窗，把转圈去掉
+                            // 错误的请求
+                        case 404:
+                            //token 不存在
+                        case 500:
+                            //应用服务端内部错误
+                            LoadDialog.dismiss(mContext);
+                            NToast.shortToast(mContext, "登录失败，请重新检查网络哦");
+                            break;
+                    }
+                    break;
             }
         }
 
@@ -475,6 +546,13 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                 LoadDialog.dismiss(mContext);
                 NToast.shortToast(mContext, "登录失败，请稍后重试");
                 break;
+
+
+            //test
+            case CODE_REGISTER:
+                LoadDialog.dismiss(mContext);
+                NToast.shortToast(mContext, "注册失败，请重新检查网络哦");
+                break;
         }
     }
 
@@ -490,7 +568,7 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
         editor.commit();
         LoadDialog.dismiss(mContext);
         NToast.shortToast(mContext, R.string.login_success);
-        startActivity(new Intent(LoginActivity_Code_PassWord.this, MainActivity.class));
+        startActivity(new Intent(LoginActivity_Register_Test.this, MainActivity.class));
         finish();
     }
 
@@ -607,7 +685,7 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                     int srollHeight = (location[1] + scroll.getHeight()) - rect.bottom;
                     //scrollTo，x为正时向左移动，y为正时向上移动，这里不再移动到某个控件下方（因为在移动中控件位置容易不定），而是往上移动一定的距离200dp
 //                    main.scrollTo(0, srollHeight + (int) CommonUtils.dpToPixel((float) 5, LoginActivity_Code_PassWord.this));
-                    main.scrollTo(0, (int) CommonUtils.dpToPixel((float) 200, LoginActivity_Code_PassWord.this));
+                    main.scrollTo(0, (int) CommonUtils.dpToPixel((float) 200, LoginActivity_Register_Test.this));
                 } else {
                     main.scrollTo(0, 0);
                 }

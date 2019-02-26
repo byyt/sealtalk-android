@@ -27,6 +27,7 @@ public class ForgetPasswordActivity_Reset extends BaseActivity implements View.O
     private ClearWriteEditText mPassword1, mPassword2;
     private Button mConfirm;
     private String phoneString, mCodeToken, mResetType, mNickName;
+    private int mSex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,7 @@ public class ForgetPasswordActivity_Reset extends BaseActivity implements View.O
         mResetType = getIntent().getStringExtra("resetType");
         //只有mResetType为not_register即还未注册过时（忘记密码进来的），下面的mNickName才有值
         mNickName = getIntent().getStringExtra("nickName");
+        mSex = getIntent().getIntExtra("sex", 0);
         if ("has_register".equals(mResetType)) {
             setTitle("重置密码");
         } else {
@@ -58,7 +60,7 @@ public class ForgetPasswordActivity_Reset extends BaseActivity implements View.O
             case CHANGE_PASSWORD:
                 return action.restPassword(mPassword1.getText().toString(), mCodeToken);
             case REGISTER:
-                return action.codeRegister(mNickName, mPassword1.getText().toString(), mCodeToken);
+                return action.codeRegister(mNickName, mPassword1.getText().toString(), mCodeToken, mSex);
         }
         return super.doInBackground(requestCode, id);
     }
