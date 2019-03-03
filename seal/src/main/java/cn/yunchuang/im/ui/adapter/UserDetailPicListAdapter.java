@@ -1,12 +1,14 @@
 package cn.yunchuang.im.ui.adapter;
 
 import android.content.Context;
-import android.widget.ImageView;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.itheima.roundedimageview.RoundedImageView;
 
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.model.UserViewInfo;
@@ -30,17 +32,20 @@ public class UserDetailPicListAdapter extends BaseQuickAdapter<UserViewInfo, Bas
 
     @Override
     protected void convert(BaseViewHolder helper, UserViewInfo item) {
-        final ImageView thumbView = helper.getView(R.id.user_detail_new_pic_item_img);
+        final RoundedImageView thumbView = helper.getView(R.id.user_detail_new_pic_item_img);
+        final FrameLayout lockLayout = helper.getView(R.id.user_detail_new_pic_item_lock_layout);
 
         RequestOptions options;
         if (StaticDataUtils.isInBlurImgUrlList(item.getUrl())) { //对图片进行模糊
-            options = RequestOptions.bitmapTransform(new BlurTransformation(25, 2));//模糊效果，两个参数都是越大越模糊3
+            options = RequestOptions.bitmapTransform(new BlurTransformation(10, 2));//模糊效果，两个参数都是越大越模糊3
+            lockLayout.setVisibility(View.VISIBLE);
         } else {
             options = new RequestOptions();//正常加载
+            lockLayout.setVisibility(View.GONE);
         }
 
-        options.placeholder(R.drawable.ic_iamge_zhanwei)
-                .error(R.drawable.ic_iamge_zhanwei);
+        options.placeholder(R.drawable.ic_image_zhanwei)
+                .error(R.drawable.ic_image_zhanwei);
 
         Glide.with(context)
                 .load(item.getUrl())

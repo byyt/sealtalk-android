@@ -1,4 +1,4 @@
-package cn.yunchuang.im.zmico;
+package cn.yunchuang.im.zmico.utils;
 
 import android.app.Application;
 import android.content.res.ColorStateList;

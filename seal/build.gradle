@@ -82,8 +82,10 @@ dependencies {
     //沉浸式标题栏，即状态栏颜色跟标题栏颜色一致
     compile 'com.gyf.immersionbar:immersionbar:2.3.2-beta04'
 
-
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-19'
     compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-19'
+
+    //圆形、圆角图
+    compile 'com.github.open-android:RoundedImageView:v1.0.0'
 }
 apply plugin: 'com.google.gms.google-services'

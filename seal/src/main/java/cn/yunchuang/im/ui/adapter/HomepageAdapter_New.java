@@ -12,6 +12,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.itheima.roundedimageview.RoundedImageView;
 
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.server.BaseAction;
@@ -36,15 +37,17 @@ public class HomepageAdapter_New extends BaseQuickAdapter<HomepageModel, BaseVie
     @Override
     protected void convert(BaseViewHolder helper, final HomepageModel item) {
         LinearLayout rootLayout = helper.getView(R.id.homepage_adabpter_item_root_layout);
-        ImageView portraitImg = helper.getView(R.id.homepage_adapter_item_portrait);
+//        ImageView portraitImg = helper.getView(R.id.homepage_adapter_item_portrait_old);
+        RoundedImageView portraitImg = helper.getView(R.id.homepage_adapter_item_portrait);
         TextView nickName = helper.getView(R.id.homepage_adabpter_item_nickname);
         ImageView imageView1 = helper.getView(R.id.homepage_adapter_item_tu_pian_one);
         ImageView imageView2 = helper.getView(R.id.homepage_adapter_item_tu_pian_two);
         ImageView imageView3 = helper.getView(R.id.homepage_adapter_item_tu_pian_three);
 
         //Glide 加载图片简单用法
-        RequestOptions optionsPortrait = RequestOptions.bitmapTransform(new CircleCrop());
-        optionsPortrait.placeholder(R.drawable.banner_moren2).error(R.drawable.banner_moren2).centerCrop();
+//        RequestOptions optionsPortrait = RequestOptions.bitmapTransform(new CircleCrop());
+        RequestOptions optionsPortrait = new RequestOptions();
+        optionsPortrait.placeholder(R.drawable.ic_image_zhanwei).error(R.drawable.ic_image_zhanwei).centerCrop();
 
         Glide.with(mContext)
                 .load(BaseAction.DOMAIN_PIC+"/renwu1.png")
@@ -52,7 +55,7 @@ public class HomepageAdapter_New extends BaseQuickAdapter<HomepageModel, BaseVie
                 .into(portraitImg);
 
         RequestOptions options = new RequestOptions();
-        options.placeholder(R.drawable.banner_moren2).error(R.drawable.banner_moren2).centerCrop();
+        options.placeholder(R.drawable.ic_image_zhanwei).error(R.drawable.ic_image_zhanwei).centerCrop();
 
         Glide.with(mContext)
                 .load(BaseAction.DOMAIN_PIC+"/renwu1.png")

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/homepage_adabpter_item_root_layout"
     android:layout_width="match_parent"
@@ -7,22 +8,24 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_marginEnd="@dimen/px30"
-        android:layout_marginRight="@dimen/px30"
-        android:layout_marginStart="@dimen/px30"
-        android:layout_marginLeft="@dimen/px30"
         android:layout_width="match_parent"
         android:layout_height="@dimen/px110"
         android:layout_marginBottom="@dimen/px30"
+        android:layout_marginEnd="@dimen/px30"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_marginRight="@dimen/px30"
+        android:layout_marginStart="@dimen/px30"
         android:layout_marginTop="@dimen/px30"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <ImageView
+        <com.itheima.roundedimageview.RoundedImageView
             android:id="@+id/homepage_adapter_item_portrait"
             android:layout_width="@dimen/px110"
             android:layout_height="@dimen/px110"
-            android:src="@drawable/de_default_portrait" />
+            android:src="@drawable/de_default_portrait"
+            android:scaleType="fitCenter"
+            app:riv_oval="true" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -66,12 +69,12 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginEnd="@dimen/px30"
-        android:layout_marginRight="@dimen/px30"
-        android:layout_marginStart="@dimen/px30"
-        android:layout_marginLeft="@dimen/px30"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/px30"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_marginRight="@dimen/px30"
+        android:layout_marginStart="@dimen/px30"
         android:orientation="horizontal">
 
         <cn.yunchuang.im.zmico.SquareLayout
@@ -120,35 +123,35 @@
     </LinearLayout>
 
     <View
-        android:layout_marginEnd="@dimen/px30"
-        android:layout_marginRight="@dimen/px30"
-        android:layout_marginStart="@dimen/px30"
-        android:layout_marginLeft="@dimen/px30"
         android:layout_width="match_parent"
         android:layout_height="@dimen/px1"
         android:layout_marginBottom="@dimen/px24"
+        android:layout_marginEnd="@dimen/px30"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_marginRight="@dimen/px30"
+        android:layout_marginStart="@dimen/px30"
         android:layout_marginTop="@dimen/px30"
         android:background="@color/color_E4E4E4" />
 
     <TextView
-        android:layout_marginEnd="@dimen/px30"
-        android:layout_marginRight="@dimen/px30"
-        android:layout_marginStart="@dimen/px30"
-        android:layout_marginLeft="@dimen/px30"
         android:id="@+id/homepage_adapter_item_qian_ming"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/px30"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_marginRight="@dimen/px30"
+        android:layout_marginStart="@dimen/px30"
         android:text="随着时间和个人的成长，每个人喜欢的东西不一样…"
         android:textColor="@color/color_9B999F"
         android:textSize="@dimen/text_px28" />
 
     <LinearLayout
-        android:layout_marginEnd="@dimen/px30"
-        android:layout_marginRight="@dimen/px30"
-        android:layout_marginStart="@dimen/px30"
-        android:layout_marginLeft="@dimen/px30"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/px30"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_marginRight="@dimen/px30"
+        android:layout_marginStart="@dimen/px30"
         android:layout_marginTop="@dimen/text_px20"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -195,12 +198,12 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginEnd="@dimen/px30"
-        android:layout_marginRight="@dimen/px30"
-        android:layout_marginStart="@dimen/px30"
-        android:layout_marginLeft="@dimen/px30"
         android:layout_width="match_parent"
         android:layout_height="@dimen/px50"
+        android:layout_marginEnd="@dimen/px30"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_marginRight="@dimen/px30"
+        android:layout_marginStart="@dimen/px30"
         android:layout_marginTop="@dimen/text_px26"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -247,9 +250,9 @@
     </LinearLayout>
 
     <View
-        android:layout_marginTop="@dimen/px30"
         android:layout_width="match_parent"
         android:layout_height="@dimen/px10"
+        android:layout_marginTop="@dimen/px30"
         android:background="@color/color_F6F5F4" />
 
 </LinearLayout>

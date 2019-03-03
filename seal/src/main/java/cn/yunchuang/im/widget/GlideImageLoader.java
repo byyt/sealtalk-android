@@ -24,7 +24,7 @@ public class GlideImageLoader extends ImageLoader {
          */
         //Glide 加载图片简单用法
         RequestOptions options = new RequestOptions();
-        options.placeholder(R.drawable.banner_moren2).error(R.drawable.banner_moren2).centerCrop();
+        options.placeholder(R.drawable.ic_image_zhanwei).error(R.drawable.ic_image_zhanwei).centerCrop();
         Glide.with(context)
                 .load(path)
                 .apply(options)

@@ -8,11 +8,15 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.previewlibrary.GPreviewBuilder;
+import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.Transformer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +35,11 @@ import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.server.utils.StaticDataUtils;
 import cn.yunchuang.im.server.widget.LoadDialog;
 import cn.yunchuang.im.ui.adapter.UserDetailPicListAdapter;
+import cn.yunchuang.im.widget.GlideImageLoader;
 import cn.yunchuang.im.widget.dialog.ConstantDialogUtils;
 import cn.yunchuang.im.widget.dialog.VZyPayImgDialog;
 import cn.yunchuang.im.widget.dialog.VZyPayWeChatDialog;
+import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
 
 //CallKit start 1
 //CallKit end 1
@@ -44,6 +50,9 @@ import cn.yunchuang.im.widget.dialog.VZyPayWeChatDialog;
 
 public class UserDetailActivity_New extends BaseActivity implements View.OnClickListener {
 
+    private ScrollView scrollView;
+
+
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerView mRecyclerView;
     private UserDetailPicListAdapter mPicdapter;//小图列表的adapter
@@ -51,15 +60,17 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
     private VZyPayWeChatDialog mVZyPayWeChatDialog;//弹出微信号付费的对话框
     private TextView mSeeWeChat;
 
+    private Banner banner;
+
     private GetUserDetailModelOne mUserDetailModelOne;
     private GetUserDetailModelTwo mUserDetailModelTwo;
     private ArrayList<String> mFreeImageList = new ArrayList<>(); //免费图片地址集合
     private ArrayList<String> mPayImageList = new ArrayList<>(); //付费图片地址集合
-    private ArrayList<String> mAllImageList = new ArrayList<>(); //所有图片地址集合
-    private List<UserViewInfo> mUserViewInfoList = new ArrayList<>(); //大图集合
-    private List<ImageModel> mResultImageList = new ArrayList<>(); //最原始总数据集合，免费图片加上付费图片,为了得到付费图片的id
-    private String mUserId = "";
-    private String mImgId; //当前点击图片的id，主要针对付费图片
+    private ArrayList<String> allImageList = new ArrayList<>(); //所有图片地址集合
+    private List<UserViewInfo> userViewInfoList = new ArrayList<>(); //大图集合
+    private List<ImageModel> resultImageList = new ArrayList<>(); //最原始总数据集合，免费图片加上付费图片,为了得到付费图片的id
+    private String userId = "";
+    private String imgId; //当前点击图片的id，主要针对付费图片
 
 
     private static final int GET_USER_DETAIL_ONE = 1601;
@@ -70,6 +81,7 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        BaseBaseUtils.setFullScreen(this);
         setContentView(R.layout.activity_user_detail_new);
         setHeadVisibility(View.GONE);
         initView();
@@ -77,9 +89,12 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
     }
 
     private void initView() {
-        mUserId = getIntent().getStringExtra("userId");
+        userId = getIntent().getStringExtra("userId");
 
-        mSeeWeChat = (TextView) findViewById(R.id.user_detail_new_see_wechat);
+        scrollView = (ScrollView) findViewById(R.id.user_detail_new_root_scrollview);
+        scrollView.scrollTo(0, 0);
+
+        mSeeWeChat = (TextView) findViewById(R.id.user_detail_new_wei_xin_cha_kan);
         mSeeWeChat.setOnClickListener(this);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.user_detail_new_top_recyclerview);
@@ -88,20 +103,20 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mPicdapter = new UserDetailPicListAdapter(this);
-        mPicdapter.replaceData(mUserViewInfoList);
+        mPicdapter.replaceData(userViewInfoList);
         mRecyclerView.setAdapter(mPicdapter);
         mPicdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                mImgId = mResultImageList.get(position).getId();
-                if (StaticDataUtils.isInBlurImgUrlList(mUserViewInfoList.get(position).getUrl())) {
+                imgId = resultImageList.get(position).getId();
+                if (StaticDataUtils.isInBlurImgUrlList(userViewInfoList.get(position).getUrl())) {
                     //如果点击的是需要付费的照片，则弹出框让用户付费
                     showPayImgDialog();
                 } else {
                     //否则进入大图浏览模式
                     computeBoundsBackward(mLinearLayoutManager.findFirstVisibleItemPosition());
                     GPreviewBuilder.from(UserDetailActivity_New.this)
-                            .setData(mUserViewInfoList)
+                            .setData(userViewInfoList)
                             .setCurrentIndex(position)
                             .setSingleFling(true)
                             .setType(GPreviewBuilder.IndicatorType.Number)
@@ -110,6 +125,45 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
             }
         });
 
+        findViewById(R.id.user_detail_new_back).setOnClickListener(this);
+
+        initBanner();
+
+    }
+
+    private void initBanner() {
+        banner = (Banner) findViewById(R.id.user_detail_new_top_banner);
+        //设置banner样式
+        banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
+        //设置图片加载器
+        banner.setImageLoader(new GlideImageLoader());
+        //设置图片集合
+//        banner.setImages(images);
+        //设置banner动画效果
+//        banner.setBannerAnimation(Transformer.DepthPage);
+        //设置自动轮播，默认为true
+        banner.isAutoPlay(false);
+        //设置轮播时间
+//        banner.setDelayTime(1500);
+        //设置指示器位置（当banner模式中有指示器时）
+        banner.setIndicatorGravity(BannerConfig.RIGHT);
+        //banner设置方法全部调用完毕时最后调用
+//        banner.start();
+    }
+
+    private void setBannerData(List<String> images) {
+        //设置图片集合
+        banner.setImages(images);
+        //设置banner动画效果
+//        banner.setBannerAnimation(Transformer.DepthPage);
+        //设置自动轮播，默认为true
+//        banner.isAutoPlay(true);
+        //设置轮播时间
+//        banner.setDelayTime(1500);
+        //设置指示器位置（当banner模式中有指示器时）
+//        banner.setIndicatorGravity(BannerConfig.RIGHT);
+        //banner设置方法全部调用完毕时最后调用
+        banner.start();
     }
 
     private void getUserDetailData() {
@@ -121,13 +175,13 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
     public Object doInBackground(int requestCode, String id) throws HttpException {
         switch (requestCode) {
             case GET_USER_DETAIL_ONE:
-                return action.getUserDetailOne(mUserId);
+                return action.getUserDetailOne(userId);
             case GET_USER_DETAIL_TWO:
-                return action.getUserDetailTwo(mUserId);
+                return action.getUserDetailTwo(userId);
             case PAY_IMG:
-                return action.payImg(mImgId);
+                return action.payImg(imgId);
             case PAY_WECHAT:
-                return action.payWeChat(mUserDetailModelTwo.getWeChat(),mUserDetailModelTwo.getWeChatPrice());
+                return action.payWeChat(mUserDetailModelTwo.getWeChat(), mUserDetailModelTwo.getWeChatPrice());
         }
         return null;
     }
@@ -202,8 +256,11 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.user_detail_new_see_wechat:
+            case R.id.user_detail_new_wei_xin_cha_kan:
                 showPayWeChatDialog();
+                break;
+            case R.id.user_detail_new_back:
+                finish();
                 break;
         }
     }
@@ -230,13 +287,13 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
             //将字符串的json数组转为list
             List<ImageModel> freeImageList = JSONArray.parseArray(detailModel.getFreeImgList(), ImageModel.class); //得到免费图片列表
             List<ImageModel> payImageList = detailModel.getPayImgList(); //得到仍需付费图片列表
-            mResultImageList = new ArrayList<>();
+            resultImageList = new ArrayList<>();
             //两个列表拼起来
             if (freeImageList != null) {
-                mResultImageList.addAll(freeImageList);
+                resultImageList.addAll(freeImageList);
             }
             if (payImageList != null) {
-                mResultImageList.addAll(payImageList);
+                resultImageList.addAll(payImageList);
                 ArrayList<String> blurImgUrlList = new ArrayList<>();
                 for (ImageModel imageModel : payImageList) {
                     blurImgUrlList.add(imageModel.getImgUrl());
@@ -245,16 +302,17 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
             } else {
                 StaticDataUtils.setBlurImgUrlList(new ArrayList<String>()); //默认没有图片模糊显示
             }
-            if (mResultImageList != null && mResultImageList.size() > 0) {
-                mAllImageList.clear();
-                for (ImageModel imageModel : mResultImageList) {
-                    mAllImageList.add(imageModel.getImgUrl());
+            if (resultImageList != null && resultImageList.size() > 0) {
+                allImageList.clear();
+                for (ImageModel imageModel : resultImageList) {
+                    allImageList.add(imageModel.getImgUrl());
                 }
-                mUserViewInfoList.clear();
-                for (int i = 0; i < mAllImageList.size(); i++) {
-                    mUserViewInfoList.add(new UserViewInfo(mAllImageList.get(i)));
+                userViewInfoList.clear();
+                for (int i = 0; i < allImageList.size(); i++) {
+                    userViewInfoList.add(new UserViewInfo(allImageList.get(i)));
                 }
-                mPicdapter.replaceData(mUserViewInfoList);
+                mPicdapter.replaceData(userViewInfoList);
+                setBannerData(allImageList);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -330,14 +388,14 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
      * 从第一个完整可见item逆序遍历，如果初始位置为0，则不执行方法内循环
      */
     private void computeBoundsBackward(int firstCompletelyVisiblePos) {
-        for (int i = firstCompletelyVisiblePos; i < mUserViewInfoList.size(); i++) {
+        for (int i = firstCompletelyVisiblePos; i < userViewInfoList.size(); i++) {
             View itemView = mLinearLayoutManager.findViewByPosition(i);
             Rect bounds = new Rect();
             if (itemView != null) {
                 ImageView thumbView = (ImageView) itemView.findViewById(R.id.user_detail_new_pic_item_img);
                 thumbView.getGlobalVisibleRect(bounds);
             }
-            mUserViewInfoList.get(i).setBounds(bounds);
+            userViewInfoList.get(i).setBounds(bounds);
         }
     }
 

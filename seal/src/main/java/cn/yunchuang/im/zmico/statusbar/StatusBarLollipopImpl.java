@@ -7,7 +7,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import cn.yunchuang.im.R;
-import cn.yunchuang.im.zmico.ResourceUtils;
+import cn.yunchuang.im.zmico.utils.ResourceUtils;
 
 
 /**

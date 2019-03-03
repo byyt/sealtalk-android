@@ -1,14 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/user_detail_new_root_layout"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/user_detail_new_pic_item_img"
+    <FrameLayout
         android:layout_width="@dimen/px200"
-        android:layout_height="@dimen/px200"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_iamge_zhanwei" />
+        android:layout_height="@dimen/px200">
 
-</FrameLayout>
+        <com.itheima.roundedimageview.RoundedImageView
+            android:id="@+id/user_detail_new_pic_item_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_image_zhanwei"
+            app:riv_corner_radius="@dimen/px8"
+            app:riv_oval="false" />
+
+        <FrameLayout
+            android:id="@+id/user_detail_new_pic_item_lock_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/user_detail_mo_hu_bg">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_jia_mi_suo_tou" />
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="@dimen/px20"
+        android:layout_height="1dp" />
+
+</LinearLayout>

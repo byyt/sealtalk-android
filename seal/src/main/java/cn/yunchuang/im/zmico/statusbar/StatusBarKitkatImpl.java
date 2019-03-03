@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import cn.yunchuang.im.R;
-import cn.yunchuang.im.zmico.ResourceUtils;
+import cn.yunchuang.im.zmico.utils.ResourceUtils;
 
 
 /**

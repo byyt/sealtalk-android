@@ -11,10 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.util.ArrayList;
@@ -28,7 +26,8 @@ import cn.yunchuang.im.server.response.HomepageModel;
 import cn.yunchuang.im.server.response.HomepageResponse;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.ui.adapter.HomepageAdapter_New;
-import cn.yunchuang.im.zmico.ResourceUtils;
+import cn.yunchuang.im.ui.widget.MyFooter;
+import cn.yunchuang.im.zmico.utils.ResourceUtils;
 import cn.yunchuang.im.zmico.statusbar.StatusBarCompat;
 
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
@@ -72,6 +71,8 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         mRefreshLayout.setEnableAutoLoadMore(true);//开启自动加载功能（非必须）
         mRefreshLayout.setEnableFooterFollowWhenNoMoreData(true);//开启自动加载功能（非必须）
         mRefreshLayout.setPrimaryColors(getResources().getColor(R.color.color_FC6880));//设置主题颜色
+//        mRefreshLayout.(getResources().getColor(R.color.color_FC6880));//设置主题颜色
+        mRefreshLayout.setRefreshFooter(new MyFooter(getContext()));
 
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.activity_homepage_recyclerView);
