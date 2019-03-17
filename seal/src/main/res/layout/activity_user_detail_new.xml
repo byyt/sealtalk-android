@@ -1,380 +1,373 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/user_detail_new_root_scrollview"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scrollbars="none">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/user_detail_new_root_layout"
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/user_detail_new_root_scrollview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
-        <cn.yunchuang.im.zmico.SquareLayout
+        <LinearLayout
+            android:id="@+id/user_detail_new_root_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/color_F4F4F4"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <cn.yunchuang.im.zmico.SquareLayout
+                android:id="@+id/user_detail_new_top_square_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
 
-            <com.youth.banner.Banner
-                android:id="@+id/user_detail_new_top_banner"
+                <com.youth.banner.Banner
+                    android:id="@+id/user_detail_new_top_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:banner_layout="@layout/user_detail_custom_banner"
+                    app:indicator_drawable_selected="@drawable/user_detail_top_indicator_selected_bg"
+                    app:indicator_drawable_unselected="@drawable/user_detail_top_indicator_un_selected_bg"
+                    app:indicator_height="@dimen/px14"
+                    app:indicator_margin="@dimen/px9"
+                    app:indicator_width="@dimen/px14" />
+
+
+                <TextView
+                    android:id="@+id/user_detail_new_feed_back_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/user_detail_new_banner_bottom_layout"
+                    android:layout_marginBottom="@dimen/px18"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginStart="@dimen/px30"
+                    android:text="好评率：95%"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_px26" />
+
+                <LinearLayout
+                    android:id="@+id/user_detail_new_banner_bottom_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="@dimen/px26"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginStart="@dimen/px30"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/user_detail_new_height"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="165CM"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_px26" />
+
+                    <View
+                        android:layout_width="@dimen/px4"
+                        android:layout_height="@dimen/px20"
+                        android:layout_marginEnd="@dimen/px15"
+                        android:layout_marginLeft="@dimen/px15"
+                        android:layout_marginRight="@dimen/px15"
+                        android:layout_marginStart="@dimen/px15"
+                        android:background="@color/white" />
+
+                    <TextView
+                        android:id="@+id/user_detail_new_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/user_detail_location"
+                        android:drawablePadding="@dimen/px4"
+                        android:text="5km"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_px26" />
+
+                </LinearLayout>
+
+
+            </cn.yunchuang.im.zmico.SquareLayout>
+
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:banner_layout="@layout/user_detail_custom_banner"
-                app:indicator_drawable_selected="@drawable/user_detail_top_indicator_selected_bg"
-                app:indicator_drawable_unselected="@drawable/user_detail_top_indicator_un_selected_bg"
-                app:indicator_height="@dimen/px14"
-                app:indicator_margin="@dimen/px9"
-                app:indicator_width="@dimen/px14" />
+                android:background="@color/white">
 
-            <ImageView
-                android:id="@+id/user_detail_new_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/px30"
-                android:layout_marginStart="@dimen/px30"
-                android:layout_marginTop="@dimen/px90"
-                android:src="@drawable/user_detail_back" />
-
-            <ImageView
-                android:id="@+id/user_detail_new_more_op"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginEnd="@dimen/px30"
-                android:layout_marginRight="@dimen/px30"
-                android:layout_marginTop="@dimen/px90"
-                android:src="@drawable/user_detail_more_op" />
-
-            <TextView
-                android:id="@+id/user_detail_new_hao_ping_lv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/user_detail_new_banner_bottom_layout"
-                android:layout_marginBottom="@dimen/px18"
-                android:layout_marginLeft="@dimen/px30"
-                android:layout_marginStart="@dimen/px30"
-                android:text="好评率：95%"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_px26" />
-
-            <LinearLayout
-                android:id="@+id/user_detail_new_banner_bottom_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="@dimen/px26"
-                android:layout_marginLeft="@dimen/px30"
-                android:layout_marginStart="@dimen/px30"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/user_detail_new_high"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="165CM"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_px26" />
-
-                <View
-                    android:layout_width="@dimen/px4"
-                    android:layout_height="@dimen/px20"
-                    android:layout_marginEnd="@dimen/px15"
-                    android:layout_marginLeft="@dimen/px15"
-                    android:layout_marginRight="@dimen/px15"
-                    android:layout_marginStart="@dimen/px15"
-                    android:background="@color/white" />
-
-                <TextView
-                    android:id="@+id/user_detail_new_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/user_detail_location"
-                    android:drawablePadding="@dimen/px4"
-                    android:text="5km"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_px26" />
-
-            </LinearLayout>
-
-
-        </cn.yunchuang.im.zmico.SquareLayout>
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/user_detail_new_name_sex_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/px30"
-                android:layout_marginStart="@dimen/px30"
-                android:layout_marginTop="@dimen/px40">
-
-                <TextView
-                    android:id="@+id/user_detail_new_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="小明同学"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_px32" />
-
-                <TextView
-                    android:id="@+id/user_detail_new_sex"
-                    android:layout_width="@dimen/px76"
-                    android:layout_height="@dimen/px34"
-                    android:layout_marginLeft="@dimen/px36"
-                    android:layout_marginStart="@dimen/px36"
-                    android:background="@drawable/user_detail_sex_bg"
-                    android:drawableLeft="@drawable/icon_woman"
-                    android:drawablePadding="@dimen/px10"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/px10"
-                    android:paddingStart="@dimen/px10"
-                    android:text="22"
-                    android:textColor="@color/color_FC6880"
-                    android:textSize="@dimen/text_px22" />
-
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/user_detail_new_follow_btn"
-                android:layout_width="@dimen/px152"
-                android:layout_height="@dimen/px54"
-                android:layout_alignParentRight="true"
-                android:layout_marginEnd="@dimen/px30"
-                android:layout_marginRight="@dimen/px30"
-                android:layout_marginTop="@dimen/px40"
-                android:background="@drawable/user_detail_follow_bg"
-                android:drawableLeft="@drawable/icon_guan_zhu"
-                android:drawablePadding="@dimen/px12"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/px22"
-                android:paddingStart="@dimen/px22"
-                android:text="加关注"
-                android:textColor="@color/color_909090"
-                android:textSize="@dimen/text_px22" />
-
-            <LinearLayout
-                android:id="@+id/user_detail_new_follow_fans_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/user_detail_new_name_sex_layout"
-                android:layout_marginTop="@dimen/px22"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/user_detail_new_follow_num"
+                <LinearLayout
+                    android:id="@+id/user_detail_new_name_sex_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/px30"
                     android:layout_marginStart="@dimen/px30"
-                    android:text="关注：20"
-                    android:textColor="@color/color_9B999F"
-                    android:textSize="@dimen/text_px26" />
+                    android:layout_marginTop="@dimen/px40">
 
-                <View
-                    android:layout_width="@dimen/px4"
-                    android:layout_height="@dimen/px20"
-                    android:layout_marginEnd="@dimen/px20"
-                    android:layout_marginLeft="@dimen/px20"
-                    android:layout_marginRight="@dimen/px20"
-                    android:layout_marginStart="@dimen/px20"
-                    android:background="@color/color_9B999F" />
+                    <TextView
+                        android:id="@+id/user_detail_new_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="小明同学"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_px32" />
+
+                    <TextView
+                        android:id="@+id/user_detail_new_sex_age"
+                        android:layout_width="@dimen/px76"
+                        android:layout_height="@dimen/px34"
+                        android:layout_marginLeft="@dimen/px36"
+                        android:layout_marginStart="@dimen/px36"
+                        android:background="@drawable/user_detail_sex_bg"
+                        android:drawableLeft="@drawable/icon_woman"
+                        android:drawablePadding="@dimen/px10"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="@dimen/px10"
+                        android:paddingStart="@dimen/px10"
+                        android:text="22"
+                        android:textColor="@color/color_FC6880"
+                        android:textSize="@dimen/text_px22" />
+
+
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/user_detail_new_fans_num"
+                    android:id="@+id/user_detail_new_follow_btn"
+                    android:layout_width="@dimen/px152"
+                    android:layout_height="@dimen/px54"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="@dimen/px30"
+                    android:layout_marginRight="@dimen/px30"
+                    android:layout_marginTop="@dimen/px40"
+                    android:background="@drawable/user_detail_follow_bg"
+                    android:drawableLeft="@drawable/icon_guan_zhu"
+                    android:drawablePadding="@dimen/px12"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/px22"
+                    android:paddingStart="@dimen/px22"
+                    android:text="加关注"
+                    android:textColor="@color/color_909090"
+                    android:textSize="@dimen/text_px22" />
+
+                <LinearLayout
+                    android:id="@+id/user_detail_new_follow_fans_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="粉丝：120"
-                    android:textColor="@color/color_9B999F"
-                    android:textSize="@dimen/text_px26" />
+                    android:layout_below="@+id/user_detail_new_name_sex_layout"
+                    android:layout_marginTop="@dimen/px22"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/user_detail_new_follow_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginStart="@dimen/px30"
+                        android:text="关注：20"
+                        android:textColor="@color/color_9B999F"
+                        android:textSize="@dimen/text_px26" />
+
+                    <View
+                        android:layout_width="@dimen/px4"
+                        android:layout_height="@dimen/px20"
+                        android:layout_marginEnd="@dimen/px20"
+                        android:layout_marginLeft="@dimen/px20"
+                        android:layout_marginRight="@dimen/px20"
+                        android:layout_marginStart="@dimen/px20"
+                        android:background="@color/color_9B999F" />
+
+                    <TextView
+                        android:id="@+id/user_detail_new_fans_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="粉丝：120"
+                        android:textColor="@color/color_9B999F"
+                        android:textSize="@dimen/text_px26" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/user_detail_new_qian_ming"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/user_detail_new_follow_fans_layout"
+                    android:layout_marginBottom="@dimen/px34"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginStart="@dimen/px30"
+                    android:layout_marginTop="@dimen/px30"
+                    android:text="他太懒了，还没有签名哦！"
+                    android:textColor="@color/color_8E8E8E"
+                    android:textSize="@dimen/text_px28" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/user_detail_new_wechat_identify_img"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <include layout="@layout/layout_10dp_gap" />
+
+                <LinearLayout
+                    android:id="@+id/user_detail_wei_xin_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px34"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginStart="@dimen/px30"
+                        android:text="Ta的微信号"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_px32" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/user_detail_new_wei_xin_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginStart="@dimen/px30"
+                        android:text="88元"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_px32" />
+
+                    <TextView
+                        android:id="@+id/user_detail_new_wei_xin_cha_kan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/px54"
+                        android:layout_marginEnd="@dimen/px30"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginRight="@dimen/px30"
+                        android:layout_marginStart="@dimen/px30"
+                        android:background="@drawable/user_detail_cha_kan_bg"
+                        android:gravity="center"
+                        android:minWidth="@dimen/px130"
+                        android:text="查看"
+                        android:textColor="@color/color_FC6880"
+                        android:textSize="@dimen/text_px32" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px1"
+                    android:layout_marginBottom="@dimen/px24"
+                    android:layout_marginEnd="@dimen/px30"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginRight="@dimen/px30"
+                    android:layout_marginStart="@dimen/px30"
+                    android:layout_marginTop="@dimen/px24"
+                    android:background="@color/color_E4E4E4" />
+
+                <LinearLayout
+                    android:id="@+id/user_detail_zheng_jian_zhao_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/px34"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginStart="@dimen/px30"
+                        android:text="Ta的证件照"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_px32" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/user_detail_new_zjz_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginStart="@dimen/px30"
+                        android:text="20元"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_px32" />
+
+                    <TextView
+                        android:id="@+id/user_detail_new_zjz_cha_kan"
+                        android:layout_width="@dimen/px130"
+                        android:layout_height="@dimen/px54"
+                        android:layout_marginEnd="@dimen/px30"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginRight="@dimen/px30"
+                        android:layout_marginStart="@dimen/px30"
+                        android:background="@drawable/user_detail_cha_kan_bg"
+                        android:gravity="center"
+                        android:text="查看"
+                        android:textColor="@color/color_FC6880"
+                        android:textSize="@dimen/text_px32" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/user_detail_new_productions_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <include layout="@layout/layout_10dp_gap" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginStart="@dimen/px30"
+                    android:layout_marginTop="@dimen/px34"
+                    android:text="Ta的作品"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_px32" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/user_detail_new_top_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px200"
+                    android:layout_marginBottom="@dimen/px50"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginStart="@dimen/px30"
+                    android:layout_marginTop="@dimen/px30" />
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/user_detail_new_qian_ming"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/user_detail_new_skills_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/user_detail_new_follow_fans_layout"
-                android:layout_marginLeft="@dimen/px30"
-                android:layout_marginStart="@dimen/px30"
-                android:layout_marginTop="@dimen/px30"
-                android:text="他太懒了，还没有签名哦！"
-                android:textColor="@color/color_8E8E8E"
-                android:textSize="@dimen/text_px28" />
+                android:background="@color/white"
+                android:orientation="vertical" />
 
-        </RelativeLayout>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px20"
-            android:layout_marginBottom="@dimen/px34"
-            android:layout_marginTop="@dimen/px34"
-            android:background="@color/color_F0F0F0" />
-
-        <LinearLayout
-            android:id="@+id/user_detail_wei_xin_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/px30"
-                android:layout_marginStart="@dimen/px30"
-                android:text="Ta的微信号"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_px32" />
+            <!--动态计算这个view的高度-->
 
             <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/user_detail_new_wei_xin_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/px30"
-                android:layout_marginStart="@dimen/px30"
-                android:text="88元"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_px32" />
-
-            <TextView
-                android:id="@+id/user_detail_new_wei_xin_cha_kan"
-                android:layout_width="@dimen/px130"
-                android:layout_height="@dimen/px54"
-                android:layout_marginEnd="@dimen/px30"
-                android:layout_marginLeft="@dimen/px20"
-                android:layout_marginRight="@dimen/px30"
-                android:layout_marginStart="@dimen/px20"
-                android:background="@drawable/user_detail_cha_kan_bg"
-                android:gravity="center"
-                android:text="查看"
-                android:textColor="@color/color_FC6880"
-                android:textSize="@dimen/text_px32" />
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
 
         </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px1"
-            android:layout_marginBottom="@dimen/px24"
-            android:layout_marginEnd="@dimen/px30"
-            android:layout_marginLeft="@dimen/px30"
-            android:layout_marginRight="@dimen/px30"
-            android:layout_marginStart="@dimen/px30"
-            android:layout_marginTop="@dimen/px24"
-            android:background="@color/color_E4E4E4" />
+    <include
+        android:id="@+id/user_detail_new_title_root_layout"
+        layout="@layout/layout_user_detail_new_title_layout" />
 
-        <LinearLayout
-            android:id="@+id/user_detail_zheng_jian_zhao_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/px30"
-                android:layout_marginStart="@dimen/px30"
-                android:text="Ta的证件照"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_px32" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/user_detail_new_zjz_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/px30"
-                android:layout_marginStart="@dimen/px30"
-                android:text="20元"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_px32" />
-
-            <TextView
-                android:id="@+id/user_detail_new_zjz_cha_kan"
-                android:layout_width="@dimen/px130"
-                android:layout_height="@dimen/px54"
-                android:layout_marginEnd="@dimen/px30"
-                android:layout_marginLeft="@dimen/px20"
-                android:layout_marginRight="@dimen/px30"
-                android:layout_marginStart="@dimen/px20"
-                android:background="@drawable/user_detail_cha_kan_bg"
-                android:gravity="center"
-                android:text="查看"
-                android:textColor="@color/color_FC6880"
-                android:textSize="@dimen/text_px32" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px20"
-            android:layout_marginBottom="@dimen/px34"
-            android:layout_marginTop="@dimen/px34"
-            android:background="@color/color_F0F0F0" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/px30"
-            android:layout_marginStart="@dimen/px30"
-            android:text="Ta的作品"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_px32" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/user_detail_new_top_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px200"
-            android:layout_marginLeft="@dimen/px30"
-            android:layout_marginStart="@dimen/px30"
-            android:layout_marginTop="@dimen/px30" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/px30">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left|center_vertical"
-                android:layout_marginLeft="@dimen/px30"
-                android:text="Ta的微信号"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_px36" />
-
-            <TextView
-                android:id="@+id/user_detail_new_see_wechat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginRight="@dimen/px30"
-                android:text="查看"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_px36" />
-
-        </FrameLayout>
-
-    </LinearLayout>
-</ScrollView>
+</RelativeLayout>

@@ -391,9 +391,9 @@ public class SealAction extends BaseAction {
      * @return
      * @throws HttpException
      */
-    public BaseResponse payImg(String imgId) throws HttpException {
+    public BaseResponse payImg(int imgId,int imgPrice) throws HttpException {
         String uri = getURL("user/user_pay_img");
-        String json = JsonMananger.beanToJson(new PayImgRequest(imgId));
+        String json = JsonMananger.beanToJson(new PayImgRequest(String.valueOf(imgId), imgPrice));
         StringEntity entity = null;
         try {
             entity = new StringEntity(json, ENCODING);

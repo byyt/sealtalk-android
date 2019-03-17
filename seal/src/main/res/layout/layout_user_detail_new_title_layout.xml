@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/md_profile_top_title_bg">
+
+
+    <FrameLayout
+        android:id="@+id/user_detail_new_title_layout_translate"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px96">
+
+        <ImageView
+            android:id="@+id/user_detail_new_back_translate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:paddingBottom="@dimen/px10"
+            android:paddingEnd="@dimen/px30"
+            android:paddingLeft="@dimen/px30"
+            android:paddingRight="@dimen/px30"
+            android:paddingStart="@dimen/px30"
+            android:paddingTop="@dimen/px10"
+            android:src="@drawable/user_detail_back" />
+
+        <ImageView
+            android:id="@+id/user_detail_new_more_op_translate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:paddingBottom="@dimen/px10"
+            android:paddingEnd="@dimen/px30"
+            android:paddingLeft="@dimen/px30"
+            android:paddingRight="@dimen/px30"
+            android:paddingStart="@dimen/px30"
+            android:paddingTop="@dimen/px10"
+            android:src="@drawable/user_detail_more_op" />
+
+    </FrameLayout>
+
+    <!-- 高度动态计算，状态栏高度+48dp -->
+    <FrameLayout
+        android:id="@+id/user_detail_new_title_layout_white"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px96"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/user_detail_new_back_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:paddingBottom="@dimen/px10"
+            android:paddingEnd="@dimen/px30"
+            android:paddingLeft="@dimen/px30"
+            android:paddingRight="@dimen/px30"
+            android:paddingStart="@dimen/px30"
+            android:paddingTop="@dimen/px10"
+            android:src="@drawable/user_detail_back_black" />
+
+        <TextView
+            android:id="@+id/user_detail_new_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="小明同学"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_px36" />
+
+        <ImageView
+            android:id="@+id/user_detail_new_more_op_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:paddingBottom="@dimen/px10"
+            android:paddingEnd="@dimen/px30"
+            android:paddingLeft="@dimen/px30"
+            android:paddingRight="@dimen/px30"
+            android:paddingStart="@dimen/px30"
+            android:paddingTop="@dimen/px10"
+            android:src="@drawable/user_detail_more_black" />
+
+        <View
+            android:id="@+id/user_detail_new_title_line"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px1"
+            android:layout_gravity="bottom"
+            android:background="@color/color_E4E4E4" />
+
+    </FrameLayout>
+
+</FrameLayout>

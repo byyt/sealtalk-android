@@ -2,14 +2,15 @@ package cn.yunchuang.im.server.response;
 
 public class ImageModel {
 
-    private String id; //付费图片有id，免费图片没有
+    private int id; //付费图片有id，免费图片没有
     private String imgUrl;
+    private int imgPrice;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -19,5 +20,13 @@ public class ImageModel {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public int getImgPrice() {
+        return imgPrice;
+    }
+
+    public void setImgPrice(int imgPrice) {
+        this.imgPrice = imgPrice;
     }
 }

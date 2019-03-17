@@ -76,6 +76,18 @@
     <color name="color_F0F0F0">#F0F0F0</color>
     <color name="color_4D000000">#4D000000</color>
     <color name="color_1A000000">#1A000000</color>
+    <color name="color_EFEFEF">#EFEFEF</color>
+    <color name="color_EDEDED">#EDEDED</color>
+    <color name="color_FDFFFD">#FDFFFD</color>
+    <color name="color_EFEFF4">#EFEFF4</color>
+    <color name="color_F4F4F4">#F4F4F4</color>
+
+    <color name="color_101013">#101013</color>
+    <color name="color_2C2D31">#2C2D31</color>
+
+
+    <color name="color_EDEFF0">#EDEFF0</color>
+
 
     <color name="colorE6E8EB">#E6E8EB</color>
 

@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -27,8 +29,10 @@ import cn.yunchuang.im.server.response.HomepageResponse;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.ui.adapter.HomepageAdapter_New;
 import cn.yunchuang.im.ui.widget.MyFooter;
-import cn.yunchuang.im.zmico.utils.ResourceUtils;
 import cn.yunchuang.im.zmico.statusbar.StatusBarCompat;
+import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
+import cn.yunchuang.im.zmico.utils.DeviceUtils;
+import cn.yunchuang.im.zmico.utils.ResourceUtils;
 
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 
@@ -36,7 +40,7 @@ import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
  * tab 2 通讯录的 Fragment
  * Created by Bob on 2015/1/25.
  */
-public class HomepageFragment extends BaseFragment implements View.OnClickListener, OnRefreshLoadMoreListener {
+public class HomepageFragment_new extends BaseFragment implements View.OnClickListener, OnRefreshLoadMoreListener {
 
     private RefreshLayout mRefreshLayout;
     private RecyclerView mRecyclerView;
@@ -45,16 +49,13 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     private HomepageAdapter_New mHomepageAdapter;
 
     private int startIndex = 0;
-    private static final int PAGE_SIZE = 3;
+    private static final int PAGE_SIZE = 6;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_homepage_new, container, false);
         initView(view);
-
-        StatusBarCompat.setStatusBarColor(getActivity(), ResourceUtils.getColor(R.color.color_FC6880));
-
         return view;
     }
 

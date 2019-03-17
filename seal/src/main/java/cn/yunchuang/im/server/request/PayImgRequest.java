@@ -7,17 +7,27 @@ package cn.yunchuang.im.server.request;
  */
 public class PayImgRequest {
 
-    private String imgId;
+    private String image;
+    private int imgPrice;
 
-    public PayImgRequest(String imgId) {
-        this.imgId = imgId;
+    public PayImgRequest(String image, int imgPrice) {
+        this.image = image;
+        this.imgPrice = imgPrice;
     }
 
-    public String getImgId() {
-        return imgId;
+    public String getImage() {
+        return image;
     }
 
-    public void setImgId(String imgId) {
-        this.imgId = imgId;
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public int getImgPrice() {
+        return imgPrice;
+    }
+
+    public void setImgPrice(int imgPrice) {
+        this.imgPrice = imgPrice;
     }
 }

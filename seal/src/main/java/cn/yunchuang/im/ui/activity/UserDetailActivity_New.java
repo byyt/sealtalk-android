@@ -1,14 +1,18 @@
 package cn.yunchuang.im.ui.activity;
 
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ScrollView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONArray;
@@ -16,9 +20,12 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.previewlibrary.GPreviewBuilder;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
-import com.youth.banner.Transformer;
 
+import org.json.JSONObject;
+
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import cn.yunchuang.im.R;
@@ -36,10 +43,12 @@ import cn.yunchuang.im.server.utils.StaticDataUtils;
 import cn.yunchuang.im.server.widget.LoadDialog;
 import cn.yunchuang.im.ui.adapter.UserDetailPicListAdapter;
 import cn.yunchuang.im.widget.GlideImageLoader;
+import cn.yunchuang.im.widget.dialog.CommonDialog;
 import cn.yunchuang.im.widget.dialog.ConstantDialogUtils;
-import cn.yunchuang.im.widget.dialog.VZyPayImgDialog;
-import cn.yunchuang.im.widget.dialog.VZyPayWeChatDialog;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
+import cn.yunchuang.im.zmico.utils.DeviceUtils;
+import cn.yunchuang.im.zmico.utils.ResourceUtils;
+import cn.yunchuang.im.zmico.utils.Utils;
 
 //CallKit start 1
 //CallKit end 1
@@ -48,40 +57,68 @@ import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
  * Created by tiankui on 16/11/2.
  */
 
-public class UserDetailActivity_New extends BaseActivity implements View.OnClickListener {
+public class UserDetailActivity_New extends BaseActivity implements View.OnClickListener
+        , NestedScrollView.OnScrollChangeListener {
 
-    private ScrollView scrollView;
+    private NestedScrollView nestedScrollView;
+    //标题栏
+    private FrameLayout titleRootLayout;
+    private FrameLayout titleLayoutTranslate;
+    private FrameLayout titleLayoutWhite;
+    private View titleLine;
+    private ImageView backImgTranslate;
+    private ImageView backImgBlack;
+    private ImageView moreOpImgTranslate;
+    private ImageView moreOpImgBlack;
+    private TextView titleTv;
 
-
-    private LinearLayoutManager mLinearLayoutManager;
-    private RecyclerView mRecyclerView;
-    private UserDetailPicListAdapter mPicdapter;//小图列表的adapter
-    private VZyPayImgDialog mVZyPayImgDialog;//弹出图片付费的对话框
-    private VZyPayWeChatDialog mVZyPayWeChatDialog;//弹出微信号付费的对话框
-    private TextView mSeeWeChat;
-
+    //轮播图
     private Banner banner;
 
-    private GetUserDetailModelOne mUserDetailModelOne;
-    private GetUserDetailModelTwo mUserDetailModelTwo;
-    private ArrayList<String> mFreeImageList = new ArrayList<>(); //免费图片地址集合
-    private ArrayList<String> mPayImageList = new ArrayList<>(); //付费图片地址集合
-    private ArrayList<String> allImageList = new ArrayList<>(); //所有图片地址集合
+    //个人信息
+    private TextView feedBackRateTv;
+    private TextView heightTv;
+    private TextView locationTv;
+    private TextView nameTv;
+    private TextView sexAgeTv;
+    private TextView followNumTv;
+    private TextView fansNumTv;
+    private TextView qianMingTv;
+
+    //微信和证件照
+    private LinearLayout weChatIdentifyImgLayout;
+    private TextView seeWeChat;
+    private TextView weChatPrice;
+
+    //付费作品
+    private LinearLayout productionsLayout;
+    private LinearLayoutManager linearLayoutManager;
+    private RecyclerView recyclerView;
+    private UserDetailPicListAdapter picdapter;//小图列表的adapter
+
+
+    private GetUserDetailModelOne userDetailModelOne;
+    private GetUserDetailModelTwo userDetailModelTwo;
+    private ArrayList<String> freeImageList = new ArrayList<>(); //免费图片地址集合，在banner中展示
     private List<UserViewInfo> userViewInfoList = new ArrayList<>(); //大图集合
     private List<ImageModel> resultImageList = new ArrayList<>(); //最原始总数据集合，免费图片加上付费图片,为了得到付费图片的id
     private String userId = "";
-    private String imgId; //当前点击图片的id，主要针对付费图片
+    private int imgId; //当前点击图片的id，主要针对付费图片
+    private int imgPrice; //当前点击图片的id，主要针对付费图片
 
+    private LinearLayout skillsLayout;
 
     private static final int GET_USER_DETAIL_ONE = 1601;
     private static final int GET_USER_DETAIL_TWO = 1602;
     private static final int PAY_IMG = 1603;
     private static final int PAY_WECHAT = 1604;
 
+    private int statusBarHeight = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BaseBaseUtils.setFullScreen(this);
+        BaseBaseUtils.setTranslucentStatus(this);
         setContentView(R.layout.activity_user_detail_new);
         setHeadVisibility(View.GONE);
         initView();
@@ -91,30 +128,59 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
     private void initView() {
         userId = getIntent().getStringExtra("userId");
 
-        scrollView = (ScrollView) findViewById(R.id.user_detail_new_root_scrollview);
-        scrollView.scrollTo(0, 0);
+        nestedScrollView = (NestedScrollView) findViewById(R.id.user_detail_new_root_scrollview);
+        nestedScrollView.setOnScrollChangeListener(this);
 
-        mSeeWeChat = (TextView) findViewById(R.id.user_detail_new_wei_xin_cha_kan);
-        mSeeWeChat.setOnClickListener(this);
+        titleRootLayout = (FrameLayout) findViewById(R.id.user_detail_new_title_root_layout);
+        titleLayoutTranslate = (FrameLayout) findViewById(R.id.user_detail_new_title_layout_translate);
+        titleLayoutWhite = (FrameLayout) findViewById(R.id.user_detail_new_title_layout_white);
+        titleLine = findViewById(R.id.user_detail_new_title_line);
+        backImgTranslate = (ImageView) findViewById(R.id.user_detail_new_back_translate);
+        backImgTranslate.setOnClickListener(this);
+        backImgBlack = (ImageView) findViewById(R.id.user_detail_new_back_black);
+        backImgBlack.setOnClickListener(this);
+        moreOpImgTranslate = (ImageView) findViewById(R.id.user_detail_new_more_op_translate);
+        moreOpImgTranslate.setOnClickListener(this);
+        moreOpImgBlack = (ImageView) findViewById(R.id.user_detail_new_more_op_black);
+        moreOpImgBlack.setOnClickListener(this);
+        titleTv = (TextView) findViewById(R.id.user_detail_new_title_tv);
+        initTitleLayout();
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.user_detail_new_top_recyclerview);
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mRecyclerView.setHasFixedSize(true);
-        mPicdapter = new UserDetailPicListAdapter(this);
-        mPicdapter.replaceData(userViewInfoList);
-        mRecyclerView.setAdapter(mPicdapter);
-        mPicdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        feedBackRateTv = (TextView) findViewById(R.id.user_detail_new_feed_back_rate);
+        heightTv = (TextView) findViewById(R.id.user_detail_new_height);
+        locationTv = (TextView) findViewById(R.id.user_detail_new_location);
+        nameTv = (TextView) findViewById(R.id.user_detail_new_name);
+        sexAgeTv = (TextView) findViewById(R.id.user_detail_new_sex_age);
+        followNumTv = (TextView) findViewById(R.id.user_detail_new_follow_num);
+        fansNumTv = (TextView) findViewById(R.id.user_detail_new_fans_num);
+        qianMingTv = (TextView) findViewById(R.id.user_detail_new_qian_ming);
+
+        weChatIdentifyImgLayout = (LinearLayout) findViewById(R.id.user_detail_new_wechat_identify_img);
+        seeWeChat = (TextView) findViewById(R.id.user_detail_new_wei_xin_cha_kan);
+        seeWeChat.setOnClickListener(this);
+        weChatPrice = (TextView) findViewById(R.id.user_detail_new_wei_xin_price);
+
+        productionsLayout = (LinearLayout) findViewById(R.id.user_detail_new_productions_layout);
+        recyclerView = (RecyclerView) findViewById(R.id.user_detail_new_top_recyclerview);
+        linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setHasFixedSize(true);
+        picdapter = new UserDetailPicListAdapter(this);
+        picdapter.replaceData(userViewInfoList);
+        recyclerView.setAdapter(picdapter);
+        picdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 imgId = resultImageList.get(position).getId();
-                if (StaticDataUtils.isInBlurImgUrlList(userViewInfoList.get(position).getUrl())) {
+                imgPrice = resultImageList.get(position).getImgPrice();
+                if (StaticDataUtils.isInBlurImgUrlList(resultImageList.get(position).getImgUrl())) {
                     //如果点击的是需要付费的照片，则弹出框让用户付费
-                    showPayImgDialog();
+                    showPayImgDialog(position);
+
                 } else {
                     //否则进入大图浏览模式
-                    computeBoundsBackward(mLinearLayoutManager.findFirstVisibleItemPosition());
+                    computeBoundsBackward(linearLayoutManager.findFirstVisibleItemPosition());
                     GPreviewBuilder.from(UserDetailActivity_New.this)
                             .setData(userViewInfoList)
                             .setCurrentIndex(position)
@@ -125,10 +191,24 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
             }
         });
 
-        findViewById(R.id.user_detail_new_back).setOnClickListener(this);
+        skillsLayout = (LinearLayout) findViewById(R.id.user_detail_new_skills_layout);
 
         initBanner();
 
+        statusBarHeight = DeviceUtils.getStatusBarHeightPixels(this);
+
+        nestedScrollView.scrollTo(0, 0);
+    }
+
+    private void initTitleLayout() {
+        //设置标题栏距离顶部的距离，这个距离就是状态栏的高度
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                DeviceUtils.dpToPx(48));
+        layoutParams.setMargins(0, DeviceUtils.getStatusBarHeightPixels(this), 0, 0);
+        titleLayoutTranslate.setLayoutParams(layoutParams);
+        titleLayoutWhite.setLayoutParams(layoutParams);
+        titleLayoutTranslate.setVisibility(View.VISIBLE);
+        titleLayoutWhite.setVisibility(View.GONE);
     }
 
     private void initBanner() {
@@ -151,24 +231,54 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
 //        banner.start();
     }
 
-    private void setBannerData(List<String> images) {
+    private void setBannerData(List<ImageModel> imageModels) {
         //设置图片集合
-        banner.setImages(images);
-        //设置banner动画效果
-//        banner.setBannerAnimation(Transformer.DepthPage);
-        //设置自动轮播，默认为true
-//        banner.isAutoPlay(true);
-        //设置轮播时间
-//        banner.setDelayTime(1500);
-        //设置指示器位置（当banner模式中有指示器时）
-//        banner.setIndicatorGravity(BannerConfig.RIGHT);
-        //banner设置方法全部调用完毕时最后调用
+        List<String> freeImgUrlList = new ArrayList<>();
+        if (imageModels != null) {
+            for (ImageModel imageModel : imageModels) {
+                freeImgUrlList.add(imageModel.getImgUrl());
+            }
+        }
+        banner.setImages(freeImgUrlList);
         banner.start();
     }
 
     private void getUserDetailData() {
         request(GET_USER_DETAIL_ONE);
         request(GET_USER_DETAIL_TWO);
+    }
+
+    @Override
+    public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+        if (Utils.isNotNull(banner) && Utils.isNotNull(titleLayoutTranslate)
+                && Utils.ensureNotNull(titleLayoutWhite)) {
+            int height = banner.getMeasuredHeight() - titleLayoutTranslate.getMeasuredHeight() - statusBarHeight;
+            if (scrollY >= height) {
+                if (titleLayoutWhite.getVisibility() != View.VISIBLE) {
+                    buildTitleBgWhile();
+                }
+            } else {
+                if (titleLayoutTranslate.getVisibility() != View.VISIBLE) {
+                    buildTitleBgTransparent();
+                }
+            }
+        }
+    }
+
+    private void buildTitleBgWhile() {
+//        StatusBarCompat.setStatusBarColor(this, Color.WHITE);
+        BaseBaseUtils.setStatusBarColor(this, Color.WHITE);
+        titleRootLayout.setBackgroundColor(ResourceUtils.getColor(R.color.white));
+        titleLayoutWhite.setVisibility(View.VISIBLE);
+        titleLayoutTranslate.setVisibility(View.GONE);
+    }
+
+    private void buildTitleBgTransparent() {
+//        StatusBarCompat.setStatusBarColor(this, Color.TRANSPARENT);
+        BaseBaseUtils.setTranslucentStatus(this);
+        titleRootLayout.setBackground(ResourceUtils.getDrawable(R.drawable.md_profile_top_title_bg));
+        titleLayoutWhite.setVisibility(View.GONE);
+        titleLayoutTranslate.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -179,9 +289,9 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
             case GET_USER_DETAIL_TWO:
                 return action.getUserDetailTwo(userId);
             case PAY_IMG:
-                return action.payImg(imgId);
+                return action.payImg(imgId, imgPrice);
             case PAY_WECHAT:
-                return action.payWeChat(mUserDetailModelTwo.getWeChat(), mUserDetailModelTwo.getWeChatPrice());
+                return action.payWeChat(userDetailModelTwo.getWeChat(), userDetailModelTwo.getWeChatPrice());
         }
         return null;
     }
@@ -259,7 +369,8 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
             case R.id.user_detail_new_wei_xin_cha_kan:
                 showPayWeChatDialog();
                 break;
-            case R.id.user_detail_new_back:
+            case R.id.user_detail_new_back_translate:
+            case R.id.user_detail_new_back_black:
                 finish();
                 break;
         }
@@ -274,112 +385,216 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
         if (getUserDetailOneResponse == null) {
             return;
         }
-        GetUserDetailModelOne detailModel = getUserDetailOneResponse.getResult();
-        if (detailModel == null) {
+        GetUserDetailModelOne modelOne = getUserDetailOneResponse.getResult();
+        if (modelOne == null) {
             return;
         }
-        mUserDetailModelOne = detailModel;
-        if (TextUtils.isEmpty(detailModel.getFreeImgList())) {
+        //个人信息
+        feedBackRateTv.setText(MessageFormat.format("{0}{1}{2}", "好评率：", modelOne.getFeedback_rate(), "%"));
+        heightTv.setText(MessageFormat.format("{0}{1}", String.valueOf(modelOne.getHeight()), "CM"));
+        locationTv.setText(MessageFormat.format("{0}{1}", modelOne.getLocation(), "km"));
+        nameTv.setText(modelOne.getNickname());
+        sexAgeTv.setText(String.valueOf(modelOne.getAge()));
+        followNumTv.setText(MessageFormat.format("{0}{1}", "关注 ", String.valueOf(modelOne.getFollowNum())));
+        fansNumTv.setText(MessageFormat.format("{0}{1}", "粉丝 ", String.valueOf(modelOne.getFansNum())));
+        qianMingTv.setText(modelOne.getQianMing());
+
+        //技能信息
+        updateSkillLayout(modelOne);
+
+        //免费图片展示
+        userDetailModelOne = modelOne;
+        if (TextUtils.isEmpty(modelOne.getFreeImgList())) {
             return;
         }
-        //免费图片，和付费图片的处理
         try {
             //将字符串的json数组转为list
-            List<ImageModel> freeImageList = JSONArray.parseArray(detailModel.getFreeImgList(), ImageModel.class); //得到免费图片列表
-            List<ImageModel> payImageList = detailModel.getPayImgList(); //得到仍需付费图片列表
-            resultImageList = new ArrayList<>();
-            //两个列表拼起来
-            if (freeImageList != null) {
-                resultImageList.addAll(freeImageList);
-            }
-            if (payImageList != null) {
-                resultImageList.addAll(payImageList);
-                ArrayList<String> blurImgUrlList = new ArrayList<>();
-                for (ImageModel imageModel : payImageList) {
-                    blurImgUrlList.add(imageModel.getImgUrl());
-                }
-                StaticDataUtils.setBlurImgUrlList(blurImgUrlList); //设置需要模糊显示的图片
-            } else {
-                StaticDataUtils.setBlurImgUrlList(new ArrayList<String>()); //默认没有图片模糊显示
-            }
-            if (resultImageList != null && resultImageList.size() > 0) {
-                allImageList.clear();
-                for (ImageModel imageModel : resultImageList) {
-                    allImageList.add(imageModel.getImgUrl());
-                }
-                userViewInfoList.clear();
-                for (int i = 0; i < allImageList.size(); i++) {
-                    userViewInfoList.add(new UserViewInfo(allImageList.get(i)));
-                }
-                mPicdapter.replaceData(userViewInfoList);
-                setBannerData(allImageList);
-            }
+            List<ImageModel> freeImgList = JSONArray.parseArray(modelOne.getFreeImgList(), ImageModel.class); //得到免废费图片列表
+            setBannerData(freeImgList);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * 更新第二部分数据
-     *
-     * @param getUserDetailTwoResponse
-     */
-    private void updateDataTwo(GetUserDetailTwoResponse getUserDetailTwoResponse) {
-        mSeeWeChat.setText("");
-        mSeeWeChat.setClickable(false);
-        if (getUserDetailTwoResponse == null) {
+    private void updateSkillLayout(GetUserDetailModelOne modelOne) {
+        String skillJsonStr = modelOne.getSkills();
+        if (skillJsonStr == null || skillJsonStr.equals("")) {
             return;
         }
-        GetUserDetailModelTwo detailModel = getUserDetailTwoResponse.getResult();
-        if (detailModel == null) {
-            return;
-        }
-        mUserDetailModelTwo = detailModel;
-        if (mUserDetailModelTwo.isHasPayedWeChat()) {
-            mSeeWeChat.setText(mUserDetailModelTwo.getWeChat());
-            mSeeWeChat.setClickable(false);
-        } else {
-            mSeeWeChat.setText("查看");
-            mSeeWeChat.setClickable(true);
+        try {
+            JSONObject jsonObject = new JSONObject(skillJsonStr);
+            Iterator iterator = jsonObject.keys();
+            //如果数据不为空，添加Ta的技能这一行
+            if (iterator.hasNext()) {
+                View skillTitleView = LayoutInflater.from(this).inflate(R.layout.layout_user_detail_skill_top_title, null);
+                skillsLayout.addView(skillTitleView);
+            }
+            //一次添加技能列表，遍历json的key和value
+            while (iterator.hasNext()) {
+                String key = (String) iterator.next();
+                String value = jsonObject.getString(key);
+
+                View view = LayoutInflater.from(this).inflate(R.layout.layout_user_detail_skill_item, null);
+                ImageView imageView = (ImageView) view.findViewById(R.id.user_detail_new_skill_item_iv);
+                TextView nameTv = (TextView) view.findViewById(R.id.user_detail_new_skill_item_name_tv);
+                TextView priceTv = (TextView) view.findViewById(R.id.user_detail_new_skill_item_price_tv);
+
+                switch (key) {
+                    case "跑步":
+                        imageView.setImageResource(R.drawable.user_detail_paobu);
+                        break;
+                    case "健身":
+                        imageView.setImageResource(R.drawable.user_detail_jianshen);
+                        break;
+                    case "吃饭":
+                        imageView.setImageResource(R.drawable.user_detail_chifan);
+                        break;
+                    case "看电影":
+                        imageView.setImageResource(R.drawable.user_detail_kandianying);
+                        break;
+                    default:
+                        //记得添加一个其他图标
+                        imageView.setImageResource(R.drawable.user_detail_paobu);
+                        break;
+                }
+                nameTv.setText(key);
+                priceTv.setText(value);
+
+                skillsLayout.addView(view);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
 
     /**
+     * 更新第二部分数据，微信付费、付费图片、付费视频，付费情况
+     *
+     * @param getUserDetailTwoResponse
+     */
+    private void updateDataTwo(GetUserDetailTwoResponse getUserDetailTwoResponse) {
+        if (getUserDetailTwoResponse == null) {
+            weChatIdentifyImgLayout.setVisibility(View.GONE);
+            productionsLayout.setVisibility(View.GONE);
+            return;
+        }
+        GetUserDetailModelTwo modelTwo = getUserDetailTwoResponse.getResult();
+        if (modelTwo == null) {
+            weChatIdentifyImgLayout.setVisibility(View.GONE);
+            productionsLayout.setVisibility(View.GONE);
+            return;
+        }
+
+        //处理微信证件照信息情况
+        handleWeChatIdentifyImgLayout(modelTwo);
+
+        //付费图片付费情况
+        handlePayImgLayout(modelTwo);
+
+    }
+
+    private void handleWeChatIdentifyImgLayout(GetUserDetailModelTwo modelTwo) {
+        //没有填写微信号则不显示此行（后面还会加而且没有上传证件照）
+        if (TextUtils.isEmpty(modelTwo.getWeChat())) {
+            weChatIdentifyImgLayout.setVisibility(View.GONE);
+            return;
+        }
+
+        weChatIdentifyImgLayout.setVisibility(View.VISIBLE);
+        userDetailModelTwo = modelTwo;
+        //微信付费情况
+        if (userDetailModelTwo.isHasPayedWeChat()) {
+            seeWeChat.setText(userDetailModelTwo.getWeChat());
+            seeWeChat.setBackground(null);
+            seeWeChat.setClickable(false);
+            weChatPrice.setVisibility(View.GONE);
+        } else {
+            seeWeChat.setText("查看");
+            seeWeChat.setBackground(ResourceUtils.getDrawable(R.drawable.user_detail_cha_kan_bg));
+            seeWeChat.setClickable(true);
+            weChatPrice.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void handlePayImgLayout(GetUserDetailModelTwo modelTwo) {
+        List<ImageModel> hasPayedImgList = modelTwo.getHasPayedImgList(); //得到已经付费图片列表
+        List<ImageModel> notPayedImgList = modelTwo.getNotPayedImgList(); //得到未付费图片列表
+        resultImageList.clear();
+        //两个列表拼起来
+        if (hasPayedImgList != null) {
+            resultImageList.addAll(hasPayedImgList);
+        }
+        if (notPayedImgList != null) {
+            resultImageList.addAll(notPayedImgList);
+            ArrayList<String> blurImgUrlList = new ArrayList<>();
+            for (ImageModel imageModel : notPayedImgList) {
+                blurImgUrlList.add(imageModel.getImgUrl());
+            }
+            StaticDataUtils.setBlurImgUrlList(blurImgUrlList); //设置需要模糊显示的图片
+        } else {
+            StaticDataUtils.setBlurImgUrlList(new ArrayList<String>()); //默认没有图片模糊显示
+        }
+        if (resultImageList != null && resultImageList.size() > 0) {
+            //有数据，则展示作品一栏
+            productionsLayout.setVisibility(View.VISIBLE);
+            userViewInfoList.clear();
+            UserViewInfo userViewInfo;
+            for (int i = 0; i < resultImageList.size(); i++) {
+                userViewInfo = new UserViewInfo(resultImageList.get(i).getImgUrl());
+                userViewInfo.setImgPrice(resultImageList.get(i).getImgPrice());
+                userViewInfoList.add(userViewInfo);
+            }
+            picdapter.replaceData(userViewInfoList);
+        } else {
+            //没数据，则隐藏作品一栏
+            productionsLayout.setVisibility(View.GONE);
+        }
+    }
+
+    /**
      * 弹出图片需要付费对话框
      */
-    private void showPayImgDialog() {
-        mVZyPayImgDialog = new VZyPayImgDialog(this, new VZyPayImgDialog.CallBack() {
-            @Override
-            public void callback() {
-                Log.d("xxxxxx", "showPayImgDialog");
-                request(PAY_IMG);
-            }
-        });
-        mVZyPayImgDialog.showDialog(ConstantDialogUtils.LEVEL_3, ConstantDialogUtils.OPERATEWINDOW);
+    private void showPayImgDialog(final int position) {
+        new CommonDialog.Builder()
+                .context(UserDetailActivity_New.this)
+                .title("温馨提示")
+                .content("查看该图片需要" + resultImageList.get(position).getImgPrice()
+                        + "元，是否支付？")
+                .sureCallback(new CommonDialog.CallBack() {
+                    @Override
+                    public void callback() {
+                        request(PAY_IMG);
+                    }
+                })
+                .build()
+                .showDialog(ConstantDialogUtils.LEVEL_3, ConstantDialogUtils.OPERATEWINDOW, true);
     }
 
     /**
      * 弹出微信号需要付费对话框
      */
     private void showPayWeChatDialog() {
-        if (mUserDetailModelTwo == null) {
+        if (userDetailModelTwo == null) {
             return;
         }
-        if (TextUtils.isEmpty(mUserDetailModelTwo.getWeChat()) || mUserDetailModelTwo.getWeChatPrice() <= 0) {
+        if (TextUtils.isEmpty(userDetailModelTwo.getWeChat()) || userDetailModelTwo.getWeChatPrice() <= 0) {
             return;
         }
         //理论上不会出现上面两种情况，如果出现上面两种情况不会出现查看微信这个按钮
-        mVZyPayWeChatDialog = new VZyPayWeChatDialog(this, new VZyPayWeChatDialog.CallBack() {
-            @Override
-            public void callback() {
-                Log.d("xxxxxx", "showPayImgDialog");
-                request(PAY_WECHAT);
-            }
-        });
-        mVZyPayWeChatDialog.setContent("查看TA的微信需要" + mUserDetailModelTwo.getWeChatPrice() + "元，是否支付？");
-
-        mVZyPayWeChatDialog.showDialog(ConstantDialogUtils.LEVEL_3, ConstantDialogUtils.OPERATEWINDOW);
+        new CommonDialog.Builder()
+                .context(UserDetailActivity_New.this)
+                .title("温馨提示")
+                .content("查看TA的微信需要" + userDetailModelTwo.getWeChatPrice() + "元，是否支付？")
+                .sureCallback(new CommonDialog.CallBack() {
+                    @Override
+                    public void callback() {
+                        request(PAY_WECHAT);
+                    }
+                })
+                .build()
+                .showDialog(ConstantDialogUtils.LEVEL_3, ConstantDialogUtils.OPERATEWINDOW, false);
     }
 
 
@@ -389,7 +604,7 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
      */
     private void computeBoundsBackward(int firstCompletelyVisiblePos) {
         for (int i = firstCompletelyVisiblePos; i < userViewInfoList.size(); i++) {
-            View itemView = mLinearLayoutManager.findViewByPosition(i);
+            View itemView = linearLayoutManager.findViewByPosition(i);
             Rect bounds = new Rect();
             if (itemView != null) {
                 ImageView thumbView = (ImageView) itemView.findViewById(R.id.user_detail_new_pic_item_img);

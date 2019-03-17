@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import com.previewlibrary.enitity.IThumbViewInfo;
 
 /**
- *
  * @author yangc
  * @date 2017/4/26
  * E-Mail:yangchaojiang@outlook.com
@@ -18,15 +17,26 @@ public class UserViewInfo implements IThumbViewInfo {
     private String url;  //图片地址
     private Rect mBounds; // 记录坐标
     private String user = "用户字段";
-     private String videoUrl;
+    private String videoUrl;
+    private int imgPrice;
 
     public UserViewInfo(String url) {
         this.url = url;
     }
+
     public UserViewInfo(String videoUrl, String url) {
         this.url = url;
         this.videoUrl = videoUrl;
     }
+
+    public int getImgPrice() {
+        return imgPrice;
+    }
+
+    public void setImgPrice(int imgPrice) {
+        this.imgPrice = imgPrice;
+    }
+
     public String getUser() {
         return user;
     }

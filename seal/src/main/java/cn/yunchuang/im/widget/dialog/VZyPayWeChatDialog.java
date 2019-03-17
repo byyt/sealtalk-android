@@ -35,10 +35,10 @@ public class VZyPayWeChatDialog extends VZyBaseView implements View.OnClickListe
 
     @Override
     protected View initView() {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_pay_wechat, null);
-        mContentTv = (TextView) view.findViewById(R.id.pay_wechat_content);
-        mSureTv = (TextView) view.findViewById(R.id.pay_wechat_sure_tv);
-        mCancelTv = (TextView) view.findViewById(R.id.pay_wechat_cancel_tv);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.common_dialog_layout, null);
+        mContentTv = (TextView) view.findViewById(R.id.common_dialog_content_tv);
+        mSureTv = (TextView) view.findViewById(R.id.common_dialog_sure_tv);
+        mCancelTv = (TextView) view.findViewById(R.id.common_dialog_cancel_tv);
         mSureTv.setOnClickListener(this);
         mCancelTv.setOnClickListener(this);
         mContentTv.setText(mContentStr);
@@ -63,5 +63,9 @@ public class VZyPayWeChatDialog extends VZyBaseView implements View.OnClickListe
 
     public void setContent(String content) {
         mContentStr = content;
+    }
+
+    public static class Builder {
+
     }
 }

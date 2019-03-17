@@ -1,16 +1,18 @@
 package cn.yunchuang.im.server.response;
 
-import java.util.List;
-
 public class GetUserDetailModelOne {
     private String id;
-    private String phone;
     private String nickname;
-    private String portraitUri;
-    private String weChat; //微信号
-    private int weChatPrice; //微信号价格
+    private int sex;
+    private int height;
+    private int age;
+    private String location;
+    private int feedback_rate;
+    private int followNum;
+    private int fansNum;
+    private String qianMing;
     private String freeImgList; //免费图片列表，是一个json数组的字符串
-    private List<ImageModel> payImgList; //付费图片列表，是一个json数组
+    private String skills;//技能，是一个json字符串
 
     public String getId() {
         return id;
@@ -18,14 +20,6 @@ public class GetUserDetailModelOne {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getNickname() {
@@ -36,28 +30,68 @@ public class GetUserDetailModelOne {
         this.nickname = nickname;
     }
 
-    public String getPortraitUri() {
-        return portraitUri;
+    public int getSex() {
+        return sex;
     }
 
-    public void setPortraitUri(String portraitUri) {
-        this.portraitUri = portraitUri;
+    public void setSex(int sex) {
+        this.sex = sex;
     }
 
-    public String getWeChat() {
-        return weChat;
+    public int getHeight() {
+        return height;
     }
 
-    public void setWeChat(String weChat) {
-        this.weChat = weChat;
+    public void setHeight(int height) {
+        this.height = height;
     }
 
-    public int getWeChatPrice() {
-        return weChatPrice;
+    public int getAge() {
+        return age;
     }
 
-    public void setWeChatPrice(int weChatPrice) {
-        this.weChatPrice = weChatPrice;
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public int getFeedback_rate() {
+        return feedback_rate;
+    }
+
+    public void setFeedback_rate(int feedback_rate) {
+        this.feedback_rate = feedback_rate;
+    }
+
+    public int getFollowNum() {
+        return followNum;
+    }
+
+    public void setFollowNum(int followNum) {
+        this.followNum = followNum;
+    }
+
+    public int getFansNum() {
+        return fansNum;
+    }
+
+    public void setFansNum(int fansNum) {
+        this.fansNum = fansNum;
+    }
+
+    public String getQianMing() {
+        return qianMing;
+    }
+
+    public void setQianMing(String qianMing) {
+        this.qianMing = qianMing;
     }
 
     public String getFreeImgList() {
@@ -68,11 +102,11 @@ public class GetUserDetailModelOne {
         this.freeImgList = freeImgList;
     }
 
-    public List<ImageModel> getPayImgList() {
-        return payImgList;
+    public String getSkills() {
+        return skills;
     }
 
-    public void setPayImgList(List<ImageModel> payImgList) {
-        this.payImgList = payImgList;
+    public void setSkills(String skills) {
+        this.skills = skills;
     }
 }

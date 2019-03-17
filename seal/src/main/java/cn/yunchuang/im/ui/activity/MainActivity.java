@@ -16,7 +16,9 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,10 +33,12 @@ import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.server.widget.LoadDialog;
 import cn.yunchuang.im.ui.adapter.ConversationListAdapterEx;
 import cn.yunchuang.im.ui.fragment.ContactsFragment;
-import cn.yunchuang.im.ui.fragment.HomepageFragment;
+import cn.yunchuang.im.ui.fragment.HomepageFragment_new;
 import cn.yunchuang.im.ui.fragment.MineFragment;
 import cn.yunchuang.im.ui.widget.DragPointView;
 import cn.yunchuang.im.ui.widget.MorePopWindow;
+import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
+import cn.yunchuang.im.zmico.utils.DeviceUtils;
 import io.rong.common.RLog;
 import io.rong.imkit.RongContext;
 import io.rong.imkit.RongIM;
@@ -67,7 +71,7 @@ public class MainActivity extends FragmentActivity implements
     private Conversation.ConversationType[] mConversationsTypes = null;
     //其他fragment
     private ContactsFragment mContactsFragment = null;
-    private HomepageFragment mHomepageFragment = null;
+    private HomepageFragment_new mHomepageFragmentNew = null;
     private MineFragment mMineFragment = null;
 
     @Override
@@ -90,6 +94,16 @@ public class MainActivity extends FragmentActivity implements
 
 
     private void initViews() {
+
+        //设置标题栏高度，还有状态栏透明
+        int topLayoutHeight = DeviceUtils.getStatusBarHeightPixels(this) + DeviceUtils.dpToPx(48);
+        FrameLayout titleLayout = (FrameLayout) findViewById(R.id.user_detail_new_title_root_layout);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                topLayoutHeight);
+        titleLayout.setLayoutParams(layoutParams);
+        BaseBaseUtils.setTranslucentStatus(this);//状态栏透明
+
+
         RelativeLayout chatRLayout = (RelativeLayout) findViewById(R.id.seal_chat);
         RelativeLayout contactRLayout = (RelativeLayout) findViewById(R.id.seal_contact_list);
         RelativeLayout foundRLayout = (RelativeLayout) findViewById(R.id.seal_find);
@@ -124,7 +138,7 @@ public class MainActivity extends FragmentActivity implements
     private void initMainViewPager() {
         Fragment conversationList = initConversationList();
         mContactsFragment = new ContactsFragment();
-        mHomepageFragment = new HomepageFragment();
+        mHomepageFragmentNew = new HomepageFragment_new();
         mMineFragment = new MineFragment();
 
         mViewPager = (ViewPager) findViewById(R.id.main_viewpager);
@@ -136,7 +150,7 @@ public class MainActivity extends FragmentActivity implements
         mFragment.add(conversationList);
         mFragment.add(mContactsFragment);
 //        mFragment.add(new DiscoverFragment());
-        mFragment.add(mHomepageFragment);
+        mFragment.add(mHomepageFragmentNew);
         mFragment.add(mMineFragment);
         FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
@@ -283,7 +297,7 @@ public class MainActivity extends FragmentActivity implements
                 break;
             case R.id.seal_find:
                 mViewPager.setCurrentItem(2, false);
-                mHomepageFragment.fragmentShow();
+                mHomepageFragmentNew.fragmentShow();
                 break;
             case R.id.seal_me:
                 mViewPager.setCurrentItem(3, false);

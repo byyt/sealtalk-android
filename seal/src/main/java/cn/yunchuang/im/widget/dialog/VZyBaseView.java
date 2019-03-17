@@ -3,8 +3,6 @@ package cn.yunchuang.im.widget.dialog;
 import android.app.Activity;
 import android.view.View;
 
-import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
-
 /**
  * Created by ZhuMing on 2018/8/30.
  * dialog base
@@ -32,18 +30,19 @@ public abstract class VZyBaseView implements VZyBaseDialogBackListener {
      * @param level  层级
      * @param unique 标识唯一值
      */
-    public void showDialog(int level, String unique) {
+    public void showDialog(int level, String unique, boolean isFullScreen) {
         if (baseDialog != null) {
             View view = initView();
             VZyBaseDialogManager.getInstance().addListener(view, this);
             baseDialog.setViewData(view, level, unique);
+            baseDialog.setFullScreen(isFullScreen);
             if (!baseDialog.isShowing()) {
                 ConstantDialogUtils.isShowDialog = true;
                 baseDialog.show();
-                BaseBaseUtils.setFullScreen(activity);
             }
         }
     }
+
 
     /**
      * 子类可以自己处理返回逻辑
