@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:background="@drawable/md_profile_top_title_bg">
 
-
     <FrameLayout
         android:id="@+id/user_detail_new_title_layout_translate"
         android:layout_width="match_parent"

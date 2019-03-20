@@ -35,6 +35,7 @@ import cn.yunchuang.im.ui.adapter.ConversationListAdapterEx;
 import cn.yunchuang.im.ui.fragment.ContactsFragment;
 import cn.yunchuang.im.ui.fragment.HomepageFragment_new;
 import cn.yunchuang.im.ui.fragment.MineFragment;
+import cn.yunchuang.im.ui.fragment.MineFragment_new;
 import cn.yunchuang.im.ui.widget.DragPointView;
 import cn.yunchuang.im.ui.widget.MorePopWindow;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
@@ -72,7 +73,7 @@ public class MainActivity extends FragmentActivity implements
     //其他fragment
     private ContactsFragment mContactsFragment = null;
     private HomepageFragment_new mHomepageFragmentNew = null;
-    private MineFragment mMineFragment = null;
+    private MineFragment_new mMineFragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,13 +96,13 @@ public class MainActivity extends FragmentActivity implements
 
     private void initViews() {
 
-        //设置标题栏高度，还有状态栏透明
-        int topLayoutHeight = DeviceUtils.getStatusBarHeightPixels(this) + DeviceUtils.dpToPx(48);
-        FrameLayout titleLayout = (FrameLayout) findViewById(R.id.user_detail_new_title_root_layout);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                topLayoutHeight);
-        titleLayout.setLayoutParams(layoutParams);
-        BaseBaseUtils.setTranslucentStatus(this);//状态栏透明
+//        //设置标题栏高度，还有状态栏透明
+//        int topLayoutHeight = DeviceUtils.getStatusBarHeightPixels(this) + DeviceUtils.dpToPx(48);
+//        FrameLayout titleLayout = (FrameLayout) findViewById(R.id.user_detail_new_title_root_layout);
+//        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                topLayoutHeight);
+//        titleLayout.setLayoutParams(layoutParams);
+//        BaseBaseUtils.setTranslucentStatus(this);//状态栏透明
 
 
         RelativeLayout chatRLayout = (RelativeLayout) findViewById(R.id.seal_chat);
@@ -126,12 +127,12 @@ public class MainActivity extends FragmentActivity implements
         mineRLayout.setOnClickListener(this);
         moreImage.setOnClickListener(this);
         mSearchImageView.setOnClickListener(this);
-        BroadcastManager.getInstance(mContext).addAction(MineFragment.SHOW_RED, new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                mMineRed.setVisibility(View.VISIBLE);
-            }
-        });
+//        BroadcastManager.getInstance(mContext).addAction(MineFragment.SHOW_RED, new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                mMineRed.setVisibility(View.VISIBLE);
+//            }
+//        });
     }
 
 
@@ -139,7 +140,7 @@ public class MainActivity extends FragmentActivity implements
         Fragment conversationList = initConversationList();
         mContactsFragment = new ContactsFragment();
         mHomepageFragmentNew = new HomepageFragment_new();
-        mMineFragment = new MineFragment();
+        mMineFragment = new MineFragment_new();
 
         mViewPager = (ViewPager) findViewById(R.id.main_viewpager);
 

@@ -211,7 +211,7 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <include layout="@layout/layout_10dp_gap" />
+                <include layout="@layout/layout_20px_gap" />
 
                 <LinearLayout
                     android:id="@+id/user_detail_wei_xin_layout"
@@ -327,7 +327,7 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <include layout="@layout/layout_10dp_gap" />
+                <include layout="@layout/layout_20px_gap" />
 
                 <TextView
                     android:layout_width="wrap_content"

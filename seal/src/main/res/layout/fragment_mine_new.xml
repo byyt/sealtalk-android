@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/fragment_mine_new_root_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/fragment_mine_top_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px448"
+                android:background="@drawable/rs_select_btn_common_new">
+
+                <FrameLayout
+                    android:id="@+id/fragment_mine_new_title_layout_translate"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px96">
+
+                    <ImageView
+                        android:id="@+id/fragment_mine_new_title_bianji"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|center_vertical"
+                        android:paddingBottom="@dimen/px10"
+                        android:paddingEnd="@dimen/px30"
+                        android:paddingLeft="@dimen/px30"
+                        android:paddingRight="@dimen/px30"
+                        android:paddingStart="@dimen/px30"
+                        android:paddingTop="@dimen/px10"
+                        android:src="@drawable/mine_fragment_bianji" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="@dimen/px90"
+                    android:layout_marginEnd="@dimen/px30"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginRight="@dimen/px30"
+                    android:layout_marginStart="@dimen/px30"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <com.itheima.roundedimageview.RoundedImageView
+                        android:id="@+id/fragment_mine_avatar_iv"
+                        android:layout_width="@dimen/px140"
+                        android:layout_height="@dimen/px140"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/de_default_portrait"
+                        app:riv_oval="true" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/fragment_mine_name_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/text_px30"
+                            android:layout_marginStart="@dimen/text_px30"
+                            android:text="小明同学"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_px30" />
+
+                        <TextView
+                            android:id="@+id/fragment_mine_num_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/text_px30"
+                            android:layout_marginStart="@dimen/text_px30"
+                            android:layout_marginTop="@dimen/px26"
+                            android:text="么么号：10676625"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_px30" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|center_vertical"
+                        android:src="@drawable/mine_fragment_more_white" />
+
+                </LinearLayout>
+            </FrameLayout>
+
+            <include layout="@layout/layout_20px_gap" />
+
+            <LinearLayout
+                android:id="@+id/fragment_mine_qianbao_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px110"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/mine_fragment_qianbao"
+                    android:drawablePadding="@dimen/px30"
+                    android:drawableStart="@drawable/mine_fragment_qianbao"
+                    android:text="我的钱包"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_px32" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/mine_fragment_more_gray" />
+
+            </LinearLayout>
+
+            <include layout="@layout/layout_20px_gap" />
+
+            <LinearLayout
+                android:id="@+id/fragment_mine_xuqiu_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px110"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/mine_fragment_xuqiu"
+                    android:drawablePadding="@dimen/px30"
+                    android:drawableStart="@drawable/mine_fragment_xuqiu"
+                    android:text="我的需求"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_px32" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/mine_fragment_more_gray" />
+
+            </LinearLayout>
+
+            <include layout="@layout/layout_1px_line" />
+
+            <LinearLayout
+                android:id="@+id/fragment_mine_fuwu_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px110"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/mine_fragment_fuwu"
+                    android:drawablePadding="@dimen/px30"
+                    android:drawableStart="@drawable/mine_fragment_fuwu"
+                    android:text="我的服务"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_px32" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/mine_fragment_more_gray" />
+
+            </LinearLayout>
+
+            <include layout="@layout/layout_20px_gap" />
+
+            <LinearLayout
+                android:id="@+id/fragment_mine_weixin_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px110"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/mine_fragment_weixin"
+                    android:drawablePadding="@dimen/px30"
+                    android:drawableStart="@drawable/mine_fragment_weixin"
+                    android:text="我的微信"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_px32" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/mine_fragment_more_gray" />
+
+            </LinearLayout>
+
+            <include layout="@layout/layout_1px_line" />
+
+            <LinearLayout
+                android:id="@+id/fragment_mine_zjz_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px110"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/mine_fragment_zjz"
+                    android:drawablePadding="@dimen/px30"
+                    android:drawableStart="@drawable/mine_fragment_zjz"
+                    android:text="我的证件照"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_px32" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/mine_fragment_more_gray" />
+
+            </LinearLayout>
+
+            <include layout="@layout/layout_1px_line" />
+
+            <LinearLayout
+                android:id="@+id/fragment_mine_zuopin_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px110"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/mine_fragment_zuopin"
+                    android:drawablePadding="@dimen/px30"
+                    android:drawableStart="@drawable/mine_fragment_zuopin"
+                    android:text="我的作品"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_px32" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/mine_fragment_more_gray" />
+
+            </LinearLayout>
+
+            <include layout="@layout/layout_20px_gap" />
+
+            <LinearLayout
+                android:id="@+id/fragment_mine_zjlf_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px110"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/mine_fragment_zjlf"
+                    android:drawablePadding="@dimen/px30"
+                    android:drawableStart="@drawable/mine_fragment_zjlf"
+                    android:text="最近来访"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_px32" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/mine_fragment_more_gray" />
+
+            </LinearLayout>
+
+            <include layout="@layout/layout_1px_line" />
+
+            <LinearLayout
+                android:id="@+id/fragment_mine_guanzhu_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px110"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/mine_fragment_guanzhu"
+                    android:drawablePadding="@dimen/px30"
+                    android:drawableStart="@drawable/mine_fragment_guanzhu"
+                    android:text="我的关注"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_px32" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/mine_fragment_more_gray" />
+
+            </LinearLayout>
+
+            <include layout="@layout/layout_1px_line" />
+
+            <LinearLayout
+                android:id="@+id/fragment_mine_fensi_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px110"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/mine_fragment_fensi"
+                    android:drawablePadding="@dimen/px30"
+                    android:drawableStart="@drawable/mine_fragment_fensi"
+                    android:text="我的粉丝"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_px32" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/mine_fragment_more_gray" />
+
+            </LinearLayout>
+
+            <include layout="@layout/layout_20px_gap" />
+
+            <LinearLayout
+                android:id="@+id/fragment_mine_kefu_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px110"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/mine_fragment_kefu"
+                    android:drawablePadding="@dimen/px30"
+                    android:drawableStart="@drawable/mine_fragment_kefu"
+                    android:text="在线客服"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_px32" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/mine_fragment_more_gray" />
+
+            </LinearLayout>
+
+            <include layout="@layout/layout_1px_line" />
+
+            <LinearLayout
+                android:id="@+id/fragment_mine_shezhi_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px110"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/mine_fragment_shezhi"
+                    android:drawablePadding="@dimen/px30"
+                    android:drawableStart="@drawable/mine_fragment_shezhi"
+                    android:text="设置"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_px32" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/mine_fragment_more_gray" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px50"
+                android:background="@color/color_F4F4F4" />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <!-- 高度动态计算，状态栏高度+48dp -->
+    <FrameLayout
+        android:id="@+id/fragment_mine_new_title_layout_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:visibility="gone">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px96"
+            android:layout_gravity="bottom">
+
+            <TextView
+                android:id="@+id/fragment_mine_new_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="小明同学"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_px36" />
+
+            <ImageView
+                android:id="@+id/fragment_mine_new_title_bianji_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:paddingBottom="@dimen/px10"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30"
+                android:paddingTop="@dimen/px10"
+                android:src="@drawable/mine_fragment_bianji_black" />
+
+            <View
+                android:id="@+id/mine_fragment_new_title_line"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px1"
+                android:layout_gravity="bottom"
+                android:background="@color/color_E4E4E4" />
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+</RelativeLayout>

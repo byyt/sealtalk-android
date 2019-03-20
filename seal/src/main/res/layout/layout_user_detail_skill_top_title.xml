@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_10dp_gap" />
+    <include layout="@layout/layout_20px_gap" />
 
     <TextView
         android:id="@+id/user_detail_new_skill_title_tv"

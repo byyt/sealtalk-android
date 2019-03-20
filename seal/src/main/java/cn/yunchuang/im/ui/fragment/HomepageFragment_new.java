@@ -11,8 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -29,10 +28,8 @@ import cn.yunchuang.im.server.response.HomepageResponse;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.ui.adapter.HomepageAdapter_New;
 import cn.yunchuang.im.ui.widget.MyFooter;
-import cn.yunchuang.im.zmico.statusbar.StatusBarCompat;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
 import cn.yunchuang.im.zmico.utils.DeviceUtils;
-import cn.yunchuang.im.zmico.utils.ResourceUtils;
 
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 
@@ -66,6 +63,16 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
     }
 
     private void initView(View view) {
+
+        //设置标题栏高度，还有状态栏透明
+        if (getActivity() != null) {
+            int topLayoutHeight = DeviceUtils.getStatusBarHeightPixels(getActivity()) + DeviceUtils.dpToPx(48);
+            FrameLayout titleLayout = (FrameLayout) view.findViewById(R.id.user_detail_new_title_root_layout);
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    topLayoutHeight);
+            titleLayout.setLayoutParams(layoutParams);
+            BaseBaseUtils.setTranslucentStatus(getActivity());//状态栏透明
+        }
 
         mRefreshLayout = (RefreshLayout) view.findViewById(R.id.activity_homepage_refreshLayout);
         mRefreshLayout.setEnableHeaderTranslationContent(true);
