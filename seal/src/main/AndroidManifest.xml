@@ -147,6 +147,10 @@
             android:name="cn.yunchuang.im.ui.activity.MyAccountActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name="cn.yunchuang.im.ui.activity.MyBaseInfoActivity_new"
+            android:screenOrientation="portrait" />
+
         <!--新消息提醒-->
         <activity
             android:name="cn.yunchuang.im.ui.activity.NewMessageRemindActivity"

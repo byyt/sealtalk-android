@@ -135,6 +135,8 @@ public class PhotoUtils {
         cropIntent.putExtra("aspectY", 1);
         cropIntent.putExtra("outputX", 200);
         cropIntent.putExtra("outputY", 200);
+        cropIntent.putExtra("scale", true);
+        cropIntent.putExtra("scaleUpIfNeeded", true);
         cropIntent.putExtra("return-data", false);
         cropIntent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         Uri cropuri = buildUri(activity);

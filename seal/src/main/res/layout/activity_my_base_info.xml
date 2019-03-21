@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f0f0f6"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/my_base_info_shengri_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px120"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/px30"
+        android:paddingRight="@dimen/px30"
+        android:paddingStart="@dimen/px30"
+        android:paddingLeft="@dimen/px30">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="生日" />
+
+        <TextView
+            android:id="@+id/my_base_info_shengri_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginStart="@dimen/px30"
+            android:text="1992-02-16" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:src="@drawable/mine_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</LinearLayout>

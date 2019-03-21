@@ -49,6 +49,16 @@ public class HomepageAdapter_New extends BaseQuickAdapter<HomepageModel, BaseVie
         ImageView imageView2 = helper.getView(R.id.homepage_adapter_item_tu_pian_two);
         ImageView imageView3 = helper.getView(R.id.homepage_adapter_item_tu_pian_three);
 
+        rootLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, UserDetailActivity_New.class);
+                intent.putExtra("userId", item.getId());
+                mContext.startActivity(intent);
+            }
+        });
+        nickName.setText(item.getNickname());
+
         //Glide 加载图片简单用法
 //        RequestOptions optionsPortrait = RequestOptions.bitmapTransform(new CircleCrop());
         RequestOptions optionsPortrait = new RequestOptions();
@@ -85,15 +95,6 @@ public class HomepageAdapter_New extends BaseQuickAdapter<HomepageModel, BaseVie
                 .apply(options)
                 .into(imageView3);
 
-        rootLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, UserDetailActivity_New.class);
-                intent.putExtra("userId", item.getId());
-                mContext.startActivity(intent);
-            }
-        });
-        nickName.setText(item.getNickname());
     }
 
 

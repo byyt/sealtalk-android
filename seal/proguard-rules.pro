@@ -61,7 +61,7 @@
 # for DexGuard only
 -keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 
-#CymChad/BaseRecyclerViewAdapterHelper
+# CymChad/BaseRecyclerViewAdapterHelper
 -keep class com.chad.library.adapter.** {
 *;
 }
@@ -75,3 +75,9 @@
 -keep class com.youth.banner.** {
     *;
  }
+
+ # AndroidPicker:WheelPicker
+ -keepattributes InnerClasses,Signature
+ -keepattributes *Annotation*
+
+ -keep class cn.qqtheme.framework.entity.** { *;}
