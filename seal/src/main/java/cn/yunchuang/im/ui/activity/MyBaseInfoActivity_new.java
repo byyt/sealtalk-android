@@ -83,12 +83,24 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
         picker.setUseWeight(true);
         picker.setTopPadding(ConvertUtils.toPx(this, 10));
 
-        picker.setDividerColor(ResourceUtils.getColor(R.color.color_FC6880));
-        picker.setTextColor(ResourceUtils.getColor(R.color.color_FC6880));
-        picker.setLabelTextColor(ResourceUtils.getColor(R.color.color_FC6880));
-        picker.setCancelTextColor(ResourceUtils.getColor(R.color.color_FC6880));
-        picker.setSubmitTextColor(ResourceUtils.getColor(R.color.color_FC6880));
-        picker.setTopLineColor(ResourceUtils.getColor(R.color.color_FC6880));
+        picker.setDividerColor(ResourceUtils.getColor(R.color.color_8E8E8E));
+        picker.setDividerRatio(0);
+        picker.setTextColor(ResourceUtils.getColor(R.color.black));
+        picker.setTextSize(20);
+        picker.setLabelTextColor(ResourceUtils.getColor(R.color.black));
+        picker.setCancelTextColor(ResourceUtils.getColor(R.color.black));
+        picker.setCancelTextSize(16);
+        picker.setSubmitTextColor(ResourceUtils.getColor(R.color.black));
+        picker.setSubmitTextSize(ResourceUtils.getColor(R.color.black));
+        picker.setPressedTextColor(ResourceUtils.getColor(R.color.color_888888));
+        picker.setTitleText("出生日期");
+        picker.setTitleTextColor(ResourceUtils.getColor(R.color.black));
+        picker.setTitleTextSize(18);
+        picker.setTopLineColor(ResourceUtils.getColor(R.color.color_E4E4E4));
+        picker.setTopHeight(45);
+        picker.setHeight(ResourceUtils.dpToPX(260));
+
+        picker.setAnimationStyle(R.style.MDBottomDialogStyle_AnimationStyle);
 
         picker.setResetWhileWheel(false);
         picker.setOnDatePickListener(new DatePicker.OnYearMonthDayPickListener() {

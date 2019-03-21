@@ -1,5 +1,6 @@
 package cn.yunchuang.im.ui.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,11 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.jrmf360.rylib.JrmfClient;
 
 import cn.yunchuang.im.R;
+import cn.yunchuang.im.ui.activity.MyBaseInfoActivity_new;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
 import cn.yunchuang.im.zmico.utils.DeviceUtils;
 import cn.yunchuang.im.zmico.utils.Utils;
@@ -37,6 +40,19 @@ public class MineFragment_new extends BaseFragment implements View.OnClickListen
     private ImageView bjImgTranslate;
     private ImageView bjImgBlack;
 
+    //各个栏目
+    private LinearLayout qianbaoLayout;
+    private LinearLayout xuqiuLayout;
+    private LinearLayout fuwuLayout;
+    private LinearLayout weixinLayout;
+    private LinearLayout zjzLayout;
+    private LinearLayout zuopinLayout;
+    private LinearLayout zjlfLayout;
+    private LinearLayout guanzhuLayout;
+    private LinearLayout fensiLayout;
+    private LinearLayout kefuLayout;
+    private LinearLayout shezhiLayout;
+
     private int statusBarHeight = 0;
 
     @Nullable
@@ -58,11 +74,38 @@ public class MineFragment_new extends BaseFragment implements View.OnClickListen
         nestedScrollView.setOnScrollChangeListener(this);
 
         topLayout = (FrameLayout) view.findViewById(R.id.fragment_mine_top_layout);
+        topLayout.setOnClickListener(this);
 
         titleLayoutTranslate = (FrameLayout) view.findViewById(R.id.fragment_mine_new_title_layout_translate);
         titleLayoutWhite = (FrameLayout) view.findViewById(R.id.fragment_mine_new_title_layout_white);
         bjImgTranslate = (ImageView) view.findViewById(R.id.fragment_mine_new_title_bianji);
+        bjImgTranslate.setOnClickListener(this);
         bjImgBlack = (ImageView) view.findViewById(R.id.fragment_mine_new_title_bianji_black);
+        bjImgBlack.setOnClickListener(this);
+
+        qianbaoLayout = (LinearLayout) view.findViewById(R.id.fragment_mine_qianbao_layout);
+        xuqiuLayout = (LinearLayout) view.findViewById(R.id.fragment_mine_xuqiu_layout);
+        fuwuLayout = (LinearLayout) view.findViewById(R.id.fragment_mine_fuwu_layout);
+        weixinLayout = (LinearLayout) view.findViewById(R.id.fragment_mine_weixin_layout);
+        zjzLayout = (LinearLayout) view.findViewById(R.id.fragment_mine_zjz_layout);
+        zuopinLayout = (LinearLayout) view.findViewById(R.id.fragment_mine_zuopin_layout);
+        zjlfLayout = (LinearLayout) view.findViewById(R.id.fragment_mine_zjlf_layout);
+        guanzhuLayout = (LinearLayout) view.findViewById(R.id.fragment_mine_guanzhu_layout);
+        fensiLayout = (LinearLayout) view.findViewById(R.id.fragment_mine_fensi_layout);
+        kefuLayout = (LinearLayout) view.findViewById(R.id.fragment_mine_kefu_layout);
+        shezhiLayout = (LinearLayout) view.findViewById(R.id.fragment_mine_shezhi_layout);
+
+        qianbaoLayout.setOnClickListener(this);
+        xuqiuLayout.setOnClickListener(this);
+        fuwuLayout.setOnClickListener(this);
+        weixinLayout.setOnClickListener(this);
+        zjzLayout.setOnClickListener(this);
+        zuopinLayout.setOnClickListener(this);
+        zjlfLayout.setOnClickListener(this);
+        guanzhuLayout.setOnClickListener(this);
+        fensiLayout.setOnClickListener(this);
+        kefuLayout.setOnClickListener(this);
+        shezhiLayout.setOnClickListener(this);
 
         statusBarHeight = DeviceUtils.getStatusBarHeightPixels(getActivity());
 
@@ -130,8 +173,10 @@ public class MineFragment_new extends BaseFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.my_wallet:
-                JrmfClient.intentWallet(getActivity());
+            case R.id.fragment_mine_new_title_bianji:
+            case R.id.fragment_mine_new_title_bianji_black:
+                Intent intent = new Intent(getActivity(), MyBaseInfoActivity_new.class);
+                startActivity(intent);
                 break;
         }
     }
