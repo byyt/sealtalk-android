@@ -86,8 +86,12 @@ dependencies {
     compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-19'
     //圆形、圆角图
     compile 'com.github.open-android:RoundedImageView:v1.0.0'
-    //时间选择器、地点选择器框架
+    //时间选择器、地点、身高选择器框架
     compile('com.github.gzu-liyujiang.AndroidPicker:WheelPicker:1.5.6') {
+        exclude group: 'com.android.support'
+    }
+    //对话框
+    compile('com.mylhyl:circleDialog:2.6.8') {
         exclude group: 'com.android.support'
     }
 }

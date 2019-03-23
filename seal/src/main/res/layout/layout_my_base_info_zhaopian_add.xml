@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/activity_base_info_add_zhaopin_iv"
+        android:layout_width="@dimen/px160"
+        android:layout_height="@dimen/px160"
+        android:layout_marginRight="@dimen/px16"
+        android:layout_marginEnd="@dimen/px16"
+        android:src="@drawable/my_base_info_add_img" />
+
+</FrameLayout>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <!-- 宽度会通过计算-->
+    <com.itheima.roundedimageview.RoundedImageView
+        android:id="@+id/activity_base_info_item_zhaopin_iv"
+        android:layout_width="@dimen/px160"
+        android:layout_height="@dimen/px160"
+        android:layout_marginEnd="@dimen/px16"
+        android:layout_marginRight="@dimen/px16"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_image_zhanwei"
+        app:riv_corner_radius="@dimen/px8"
+        app:riv_oval="false" />
+
+</FrameLayout>
