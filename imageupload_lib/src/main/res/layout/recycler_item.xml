@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fr_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.docwei.imageupload_lib.view.RectImageView
+        android:id="@+id/iv_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <View
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#aaffffff"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/cb_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:background="@null"
+        android:padding="10dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/cb_image_choose" />
+</FrameLayout>

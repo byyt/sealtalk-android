@@ -82,7 +82,7 @@
                 android:layout_height="@dimen/px190"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/px30"
-                android:scaleType="fitCenter"
+                android:scaleType="centerCrop"
                 android:src="@drawable/de_default_portrait"
                 app:riv_oval="true" />
 
@@ -91,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/px20"
-                android:text="点击更换头像"
+                android:text="长按更换头像"
                 android:textColor="@color/color_888888"
                 android:textSize="@dimen/text_px28" />
 

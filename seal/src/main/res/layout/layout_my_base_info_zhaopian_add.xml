@@ -4,7 +4,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/activity_base_info_add_zhaopin_iv"
+        android:id="@+id/activity_base_info_add_zhaopian_iv"
         android:layout_width="@dimen/px160"
         android:layout_height="@dimen/px160"
         android:layout_marginRight="@dimen/px16"

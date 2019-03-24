@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.docwei.imageupload_lib">
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <application
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".album.ui.ImageChooseActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".album.ui.PreviewAllSelectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".album.ui.PreviewSingleImageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".album.ui.ImageSelectProxyActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Transparent" />
+        <activity
+            android:name=".album.ui.CropImageActivity"
+            android:screenOrientation="portrait" />
+        <!-- 图片拍照用-->
+        <provider
+            android:name="com.docwei.imageupload_lib.provider.ImageFileProvider"
+            android:authorities="${applicationId}.image.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+    </application>
+
+</manifest>

@@ -74,10 +74,6 @@ public class ResourceUtils {
         return getResources().getColorStateList(colorId);
     }
 
-    public static int dpToPX(float dp) {
-        return Math.round(getDensity() * dp);
-    }
-
     public static float getDimen(int resId) {
         return getResources().getDimension(resId);
     }

@@ -34,7 +34,7 @@ class StatusBarLollipopImpl implements IStatusBar {
                 //设置状态栏颜色
                 window.setStatusBarColor(color);
             } else {
-                window.setStatusBarColor(ResourceUtils.getColor(R.color.colorE6E8EB));
+                window.setStatusBarColor(ResourceUtils.getColor(R.color.color_E6E8EB));
             }
         } else {
             window.setStatusBarColor(color);

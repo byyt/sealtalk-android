@@ -2,9 +2,10 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:3.2.1'
         // just for GCM.
         classpath 'com.google.gms:google-services:2.0.0-alpha3'
         //banner
@@ -26,15 +27,29 @@ allprojects {
 }
 
 ext {
-    COMPILE_SDK_VERSION = 26
-    BUILD_TOOLS_VERSION = "26.0.2"
-    MIN_SDK_VERSION = 14
-    TARGET_SDK_VERSION = 26
-    ANDROID_SUPPORT_V7 = "26.1.0"
-    JUNIT_SUPPORT = "4.12"
-    RXJAVA_VERSION = "2.0.1"
-    RETROFIT_VERSION = "2.2.0"
-    DAGGER_VERSION = "2.10"
-    BUTTERKNIFE_VERSION = "8.8.1"
-    JETBRAINS_ANNOTATIONS_VERSION = "15.0"
+    android = [
+            compileSdkVersion: 28,
+            buildToolsVersion: "28.0.3",
+            minSdkVersion    : 19,
+            targetSdkVersion : 26
+    ]
+
+    dependencies = [
+            design          : "com.android.support:design:28.0.0",
+            appcompatV7     : "com.android.support:appcompat-v7:28.0.0",
+            percentview     : "com.android.support:percent:28.0.0",
+            cardview        : "com.android.support:cardview-v7:28.0.0",
+            constraintLayout: "com.android.support.constraint:constraint-layout:1.0.2",
+
+
+
+            multidex        : "com.android.support:multidex:1.0.0",
+
+
+            greendao        : "de.greenrobot:greendao:2.1.0",
+            otto            : "com.squareup:otto:1.3.4",
+
+
+
+    ]
 }

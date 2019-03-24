@@ -266,7 +266,7 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
     }
 
     private void buildTitleBgWhile() {
-//        StatusBarCompat.setStatusBarColor(this, Color.WHITE);
+//        ImageStatusBarCompat.setStatusBarColor(this, Color.WHITE);
         BaseBaseUtils.setStatusBarColor(this, Color.WHITE);
         titleRootLayout.setBackgroundColor(ResourceUtils.getColor(R.color.white));
         titleLayoutWhite.setVisibility(View.VISIBLE);
@@ -274,7 +274,7 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
     }
 
     private void buildTitleBgTransparent() {
-//        StatusBarCompat.setStatusBarColor(this, Color.TRANSPARENT);
+//        ImageStatusBarCompat.setStatusBarColor(this, Color.TRANSPARENT);
         BaseBaseUtils.setTranslucentStatus(this);
         titleRootLayout.setBackground(ResourceUtils.getDrawable(R.drawable.md_profile_top_title_bg));
         titleLayoutWhite.setVisibility(View.GONE);

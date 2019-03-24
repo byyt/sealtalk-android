@@ -6,7 +6,7 @@
 
     <!-- 宽度会通过计算-->
     <com.itheima.roundedimageview.RoundedImageView
-        android:id="@+id/activity_base_info_item_zhaopin_iv"
+        android:id="@+id/activity_base_info_item_zhaopian_iv"
         android:layout_width="@dimen/px160"
         android:layout_height="@dimen/px160"
         android:layout_marginEnd="@dimen/px16"

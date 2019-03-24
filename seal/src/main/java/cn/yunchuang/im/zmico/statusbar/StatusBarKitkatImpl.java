@@ -44,7 +44,7 @@ class StatusBarKitkatImpl implements IStatusBar {
         }
         //设置状态栏颜色
         if (Color.WHITE == color) {
-            statusBarView.setBackgroundColor(ResourceUtils.getColor(R.color.colorE6E8EB));
+            statusBarView.setBackgroundColor(ResourceUtils.getColor(R.color.color_E6E8EB));
         } else {
             statusBarView.setBackgroundColor(color);
         }

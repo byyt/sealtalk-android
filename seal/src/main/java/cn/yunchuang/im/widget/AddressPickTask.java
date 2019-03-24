@@ -16,6 +16,7 @@ import cn.qqtheme.framework.util.ConvertUtils;
 import cn.qqtheme.framework.widget.WheelView;
 import cn.yunchuang.im.App;
 import cn.yunchuang.im.R;
+import cn.yunchuang.im.zmico.utils.DeviceUtils;
 import cn.yunchuang.im.zmico.utils.ResourceUtils;
 
 /**
@@ -142,8 +143,8 @@ public class AddressPickTask extends AsyncTask<String, Void, ArrayList<Province>
         picker.setTitleTextSize(18);
         picker.setTopLineColor(ResourceUtils.getColor(R.color.color_E4E4E4));
         picker.setTopHeight(45);
-        picker.setHeight(ResourceUtils.dpToPX(260));
-        picker.setAnimationStyle(R.style.MDBottomDialogStyle_AnimationStyle);
+        picker.setHeight(DeviceUtils.dpToPx(260));
+        picker.setAnimationStyle(R.style.BottomDialogStyle_AnimationStyle150);
     }
 
 }

@@ -149,7 +149,7 @@ public class MineFragment_new extends BaseFragment implements View.OnClickListen
         if (getActivity() == null) {
             return;
         }
-//        StatusBarCompat.setStatusBarColor(this, Color.WHITE);
+//        ImageStatusBarCompat.setStatusBarColor(this, Color.WHITE);
         BaseBaseUtils.setStatusBarColor(getActivity(), Color.WHITE);
         titleLayoutWhite.setVisibility(View.VISIBLE);
         titleLayoutTranslate.setVisibility(View.GONE);
@@ -159,7 +159,7 @@ public class MineFragment_new extends BaseFragment implements View.OnClickListen
         if (getActivity() == null) {
             return;
         }
-//        StatusBarCompat.setStatusBarColor(this, Color.TRANSPARENT);
+//        ImageStatusBarCompat.setStatusBarColor(this, Color.TRANSPARENT);
         BaseBaseUtils.setTranslucentStatus(getActivity());
         titleLayoutWhite.setVisibility(View.GONE);
         titleLayoutTranslate.setVisibility(View.VISIBLE);

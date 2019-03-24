@@ -14,6 +14,7 @@ import com.facebook.stetho.Stetho;
 import com.facebook.stetho.dumpapp.DumperPlugin;
 import com.facebook.stetho.inspector.database.DefaultDatabaseConnectionProvider;
 import com.facebook.stetho.inspector.protocol.ChromeDevtoolsDomain;
+import com.mylhyl.circledialog.scale.ScaleLayoutConfig;
 import com.previewlibrary.ZoomMediaLoader;
 
 import java.util.ArrayList;
@@ -198,6 +199,9 @@ public class App extends MultiDexApplication {
 
             //图片浏览框架
             ZoomMediaLoader.getInstance().init(new TestImageLoader());
+
+            //对话框，先初始化这个类，方便将尺寸换回原始的
+            ScaleLayoutConfig.init(this);
         }
 
         instance = this;
