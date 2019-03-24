@@ -381,7 +381,9 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         if (i == 0) {
+
                         } else {
+
                         }
                     }
                 })
