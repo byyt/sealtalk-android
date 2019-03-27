@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.NestedScrollView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -33,7 +36,11 @@ import com.mylhyl.circledialog.params.DialogParams;
 import com.mylhyl.circledialog.params.ItemsParams;
 import com.mylhyl.circledialog.scale.ScaleLayoutConfig;
 import com.previewlibrary.GPreviewBuilder;
+import com.zhouyou.http.EasyHttp;
+import com.zhouyou.http.body.ProgressResponseCallBack;
+import com.zhouyou.http.exception.ApiException;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -47,10 +54,14 @@ import cn.qqtheme.framework.picker.WheelPicker;
 import cn.qqtheme.framework.util.ConvertUtils;
 import cn.qqtheme.framework.widget.WheelView;
 import cn.yunchuang.im.R;
+import cn.yunchuang.im.http.HttpCallBack;
 import cn.yunchuang.im.model.UserViewInfo;
 import cn.yunchuang.im.server.BaseAction;
 import cn.yunchuang.im.server.network.http.HttpException;
 import cn.yunchuang.im.utils.DialogUtils;
+import cn.yunchuang.im.utils.FileUtils;
+import cn.yunchuang.im.utils.TextViewUtils;
+import cn.yunchuang.im.utils.ViewVisibleUtils;
 import cn.yunchuang.im.widget.AddressPickTask;
 import cn.yunchuang.im.zmico.statusbar.StatusBarCompat;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
@@ -72,7 +83,10 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
     private ImageView backImg;
     private TextView saveTv;
 
+    private FrameLayout touxiangLaout;
     private RoundedImageView touxiangImg;
+    private FrameLayout txMengcengLayout;
+    private TextView txMengcengTv;
 
     private LinearLayout zhaopianLayout;
     private LinearLayout nichengLayout;
@@ -93,6 +107,7 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
     private int clickZhaoPianPosition = 0;//当前点击的照片的位置，从加号之后的图片开始算起
     private List<UserViewInfo> touXiangInfoList = new ArrayList<>(); //头像大图，虽然是集合，其实就一张头像图，为了符合框架用法
     private List<UserViewInfo> zhaoPianInfoList = new ArrayList<>(); //照片大图集合
+    private String shangchuanUrl;
 
     private int screenWidth;
     private int zhaopianWidth;
@@ -129,9 +144,15 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
         saveTv = (TextView) findViewById(R.id.activity_base_info_save);
         saveTv.setOnClickListener(this);
 
+
         touxiangImg = (RoundedImageView) findViewById(R.id.activity_base_info_avatar_iv);
         touxiangImg.setOnClickListener(this);
         touxiangImg.setOnLongClickListener(this);
+        txMengcengLayout = findViewById(R.id.activity_base_info_avatar_mengceng_layout);
+        txMengcengLayout.setVisibility(View.GONE);
+        txMengcengLayout.setOnLongClickListener(this);
+        txMengcengTv = findViewById(R.id.activity_base_info_avatar_mengceng_tv);
+        txMengcengTv.setText("0%");
 
         zhaopianLayout = (LinearLayout) findViewById(R.id.activity_base_info_zhaopian_layout);
         nichengLayout = (LinearLayout) findViewById(R.id.activity_base_info_nicheng_layout);
@@ -271,12 +292,15 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
             case R.id.activity_base_info_back:
                 finish();
                 break;
+            case R.id.activity_base_info_save:
+//                shangchuan(shangchuanUrl);
+                break;
             case R.id.activity_base_info_avatar_iv:
                 liuLanTouXiang();
                 break;
             case R.id.activity_base_info_add_zhaopian_iv:
-                imgTyp = 1;//更换普通照片
-                showSelectPictureDialog();
+                imgTyp = 1;//更换普通照片，添加按钮，位置是最后一个
+//                showSelectPictureDialog();
                 break;
             case R.id.activity_base_info_item_zhaopian_iv:
                 if (ViewUtil.getTag(v, R.id.info_tag) == null) {
@@ -304,8 +328,9 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
     public boolean onLongClick(View v) {
         switch (v.getId()) {
             case R.id.activity_base_info_avatar_iv:
+            case R.id.activity_base_info_avatar_mengceng_layout:
                 imgTyp = 0;//更换头像
-                showSelectPictureDialog();
+                showSelectPictureDialog(-1);//头像位置比较特殊，设置为-1
                 return true;
             case R.id.activity_base_info_item_zhaopian_iv:
                 imgTyp = 1;//更换普通照片
@@ -313,7 +338,15 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
                     return true;
                 }
                 clickZhaoPianPosition = (int) ViewUtil.getTag(v, R.id.info_tag);//从tag里取出当前点击的照片位置
-                showSelectPictureDialog();
+                showSelectPictureDialog(clickZhaoPianPosition);//这期间，可能又回点了其他照片clickZhaoPianPosition会变化，将这个位置存进去，处理完之后再对该位置图片处理
+                return true;
+            case R.id.activity_base_info_item_mengceng_layout:
+                imgTyp = 1;//更换普通照片
+                if (ViewUtil.getTag(v, R.id.info_tag) == null) {
+                    return true;
+                }
+                clickZhaoPianPosition = (int) ViewUtil.getTag(v, R.id.info_tag);//从tag里取出当前点击的照片位置
+                showSelectPictureDialog(clickZhaoPianPosition);//这期间，可能又回点了其他照片clickZhaoPianPosition会变化，将这个位置存进去，处理完之后再对该位置图片处理
                 return true;
         }
         return true;
@@ -391,10 +424,11 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
 
     }
 
-    private void showSelectPictureDialog() {
+    private void showSelectPictureDialog(int position) {
         mType = UsageTypeConstant.HEAD_PORTRAIT;//为了保留原来的用法，才加入这个变量，其实这个变量基本就是这个值，在我这没啥用
         // 更换图片 ，每次只有一张
-        ImageSelectProxyActivity.selectImage(MyBaseInfoActivity_new.this, UsageTypeConstant.HEAD_PORTRAIT, 1);
+        ImageSelectProxyActivity.selectImage(MyBaseInfoActivity_new.this,
+                UsageTypeConstant.HEAD_PORTRAIT, 1, position);
 
     }
 
@@ -431,26 +465,6 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
                 .start();
     }
 
-    /**
-     * 大图浏览，计算头像的位置
-     */
-    private void computeBoundsBackward(int firstCompletelyVisiblePos) {
-//        for (int i = firstCompletelyVisiblePos; i < zhaoPianInfoList.size(); i++) {
-//            View itemView = linearLayoutManager.findViewByPosition(i);
-//            Rect bounds = new Rect();
-//            if (itemView != null) {
-//                ImageView thumbView = (ImageView) itemView.findViewById(R.id.user_detail_new_pic_item_img);
-//                thumbView.getGlobalVisibleRect(bounds);
-//            }
-//            zhaoPianInfoList.get(i).setBounds(bounds);
-//        }
-    }
-
-    private void xuanzeZhaopian() {
-//        photoUtils.selectPicture(MyBaseInfoActivity_new.this);
-
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -466,31 +480,35 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
                 if (mType.equals(UsageTypeConstant.HEAD_PORTRAIT)) {
                     //场景二：单张图片操作 有裁剪操作
                     if (list != null && list.size() > 0) {
-                        RequestOptions options = new RequestOptions();//正常加载
-                        options.placeholder(R.drawable.ic_image_zhanwei)
-                                .error(R.drawable.ic_image_zhanwei);
+
+                        shangchuanUrl = list.get(0);
+
+                        //把之前点击图片的位置取出来，-1是头像，0-其他是普通照片，如果是-2，则表示出错
+                        int position = data.getIntExtra("position", -2);
+                        if (position == -2) {
+                            return;
+                        }
+
                         if (imgTyp == 0) {
-                            Glide.with(this)
-                                    .load(list.get(0))
-                                    .apply(options)
-                                    .into(touxiangImg);
-                            touXiangInfoList.clear();
-                            touXiangInfoList.add(new UserViewInfo(list.get(0)));
+                            //仿照waka，图片剪裁完就进行上传（后期服务端应该可以看到图片被哪些用户使用，哪些是没有用户使用的，可以后台统一删除）
+                            shangchuan(shangchuanUrl, touxiangImg, txMengcengLayout, txMengcengTv, position);
                         } else {
                             if (clickZhaoPianPosition > zhaopianLayout.getChildCount() - 2) {
                                 return;
                             }
+                            //取到当前点击的view
                             FrameLayout frameLayout
                                     = (FrameLayout) zhaopianLayout.getChildAt(clickZhaoPianPosition + 1);
-                            RoundedImageView roundedImageView = frameLayout.findViewById(R.id.activity_base_info_item_zhaopian_iv);
-                            if (roundedImageView == null) {
+                            if (frameLayout == null) {
                                 return;
                             }
-                            Glide.with(this)
-                                    .load(list.get(0))
-                                    .apply(options)
-                                    .into(roundedImageView);
-                            zhaoPianInfoList.set(clickZhaoPianPosition, new UserViewInfo(list.get(0)));
+                            RoundedImageView roundedImageView = frameLayout.findViewById(R.id.activity_base_info_item_zhaopian_iv);
+                            FrameLayout mengcengLayout = frameLayout.findViewById(R.id.activity_base_info_item_mengceng_layout);
+                            mengcengLayout.setVisibility(View.GONE);
+                            mengcengLayout.setOnLongClickListener(this);
+                            ViewUtil.setTag(mengcengLayout, clickZhaoPianPosition, R.id.info_tag);//得把位置存进tag，方便点击的时候知道点击了第几个
+                            TextView mengcengTv = frameLayout.findViewById(R.id.activity_base_info_item_mengceng_tv);
+                            shangchuan(shangchuanUrl, roundedImageView, mengcengLayout, mengcengTv, position);
                         }
                     }
                 }
@@ -609,14 +627,9 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
                 "191cm", "192cm", "193cm", "194cm", "195cm", "196cm", "197cm", "198cm", "199cm", "200cm"};
     }
 
-    public class PictureTypeEntity
-//        implements CircleItemLabel
-    {
+    public class PictureTypeEntity {
         public int id;
         public String typeName;
-
-        public PictureTypeEntity() {
-        }
 
         public PictureTypeEntity(int id, String typeName) {
             this.id = id;
@@ -628,10 +641,96 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
             return typeName;
         }
 
-//    @Override
-//    public String getItemLabel() {
-//        return typeName;
-//    }
+    }
+
+
+    //上传图片
+    private void shangchuan(String fileUrl, final RoundedImageView tupianImg,
+                            final FrameLayout mengcengLayout, final TextView mengcengTv,
+                            final int position) {
+        ViewVisibleUtils.setVisibleGone(tupianImg, false);
+        ViewVisibleUtils.setVisibleGone(mengcengLayout, true);
+        TextViewUtils.setText(mengcengTv, "0%");
+
+        File file = new File(fileUrl);
+        if (!file.exists()) {
+            return;
+        }
+        //重点，将图片fid修改为最终的fid
+        final File finalFile = FileUtils.getFinalFileFid(file);
+        if (finalFile == null) {
+            Toast.makeText(mContext, "上传出错", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!finalFile.exists()) {
+            Toast.makeText(mContext, "上传出错", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        ProgressResponseCallBack progressResponseCallBack = new ProgressResponseCallBack() {
+            @Override
+            public void onResponseProgress(long bytesWritten, long contentLength, boolean done) {
+                final int progress = (int) (bytesWritten * 100 / contentLength);
+                Log.d("xxxxxx", "progress:" + progress);
+                //需要切换到主线程
+                new Handler(getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (imgTyp == 0) {
+                            ViewVisibleUtils.setVisibleGone(tupianImg, false);
+                            ViewVisibleUtils.setVisibleGone(mengcengLayout, true);
+                            TextViewUtils.setText(mengcengTv, progress + "%");
+                        } else {
+
+                        }
+                    }
+                });
+            }
+        };
+        //注意，上传成功之后是否需要删掉本地的图？后期再考虑
+        EasyHttp.post("/file_upload")//这个路径表示上传，但服务器其实是把图片保存到/upload里，访问就是从/upload里取
+                .baseUrl(BaseAction.DOMAIN_PIC)
+                .params("img", finalFile, finalFile.getName(), progressResponseCallBack)//这个key，img，要跟nodejs后台的一个值对应起来
+                .execute(new HttpCallBack<String>() {
+                    @Override
+                    public void onSuccess(String message) {
+                        Log.d("xxxxxx", "onSuccess:" + message);
+                        RequestOptions options = new RequestOptions();
+                        options.placeholder(R.drawable.ic_image_zhanwei)
+                                .error(R.drawable.ic_image_zhanwei);
+                        if (imgTyp == 0) {
+                            Glide.with(MyBaseInfoActivity_new.this)
+                                    .load(BaseAction.DOMAIN_PIC_GET + finalFile.getName())
+                                    .apply(options)
+                                    .into(tupianImg);
+                            touXiangInfoList.clear();
+                            touXiangInfoList.add(new UserViewInfo(BaseAction.DOMAIN_PIC_GET + finalFile.getName()));
+
+                        } else {
+                            Glide.with(MyBaseInfoActivity_new.this)
+                                    .load(BaseAction.DOMAIN_PIC_GET + finalFile.getName())
+                                    .apply(options)
+                                    .into(tupianImg);
+                            zhaoPianInfoList.set(position, new UserViewInfo(BaseAction.DOMAIN_PIC_GET + finalFile.getName()));
+                        }
+                        ViewVisibleUtils.setVisibleGone(tupianImg, true);
+                        ViewVisibleUtils.setVisibleGone(mengcengLayout, false);
+                    }
+
+                    @Override
+                    public void onError(ApiException e) {
+                        Log.d("xxxxxx", "onError");
+                        if (imgTyp == 0) {
+                            touXiangInfoList.clear();
+                        } else {
+                            zhaoPianInfoList.set(position, new UserViewInfo(""));
+                        }
+                        ViewVisibleUtils.setVisibleGone(tupianImg, false);
+                        ViewVisibleUtils.setVisibleGone(mengcengLayout, true);
+                        TextViewUtils.setText(mengcengTv, "加载出错");
+                    }
+                });
+
     }
 
 }

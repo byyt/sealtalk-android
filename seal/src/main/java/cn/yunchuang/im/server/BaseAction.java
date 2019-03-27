@@ -14,9 +14,10 @@ import cn.yunchuang.im.server.utils.json.JsonMananger;
  */
 public class BaseAction {
 
-//    private static final String DOMAIN = "http://api.sealtalk.im";
+    //    private static final String DOMAIN = "http://api.sealtalk.im";
     public static final String DOMAIN = "http://192.168.0.101:8585";
     public static final String DOMAIN_PIC = "http://192.168.0.101:8081";
+    public static final String DOMAIN_PIC_GET = "http://192.168.0.101:8081/upload/";
     protected Context mContext;
     protected SyncHttpClient httpManager;
 
@@ -70,7 +71,7 @@ public class BaseAction {
      * @param url url
      */
     protected String getURL(String url) {
-        return getURL(url, new String[] {});
+        return getURL(url, new String[]{});
     }
 
     /**

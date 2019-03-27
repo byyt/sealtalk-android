@@ -16,6 +16,7 @@ import com.facebook.stetho.inspector.database.DefaultDatabaseConnectionProvider;
 import com.facebook.stetho.inspector.protocol.ChromeDevtoolsDomain;
 import com.mylhyl.circledialog.scale.ScaleLayoutConfig;
 import com.previewlibrary.ZoomMediaLoader;
+import com.zhouyou.http.EasyHttp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -196,6 +197,9 @@ public class App extends MultiDexApplication {
                 }
             }));
             RongExtensionManager.getInstance().registerExtensionModule(new RecognizeExtensionModule());
+
+            //网络框架
+            EasyHttp.init(this);//默认初始化
 
             //图片浏览框架
             ZoomMediaLoader.getInstance().init(new TestImageLoader());

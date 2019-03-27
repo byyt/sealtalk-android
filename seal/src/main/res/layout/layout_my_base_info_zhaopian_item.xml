@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
@@ -15,5 +16,24 @@
         android:src="@drawable/ic_image_zhanwei"
         app:riv_corner_radius="@dimen/px8"
         app:riv_oval="false" />
+
+    <FrameLayout
+        android:id="@+id/activity_base_info_item_mengceng_layout"
+        android:visibility="gone"
+        android:layout_width="@dimen/px160"
+        android:layout_height="@dimen/px160"
+        android:layout_marginEnd="@dimen/px16"
+        android:layout_marginRight="@dimen/px16"
+        android:background="@drawable/bg_rounded_white_50_transparent">
+
+        <TextView
+            android:id="@+id/activity_base_info_item_mengceng_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_px30"
+            tools:text="100%" />
+    </FrameLayout>
 
 </FrameLayout>

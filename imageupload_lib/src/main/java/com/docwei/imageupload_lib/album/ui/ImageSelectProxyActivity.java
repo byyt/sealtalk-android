@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -52,16 +51,19 @@ public class ImageSelectProxyActivity extends AppCompatActivity {
     private int SELECT_ALBUM = 101;
     private String mType;
     private int mCount;
+    private int position;//记录一下之前是点了哪个图片，-1代表头像，0-其他代表普通照片
 
     /**
-     * @param type    使用类型
      * @param context
-     * @param count   上传的数量
+     * @param type     使用类型
+     * @param count    上传的数量
+     * @param position 我自己加的，点了哪个图片的位置也传进来，待会再传回之前的图片
      */
-    public static void selectImage(Activity context, @UsageType String type, int count) {
+    public static void selectImage(Activity context, @UsageType String type, int count, int position) {
         Intent intent = new Intent(context, ImageSelectProxyActivity.class);
         intent.putExtra(ImageConstant.TYPE, type);
         intent.putExtra(ImageConstant.COUNT, count);
+        intent.putExtra("position", position);
         context.startActivityForResult(intent, ImageConstant.REQUEST_CODE_IAMGES);
         context.overridePendingTransition(0, 0);
     }
@@ -83,6 +85,7 @@ public class ImageSelectProxyActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mType = intent.getStringExtra(ImageConstant.TYPE);
         mCount = intent.getIntExtra(ImageConstant.COUNT, 9);
+        position = intent.getIntExtra("position", position);
         show(mCount);
     }
 
@@ -90,6 +93,7 @@ public class ImageSelectProxyActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (intent != null) {
+            intent.putExtra("position", position);//将该位置传回去，然后对该位置的图片做相应处理
             setResult(RESULT_OK, intent);
         }
         finish();
