@@ -37,6 +37,7 @@ import cn.yunchuang.im.server.request.SetGroupNameRequest;
 import cn.yunchuang.im.server.request.SetGroupPortraitRequest;
 import cn.yunchuang.im.server.request.SetNameRequest;
 import cn.yunchuang.im.server.request.SetPortraitRequest;
+import cn.yunchuang.im.server.request.UpdateBaseUserInfoRequest;
 import cn.yunchuang.im.server.request.VerifyCodeRequest;
 import cn.yunchuang.im.server.response.AddGroupMemberResponse;
 import cn.yunchuang.im.server.response.AddToBlackListResponse;
@@ -391,7 +392,7 @@ public class SealAction extends BaseAction {
      * @return
      * @throws HttpException
      */
-    public BaseResponse payImg(int imgId,int imgPrice) throws HttpException {
+    public BaseResponse payImg(int imgId, int imgPrice) throws HttpException {
         String uri = getURL("user/user_pay_img");
         String json = JsonMananger.beanToJson(new PayImgRequest(String.valueOf(imgId), imgPrice));
         StringEntity entity = null;
@@ -445,6 +446,43 @@ public class SealAction extends BaseAction {
         PayImgListResponse response = null;
         if (!TextUtils.isEmpty(result)) {
             response = jsonToBean(result, PayImgListResponse.class);
+        }
+        return response;
+    }
+
+    /**
+     * 用户信息编辑
+     *
+     * @param nickname
+     * @param portraitUri
+     * @param sex
+     * @param height
+     * @param age
+     * @param location
+     * @param qianMing
+     * @param freeImgList
+     * @return
+     * @throws HttpException
+     */
+    public BaseResponse upDateUserInfo(String nickname, String portraitUri, int sex, int height,
+                                       int age, String location, String qianMing, String freeImgList)
+            throws HttpException {
+
+        String url = getURL("user/update_user_info");
+        String json = JsonMananger.beanToJson(new UpdateBaseUserInfoRequest(nickname, portraitUri, sex, height,
+                age, location, qianMing, freeImgList));
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(json, ENCODING);
+            entity.setContentType(CONTENT_TYPE);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String result = httpManager.post(mContext, url, entity, CONTENT_TYPE);
+        BaseResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            NLog.e("LoginResponse", result);
+            response = JsonMananger.jsonToBean(result, BaseResponse.class);
         }
         return response;
     }
