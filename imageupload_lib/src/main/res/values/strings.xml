@@ -16,6 +16,7 @@
     <string name="tip_cancel_takephoto">取消</string>
     <string name="tip_takephoto">拍照</string>
     <string name="tip_form_pic_takephoto">从手机相册选择</string>
+    <string name="tip_delte_takephoto">删除照片</string>
     <string name="msg_crop_error">裁剪图片失败，请重试</string>
     <string name="dialog_cancel">取消</string>
     <string name="dialog_confirm">确定</string>

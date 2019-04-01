@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,24 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import com.jrmf360.rylib.JrmfClient;
+import com.itheima.roundedimageview.RoundedImageView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import cn.yunchuang.im.HttpManager;
+import cn.yunchuang.im.MeService;
 import cn.yunchuang.im.R;
+import cn.yunchuang.im.event.RefreshMineInfoEvent;
+import cn.yunchuang.im.server.response.GetUserDetailModelOne;
+import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
+import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.ui.activity.MyBaseInfoActivity_new;
+import cn.yunchuang.im.ui.activity.UserDetailActivity_New;
+import cn.yunchuang.im.utils.GlideUtils;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
 import cn.yunchuang.im.zmico.utils.DeviceUtils;
 import cn.yunchuang.im.zmico.utils.Utils;
@@ -33,6 +47,9 @@ public class MineFragment_new extends BaseFragment implements View.OnClickListen
 
     //顶部区域
     private FrameLayout topLayout;
+    private LinearLayout avatarNameLayout;
+    private RoundedImageView avatarIv;
+    private TextView nameTv;
 
     //标题栏
     private FrameLayout titleLayoutTranslate;
@@ -75,6 +92,10 @@ public class MineFragment_new extends BaseFragment implements View.OnClickListen
 
         topLayout = (FrameLayout) view.findViewById(R.id.fragment_mine_top_layout);
         topLayout.setOnClickListener(this);
+        avatarNameLayout = view.findViewById(R.id.fragment_mine_avatar_name_layout);
+        avatarNameLayout.setOnClickListener(this);
+        avatarIv = view.findViewById(R.id.fragment_mine_avatar_iv);
+        nameTv = view.findViewById(R.id.fragment_mine_name_tv);
 
         titleLayoutTranslate = (FrameLayout) view.findViewById(R.id.fragment_mine_new_title_layout_translate);
         titleLayoutWhite = (FrameLayout) view.findViewById(R.id.fragment_mine_new_title_layout_white);
@@ -108,10 +129,10 @@ public class MineFragment_new extends BaseFragment implements View.OnClickListen
         shezhiLayout.setOnClickListener(this);
 
         statusBarHeight = DeviceUtils.getStatusBarHeightPixels(getActivity());
-
         initTitleLayout();
-
         nestedScrollView.scrollTo(0, 0);
+        //请求个人信息
+        getMeUserInfo();
     }
 
     private void initTitleLayout() {
@@ -175,11 +196,68 @@ public class MineFragment_new extends BaseFragment implements View.OnClickListen
         switch (v.getId()) {
             case R.id.fragment_mine_new_title_bianji:
             case R.id.fragment_mine_new_title_bianji_black:
-                Intent intent = new Intent(getActivity(), MyBaseInfoActivity_new.class);
-                startActivity(intent);
+                if (getActivity() != null) {
+                    Intent intent = new Intent(getActivity(), MyBaseInfoActivity_new.class);
+                    startActivity(intent);
+                }
+                break;
+            case R.id.fragment_mine_avatar_name_layout:
+                if (getActivity() != null) {
+                    Intent intentUD = new Intent(getActivity(), UserDetailActivity_New.class);
+                    intentUD.putExtra("userId", MeService.getUid());
+                    getActivity().startActivity(intentUD);
+                }
                 break;
         }
     }
 
+    private void getMeUserInfo() {
+        HttpManager.getInstance().getUserDetailOne(MeService.getUid(), new HttpManager.ResultCallback<GetUserDetailOneResponse>() {
+            @Override
+            public void onSuccess(GetUserDetailOneResponse response) {
+                if (response != null) {
+                    GetUserDetailModelOne model = response.getResult();
+                    if (model != null && getActivity() != null) {
+                        GlideUtils.load(getActivity(), model.getPortraitUri(), avatarIv);
+                        nameTv.setText(model.getNickname());
+                    }
+                }
+            }
 
+            @Override
+            public void onError(String errString) {
+                if (getActivity() == null || !isAdded()) {
+                    return;
+                }
+                if (!TextUtils.isEmpty(errString)) {
+                    NToast.shortToast(getActivity(), errString);
+                } else {
+                    NToast.shortToast(getActivity(), "获取用户信息失败");
+                }
+            }
+        });
+    }
+
+    //额，发现必须要放在onCreate和onDestroy里，不然收不到，
+    //如果按照官网的在onStart和onStop里加，进入其他界面后就onStop注销了，所以收不到
+    //而且EventBus.getDefault().register(this);了的类必须有@Subscribe标记的接收函数，否则会报错
+    //只是发送事件是不需要EventBus.getDefault().register(this);的，直接EventBus.getDefault().post(event)即可
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRefreshMineEvent(RefreshMineInfoEvent refreshMineInfoEvent) {
+        if (Utils.isNotNull(refreshMineInfoEvent)) {
+            getMeUserInfo();
+        }
+    }
 }

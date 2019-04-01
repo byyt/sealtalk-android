@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/fragment_mine_new_root_scrollview"
@@ -41,6 +42,7 @@
                 </FrameLayout>
 
                 <LinearLayout
+                    android:id="@+id/fragment_mine_avatar_name_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -71,7 +73,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/text_px30"
                             android:layout_marginStart="@dimen/text_px30"
-                            android:text="小明同学"
+                            tools:text="小明同学"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_px30" />
 

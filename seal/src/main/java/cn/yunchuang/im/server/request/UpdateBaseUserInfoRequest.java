@@ -11,20 +11,23 @@ public class UpdateBaseUserInfoRequest {
     private String portraitUri;
     private int sex;
     private int height;
-    private int age;
-    private String location;
+    private long birthday;
+    private String suoZaiDi;
     private String qianMing;
+    private String xqah;
     private String freeImgList; //免费图片列表，是一个json数组的字符串
 
     public UpdateBaseUserInfoRequest(String nickname, String portraitUri, int sex, int height,
-                                     int age, String location, String qianMing, String freeImgList) {
+                                     long birthday, String suoZaiDi, String qianMing, String xqah,
+                                     String freeImgList) {
         this.nickname = nickname;
         this.portraitUri = portraitUri;
         this.sex = sex;
         this.height = height;
-        this.age = age;
-        this.location = location;
+        this.birthday = birthday;
+        this.suoZaiDi = suoZaiDi;
         this.qianMing = qianMing;
+        this.xqah = xqah;
         this.freeImgList = freeImgList;
     }
 
@@ -60,20 +63,20 @@ public class UpdateBaseUserInfoRequest {
         this.height = height;
     }
 
-    public int getAge() {
-        return age;
+    public long getBirthday() {
+        return birthday;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setBirthday(long birthday) {
+        this.birthday = birthday;
     }
 
-    public String getLocation() {
-        return location;
+    public String getSuoZaiDi() {
+        return suoZaiDi;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setSuoZaiDi(String suoZaiDi) {
+        this.suoZaiDi = suoZaiDi;
     }
 
     public String getQianMing() {
@@ -82,6 +85,14 @@ public class UpdateBaseUserInfoRequest {
 
     public void setQianMing(String qianMing) {
         this.qianMing = qianMing;
+    }
+
+    public String getXqah() {
+        return xqah;
+    }
+
+    public void setXqah(String xqah) {
+        this.xqah = xqah;
     }
 
     public String getFreeImgList() {

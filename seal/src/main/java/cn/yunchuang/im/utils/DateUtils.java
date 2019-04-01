@@ -2,19 +2,87 @@ package cn.yunchuang.im.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-
-import cn.yunchuang.im.model.SealSearchConversationResult;
-import io.rong.imlib.model.SearchConversationResult;
+import java.util.Locale;
 
 /**
  * 日期工具类
  * Created by bob on 2015/2/28.
  */
 public class DateUtils {
+
+    /**
+     * 根据时间戳得到年份
+     *
+     * @param timestamp
+     * @return
+     */
+    public static String getYear(long timestamp) {
+        return String.valueOf(new SimpleDateFormat("yyyy", Locale.CHINA)
+                .format(new Date(timestamp * 1000)));
+    }
+
+    public static String getMonth(long timestamp) {
+        return String.valueOf(new SimpleDateFormat("MM", Locale.CHINA)
+                .format(new Date(timestamp * 1000)));
+    }
+
+    public static String getDay(long timestamp) {
+        return String.valueOf(new SimpleDateFormat("dd", Locale.CHINA)
+                .format(new Date(timestamp * 1000)));
+    }
+
+    public static String getHMS(long timestamp) {
+        return String.valueOf(new SimpleDateFormat("HH:mm:ss", Locale.CHINA)
+                .format(new Date(timestamp * 1000)));
+    }
+
+    public static String getBirthDay(long timestamp) {
+        return String.valueOf(new SimpleDateFormat("HH:mm:ss", Locale.CHINA)
+                .format(new Date(timestamp * 1000)));
+    }
+
+    /**
+     * 日期格式字符串转换成时间戳
+     *
+     * @param date_str 字符串日期，如：1992-02-16
+     * @param format   如：yyyy-MM-dd
+     * @return
+     */
+    public static long date2TimeStamp(String date_str, String format) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(format);
+            return sdf.parse(date_str).getTime() / 1000;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * 根据出生日期得到年龄
+     *
+     * @param timestamp 出生日期的时间戳
+     * @return
+     */
+    public static int getAge(long timestamp) {
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int birthYear = Integer.valueOf(getYear(timestamp));
+        int birthMonth = Integer.valueOf(getMonth(timestamp));
+        int birthDay = Integer.valueOf(getDay(timestamp));
+        int age = currentYear - birthYear - 1;
+        if (birthMonth > currentMonth) {
+            return age;
+        } else if (birthMonth == currentMonth && birthDay > currentDay) {
+            return age;
+        } else {
+            return age + 1;
+        }
+    }
 
     /**
      * 得到当前时间
@@ -114,7 +182,6 @@ public class DateUtils {
         }
         return null;
     }
-
 
 
 }

@@ -26,6 +26,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.docwei.imageupload_lib.album.type.UsageTypeConstant;
 import com.docwei.imageupload_lib.album.ui.ImageSelectProxyActivity;
 import com.docwei.imageupload_lib.constant.ImageConstant;
+import com.hjq.toast.ToastUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.jrmf360.rylib.common.util.ToastUtil;
 import com.mylhyl.circledialog.CircleDialog;
@@ -57,16 +58,26 @@ import cn.qqtheme.framework.picker.OptionPicker;
 import cn.qqtheme.framework.picker.WheelPicker;
 import cn.qqtheme.framework.util.ConvertUtils;
 import cn.qqtheme.framework.widget.WheelView;
+import cn.yunchuang.im.MeService;
 import cn.yunchuang.im.R;
+import cn.yunchuang.im.event.RefreshMineInfoEvent;
 import cn.yunchuang.im.http.HttpCallBack;
 import cn.yunchuang.im.model.UserViewInfo;
 import cn.yunchuang.im.server.BaseAction;
 import cn.yunchuang.im.server.network.http.HttpException;
+import cn.yunchuang.im.server.response.BaseResponse;
+import cn.yunchuang.im.server.response.GetUserDetailModelOne;
+import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
+import cn.yunchuang.im.server.response.ImageModel;
+import cn.yunchuang.im.utils.DateUtils;
 import cn.yunchuang.im.utils.DialogUtils;
 import cn.yunchuang.im.utils.FileUtils;
 import cn.yunchuang.im.utils.TextViewUtils;
 import cn.yunchuang.im.utils.ViewVisibleUtils;
 import cn.yunchuang.im.widget.AddressPickTask;
+import cn.yunchuang.im.widget.dialog.ConfirmDialog;
+import cn.yunchuang.im.widget.dialog.ShuruDialog;
+import cn.yunchuang.im.widget.dialog.ShuruDuohangDialog;
 import cn.yunchuang.im.zmico.statusbar.StatusBarCompat;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
 import cn.yunchuang.im.zmico.utils.DeviceUtils;
@@ -105,6 +116,8 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
     private TextView szdTv;
     private LinearLayout qianMingLayout;
     private TextView qianMingTv;
+    private LinearLayout xqahLayout;
+    private TextView xqahTv;
 
     private PromptDialog loadingDialog;
 
@@ -125,7 +138,8 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
     private String setProvince = "广东省";
     private String setCity = "深圳市";
 
-    private static final int SAVE_USER_BASE_INFO = 1;
+    private static final int GET_USER_BASE_INFO = 1;
+    private static final int SAVE_USER_BASE_INFO = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,23 +193,29 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
         szdTv = (TextView) findViewById(R.id.activity_base_info_szd_tv);
         qianMingLayout = (LinearLayout) findViewById(R.id.activity_base_info_qianming_layout);
         qianMingLayout.setOnClickListener(this);
-        qianMingTv = (TextView) findViewById(R.id.activity_base_info_szd_tv);
+        qianMingTv = (TextView) findViewById(R.id.activity_base_info_qianming_tv);
+        xqahLayout = (LinearLayout) findViewById(R.id.activity_base_info_xqah_layout);
+        xqahLayout.setOnClickListener(this);
+        xqahTv = (TextView) findViewById(R.id.activity_base_info_xqah_tv);
 
         initTitleLayout();
-        String imgUrl = BaseAction.DOMAIN_PIC + "/" + 56 + ".jpg";
-        initTouXiang(imgUrl);
-        List<String> imgList = new ArrayList<>();
-        for (int i = 16; i < 26; i++) {
-            imgList.add(BaseAction.DOMAIN_PIC + "/" + i + ".jpg");
-        }
-        initZhaoPianLayout(imgList);
 
         loadingDialog = DialogUtils.getLoadingDialog(this);
 
         nestedScrollView.scrollTo(0, 0);
+
+        zhaopianLayout.removeAllViews();//默认有添加按钮
+        zhaopianLayout.addView(createAddItem());
+
+        request(GET_USER_BASE_INFO);
+
     }
 
+
     private void initTouXiang(String imgUrl) {
+        if (imgUrl == null) {
+            imgUrl = "";
+        }
         RequestOptions options = new RequestOptions();
         options.placeholder(R.drawable.ic_image_zhanwei)
                 .error(R.drawable.ic_image_zhanwei);
@@ -214,6 +234,9 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
     }
 
     public void initZhaoPianLayout(List<String> zhaopianList) {
+        if (zhaopianList == null) {
+            zhaopianList = new ArrayList<>();
+        }
         zhaopianLayout.removeAllViews();
         zhaopianLayout.addView(createAddItem());
         zhaoPianInfoList.clear();
@@ -270,8 +293,9 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
     @Override
     public Object doInBackground(int requestCode, String id) throws HttpException {
         switch (requestCode) {
+            case GET_USER_BASE_INFO:
+                return action.getUserDetailOne(MeService.getUid());
             case SAVE_USER_BASE_INFO:
-
                 String freeImgList = checkTouxiangAndZhaoPianHefa();
                 if (TextUtils.isEmpty(freeImgList)) {
                     return null;
@@ -280,33 +304,58 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
                 String portraitUri = touXiangInfoList.get(0).getUrl();
                 int sex = xingbieTv.getText().toString().equals("男") ? 0 : 1;
                 int height = Integer.valueOf(shengaoTv.getText().toString().replace("cm", ""));
-                Calendar calendar = Calendar.getInstance();
-                int age = getAge();
-                String location = szdTv.getText().toString();
+                long birthday = DateUtils.date2TimeStamp(setYear + "-" + setMonth + "-" + setDay,
+                        "yyyy-MM-dd");
+                String suozaidi = setProvince + "/" + setCity;
                 String qianMing = qianMingTv.getText().toString();
-                action.upDateUserInfo(nickname, portraitUri, sex, height,
-                        age, location, qianMing, freeImgList);
-
-                break;
-
+                String xqah = xqahTv.getText().toString();
+                return action.upDateUserInfo(nickname, portraitUri, sex, height,
+                        birthday, suozaidi, qianMing, xqah, freeImgList);
         }
         return null;
     }
 
     @Override
     public void onSuccess(int requestCode, Object result) {
+        DialogUtils.dimiss(loadingDialog);
         if (result != null) {
             switch (requestCode) {
+                case GET_USER_BASE_INFO:
+                    GetUserDetailOneResponse getUserDetailOneResponse = (GetUserDetailOneResponse) result;
+                    if (getUserDetailOneResponse.getCode() == 200) {
+                        updateBaseUserInfo(getUserDetailOneResponse);
+                    } else {
+                        ToastUtils.show("获取个人信息失败");
+                    }
+                    break;
+                case SAVE_USER_BASE_INFO:
+                    BaseResponse baseResponse = (BaseResponse) result;
+                    if (baseResponse.getCode() == 200) {
+                        ToastUtils.show("信息保存成功");
+                        RefreshMineInfoEvent.postEvent();
+                        finish();
+                    } else {
+                        ToastUtils.show("信息保存成功");
+                    }
 
+                    break;
             }
+        } else {
+            ToastUtils.show("信息保存失败");
         }
     }
 
 
     @Override
     public void onFailure(int requestCode, int state, Object result) {
+        DialogUtils.dimiss(loadingDialog);
         switch (requestCode) {
-
+            case GET_USER_BASE_INFO:
+                ToastUtils.show("信息获取失败");
+                break;
+            case SAVE_USER_BASE_INFO:
+                ToastUtils.show("信息保存失败");
+                break;
         }
     }
 
@@ -322,13 +371,14 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
                 break;
             case R.id.activity_base_info_save:
 //                shangchuan(shangchuanUrl);
+                DialogUtils.showLoading(loadingDialog);
                 request(SAVE_USER_BASE_INFO, true);
                 break;
             case R.id.activity_base_info_avatar_iv:
                 liuLanTouXiang();
                 break;
             case R.id.activity_base_info_add_zhaopian_iv:
-//                showSelectPictureDialog();
+                showSelectPictureDialog(zhaoPianInfoList.size(), false);//添加图片按钮，传的位置是最后一个，zhaoPianInfoList.size()
                 break;
             case R.id.activity_base_info_item_zhaopian_iv:
                 if (ViewUtil.getTag(v, R.id.info_tag) == null) {
@@ -336,6 +386,9 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
                 }
                 clickZhaoPianPosition = (int) ViewUtil.getTag(v, R.id.info_tag);//从tag里取出当前点击的照片位置
                 liuLanZhaoPian();
+                break;
+            case R.id.activity_base_info_nicheng_layout:
+                onNichengXiugai();
                 break;
             case R.id.activity_base_info_xingbie_layout:
                 onXingbiePicker();
@@ -349,35 +402,89 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
             case R.id.activity_base_info_szd_layout:
                 onSzdPicker();
                 break;
+            case R.id.activity_base_info_qianming_layout:
+                onQianmingXiugai();
+                break;
+            case R.id.activity_base_info_xqah_layout:
+                onXqahXiugai();
+                break;
         }
     }
 
     @Override
     public boolean onLongClick(View v) {
+        if (Utils.isFastClick()) {
+            return true;
+        }
         switch (v.getId()) {
-            case R.id.activity_base_info_avatar_iv:
+            case R.id.activity_base_info_avatar_iv://长按头像或者蒙层
             case R.id.activity_base_info_avatar_mengceng_layout:
-                showSelectPictureDialog(-1);//头像位置比较特殊，设置为-1
+                showSelectPictureDialog(-1, false);//头像位置比较特殊，设置为-1
                 return true;
-            case R.id.activity_base_info_item_zhaopian_iv:
-                if (ViewUtil.getTag(v, R.id.info_tag) == null) {
-                    return true;
-                }
-                clickZhaoPianPosition = (int) ViewUtil.getTag(v, R.id.info_tag);//从tag里取出当前点击的照片位置
-                showSelectPictureDialog(clickZhaoPianPosition);//这期间，可能又回点了其他照片clickZhaoPianPosition会变化，将这个位置存进去，处理完之后再对该位置图片处理
-                return true;
+            case R.id.activity_base_info_item_zhaopian_iv://长按普通照片或者蒙层
             case R.id.activity_base_info_item_mengceng_layout:
                 if (ViewUtil.getTag(v, R.id.info_tag) == null) {
                     return true;
                 }
                 clickZhaoPianPosition = (int) ViewUtil.getTag(v, R.id.info_tag);//从tag里取出当前点击的照片位置
-                showSelectPictureDialog(clickZhaoPianPosition);//这期间，可能又回点了其他照片clickZhaoPianPosition会变化，将这个位置存进去，处理完之后再对该位置图片处理
+                showSelectPictureDialog(clickZhaoPianPosition, true);//这期间，可能又回点了其他照片clickZhaoPianPosition会变化，将这个位置存进去，处理完之后再对该位置图片处理
                 return true;
         }
         return true;
     }
 
-    //这个选照片的对话框不用来，但下面的代码可以参考
+    private void updateBaseUserInfo(GetUserDetailOneResponse getUserDetailOneResponse) {
+        if (getUserDetailOneResponse == null) {
+            return;
+        }
+        GetUserDetailModelOne model = getUserDetailOneResponse.getResult();
+        if (model == null) {
+            return;
+        }
+        nichengTv.setText(model.getNickname());
+        setSex = model.getSex() == 0 ? "男" : "女";
+        xingbieTv.setText(setSex);
+        setYear = DateUtils.getYear(model.getBirthday());
+        setMonth = DateUtils.getMonth(model.getBirthday());
+        setDay = DateUtils.getDay(model.getBirthday());
+        shengriTv.setText(setYear + "-" + setMonth + "-" + setDay);
+        setShengao = String.valueOf(model.getHeight()) + "cm";
+        shengaoTv.setText(setShengao);
+        if (model.getSuoZaiDi() != null && model.getSuoZaiDi().split("/").length == 2) {
+            String[] strings = model.getSuoZaiDi().split("/");
+            setProvince = String.valueOf(strings[0]);
+            setCity = strings[1];
+        } else {
+            setProvince = "";
+            setCity = "未填写";
+        }
+        szdTv.setText(model.getSuoZaiDi());
+        qianMingTv.setText(model.getQianMing());
+        xqahTv.setText(model.getXqah());
+
+        initTouXiang(model.getPortraitUri());
+        if (TextUtils.isEmpty(model.getFreeImgList())) {
+            return;
+        }
+        List<ImageModel> imgModelList = new ArrayList<>();
+        try {
+            //将字符串的json数组转为list
+            imgModelList = com.alibaba.fastjson.JSONArray.
+                    parseArray(model.getFreeImgList(), ImageModel.class); //得到免废费图片列表
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<String> imgUrlList = new ArrayList<>();
+        if (imgModelList != null) {
+            for (ImageModel imageModel : imgModelList) {
+                imgUrlList.add(imageModel.getImgUrl());
+            }
+
+        }
+        initZhaoPianLayout(imgUrlList);
+    }
+
+    //这个选照片的对话框不用，但下面的代码可以参考
     private void showSelectPictureDialog_old() {
         //这种对话框效果很好，但为了统一还是用下面的方式吧
 //        PromptDialog promptDialog = DialogUtils.getLoadingDialog(this);
@@ -429,7 +536,7 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
                     @Override
                     public void onConfig(ButtonParams params) {
                         params.topMargin = DeviceUtils.dpToPx(5);
-                        params.textColor = ResourceUtils.getColor(R.color.color_0076ff);
+                        params.textColor = ResourceUtils.getColor(R.color.color_0076FF);
                         params.textSize = (int) (DeviceUtils.spToPx(18) / ScaleLayoutConfig.getInstance().getScale());
                         params.height = (int) (DeviceUtils.dpToPx(55) / ScaleLayoutConfig.getInstance().getScale());
                         params.text = "取消";
@@ -452,11 +559,11 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
     /**
      * @param position 这个参数很重要，postion是-1表示处理的是头像，>=0表示处理的是普通照片，后面都是通过这个来判断
      */
-    private void showSelectPictureDialog(int position) {
+    private void showSelectPictureDialog(int position, boolean showDelete) {
         mType = UsageTypeConstant.HEAD_PORTRAIT;//为了保留原来的用法，才加入这个变量，其实这个变量基本就是这个值，在我这没啥用
-        // 更换图片 ，每次只有一张
+        // 更换图片 ，每次只有一张，position为-1代表更换头像，position为0-zhaoPianInfoList.size()-1代表更换普通照片，position为zhaoPianInfoList.size()代表添加照片
         ImageSelectProxyActivity.selectImage(MyBaseInfoActivity_new.this,
-                UsageTypeConstant.HEAD_PORTRAIT, 1, position);
+                UsageTypeConstant.HEAD_PORTRAIT, 1, position, showDelete);
 
     }
 
@@ -518,10 +625,10 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
                         }
                         //仿照waka，图片剪裁完就进行上传（后期服务端应该可以看到图片被哪些用户使用，哪些是没有用户使用的，可以后台统一删除）
                         if (position == -1) {
-                            //上传的是头像
+                            //更换头像
                             shangchuan(shangchuanUrl, touxiangImg, txMengcengLayout, txMengcengTv, position);
-                        } else {
-                            //上传的是普通照片
+                        } else if (0 <= position && position <= zhaoPianInfoList.size() - 1) {
+                            //更换普通照片
                             if (clickZhaoPianPosition > zhaopianLayout.getChildCount() - 2) {
                                 return;
                             }
@@ -535,14 +642,70 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
                             FrameLayout mengcengLayout = frameLayout.findViewById(R.id.activity_base_info_item_mengceng_layout);
                             mengcengLayout.setVisibility(View.GONE);
                             mengcengLayout.setOnLongClickListener(this);
-                            ViewUtil.setTag(mengcengLayout, clickZhaoPianPosition, R.id.info_tag);//得把位置存进tag，方便点击的时候知道点击了第几个
+                            ViewUtil.setTag(mengcengLayout, position, R.id.info_tag);//得把位置存进tag，方便点击的时候知道点击了第几个，浏览图片用到
                             TextView mengcengTv = frameLayout.findViewById(R.id.activity_base_info_item_mengceng_tv);
+                            shangchuan(shangchuanUrl, roundedImageView, mengcengLayout, mengcengTv, position);
+                        } else {//position == zhaoPianInfoList.size()
+                            //添加照片
+                            View view;
+                            view = createImgItem("", position);//先新建一个空的view
+                            zhaopianLayout.addView(view);
+                            RoundedImageView roundedImageView = view.findViewById(R.id.activity_base_info_item_zhaopian_iv);
+                            FrameLayout mengcengLayout = view.findViewById(R.id.activity_base_info_item_mengceng_layout);
+                            mengcengLayout.setVisibility(View.GONE);
+                            mengcengLayout.setOnLongClickListener(this);
+                            ViewUtil.setTag(mengcengLayout, position, R.id.info_tag);//得把位置存进tag，方便点击的时候知道点击了第几个，浏览图片用到
+                            TextView mengcengTv = view.findViewById(R.id.activity_base_info_item_mengceng_tv);
                             shangchuan(shangchuanUrl, roundedImageView, mengcengLayout, mengcengTv, position);
                         }
                     }
                 }
             }
+        } else if (-6 == resultCode) {//自己定义的，返回-6就表示删除照片
+            //把之前点击图片的位置取出来，-1是头像，0-其他是普通照片，如果是-2，则表示出错
+            final int position = data.getIntExtra("position", -2);
+            if (position == -2) {
+                return;
+            }
+            //仿照waka，图片剪裁完就进行上传（后期服务端应该可以看到图片被哪些用户使用，哪些是没有用户使用的，可以后台统一删除）
+            if (position == -1) {
+                //删除的是头像，正常来讲，点击头像不会出现删除照片选项
+                return;
+            } else {
+                //删除的是普通照片
+                DialogUtils.showConfirmDialog(this, "确定删除该照片？", "",
+                        new ConfirmDialog.ConfirmListener() {
+                            @Override
+                            public void confirm() {
+                                shanchuZhaoPian(position);
+                            }
+                        });
+            }
         }
+    }
+
+    private void shanchuZhaoPian(int position) {
+        if (position < 0 || position > zhaoPianInfoList.size() - 1) {
+            ToastUtils.show("删除图片出错");
+            return;
+        }
+        zhaoPianInfoList.remove(position);
+        List<String> zhaopianList = new ArrayList<>();
+        for (UserViewInfo userViewInfo : zhaoPianInfoList) {
+            String imgUrl = userViewInfo.getUrl();
+            zhaopianList.add(imgUrl);
+        }
+        initZhaoPianLayout(zhaopianList);
+    }
+
+    private void onNichengXiugai() {
+        DialogUtils.showShuruDanhangDialog(this, "输入昵称", nichengTv.getText().toString(),
+                new ShuruDialog.ConfirmListener() {
+                    @Override
+                    public void confirm(String content) {
+                        nichengTv.setText(content);
+                    }
+                });
     }
 
     private void onXingbiePicker() {
@@ -616,10 +779,9 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
 
             @Override
             public void onAddressPicked(Province province, City city, County county) {
-//                showToast(province.getAreaName() + " " + city.getAreaName());
                 setProvince = province.getAreaName();
                 setCity = city.getAreaName();
-                szdTv.setText(province.getAreaName() + " " + city.getAreaName());
+                szdTv.setText(setProvince + " " + setCity);
             }
         });
         task.execute(setProvince, setCity);
@@ -672,6 +834,27 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
 
     }
 
+    private void onQianmingXiugai() {
+        DialogUtils.showShuruDuohangDialog(this, "输入个性签名",
+                qianMingTv.getText().toString(), "请输入您的个性签名（字数50以内）",
+                new ShuruDuohangDialog.ConfirmListener() {
+                    @Override
+                    public void confirm(String content) {
+                        qianMingTv.setText(content);
+                    }
+                });
+    }
+
+    private void onXqahXiugai() {
+        DialogUtils.showShuruDuohangDialog(this, "输入兴趣爱好",
+                xqahTv.getText().toString(), "请输入您的兴趣爱好（字数50以内）",
+                new ShuruDuohangDialog.ConfirmListener() {
+                    @Override
+                    public void confirm(String content) {
+                        xqahTv.setText(content);
+                    }
+                });
+    }
 
     //上传图片
     private void shangchuan(String fileUrl, final RoundedImageView tupianImg,
@@ -712,6 +895,7 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
                 });
             }
         };
+        DialogUtils.showLoading(loadingDialog);
         //注意，上传成功之后是否需要删掉本地的图？后期再考虑
         EasyHttp.post("/file_upload")//这个路径表示上传，但服务器其实是把图片保存到/upload里，访问就是从/upload里取
                 .baseUrl(BaseAction.DOMAIN_PIC)
@@ -720,22 +904,29 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
                     @Override
                     public void onSuccess(String message) {
                         Log.d("xxxxxx", "onSuccess:" + message);
+                        DialogUtils.dimiss(loadingDialog);
                         RequestOptions options = new RequestOptions();
                         options.placeholder(R.drawable.ic_image_zhanwei)
                                 .error(R.drawable.ic_image_zhanwei);
-                        if (position == -1) {//头像
+                        if (position == -1) {//更换头像
                             Glide.with(MyBaseInfoActivity_new.this)
                                     .load(BaseAction.DOMAIN_PIC_GET + finalFile.getName())
                                     .apply(options)
                                     .into(tupianImg);
                             touXiangInfoList.clear();
                             touXiangInfoList.add(new UserViewInfo(BaseAction.DOMAIN_PIC_GET + finalFile.getName()));
-                        } else {//普通照片
+                        } else if (0 <= position && position <= zhaoPianInfoList.size() - 1) {//更换普通照片
                             Glide.with(MyBaseInfoActivity_new.this)
                                     .load(BaseAction.DOMAIN_PIC_GET + finalFile.getName())
                                     .apply(options)
                                     .into(tupianImg);
                             zhaoPianInfoList.set(position, new UserViewInfo(BaseAction.DOMAIN_PIC_GET + finalFile.getName()));
+                        } else {//添加照片
+                            Glide.with(MyBaseInfoActivity_new.this)
+                                    .load(BaseAction.DOMAIN_PIC_GET + finalFile.getName())
+                                    .apply(options)
+                                    .into(tupianImg);
+                            zhaoPianInfoList.add(new UserViewInfo(BaseAction.DOMAIN_PIC_GET + finalFile.getName()));
                         }
                         ViewVisibleUtils.setVisibleGone(tupianImg, true);
                         ViewVisibleUtils.setVisibleGone(mengcengLayout, false);
@@ -744,10 +935,13 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
                     @Override
                     public void onError(ApiException e) {
                         Log.d("xxxxxx", "onError");
+                        DialogUtils.dimiss(loadingDialog);
                         if (position == -1) {
                             touXiangInfoList.clear();
-                        } else {
+                        } else if (0 <= position && position <= zhaoPianInfoList.size() - 1) {
                             zhaoPianInfoList.set(position, new UserViewInfo(""));
+                        } else {
+                            zhaoPianInfoList.add(new UserViewInfo(""));
                         }
                         ViewVisibleUtils.setVisibleGone(tupianImg, false);
                         ViewVisibleUtils.setVisibleGone(mengcengLayout, true);
@@ -792,19 +986,4 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
         return freeImgList;
     }
 
-    //计算还有点问题，明天再看
-    private int getAge() {
-        Calendar calendar = Calendar.getInstance();
-        int currentYear = calendar.get(Calendar.YEAR);
-        int currentMonth = calendar.get(Calendar.MONTH) + 1;
-        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-        int age = currentYear - Integer.valueOf(setYear);
-        if (Integer.valueOf(setMonth) < currentMonth) {
-            return age;
-        } else if (Integer.valueOf(setMonth) >= currentMonth && Integer.valueOf(setDay) < currentDay) {
-            return age;
-        } else {
-            return age + 1;
-        }
-    }
 }

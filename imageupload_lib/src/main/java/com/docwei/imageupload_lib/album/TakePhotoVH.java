@@ -21,8 +21,11 @@ public class TakePhotoVH implements Holder {
     private Activity mContext;
     private View mContentContainer;
 
-    public TakePhotoVH(Activity context) {
+    private boolean showDelete = false;//加一个变量，如果传来的是头像，则不显示删除照片选项
+
+    public TakePhotoVH(Activity context, boolean showDelete) {
         mContext = context;
+        this.showDelete = showDelete;
     }
 
     @Override
@@ -35,6 +38,7 @@ public class TakePhotoVH implements Holder {
     private void init(View view, final DialogPlus dialogPlus) {
         final TextView tv_photo = view.findViewById(R.id.select_photo);
         TextView tv_camera = view.findViewById(R.id.select_camera);
+        TextView tv_delete = view.findViewById(R.id.delte_photo);
         TextView tv_cancel = view.findViewById(R.id.select_cancel);
         tv_camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +75,25 @@ public class TakePhotoVH implements Holder {
                 }, 300);
             }
         });
+        tv_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mICameraAndPhotoListener != null) {
+                    mICameraAndPhotoListener.deletePhoto();
+                }
+                tv_photo.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialogPlus.dismiss();
+                    }
+                }, 300);
+            }
+        });
+        if (showDelete) {
+            tv_delete.setVisibility(View.VISIBLE);//点击的是普通照片，显示删除按钮
+        } else {
+            tv_delete.setVisibility(View.GONE);//点击的是头像或者添加按钮，不显示删除按钮
+        }
     }
 
     public void setCameraAndPhotoListener(ICameraAndPhotoListener iCameraAndPhotoListener) {
@@ -81,6 +104,8 @@ public class TakePhotoVH implements Holder {
         void takePhoto();
 
         void selectAlbum();
+
+        void deletePhoto();
     }
 
 

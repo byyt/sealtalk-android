@@ -14,6 +14,7 @@ import com.facebook.stetho.Stetho;
 import com.facebook.stetho.dumpapp.DumperPlugin;
 import com.facebook.stetho.inspector.database.DefaultDatabaseConnectionProvider;
 import com.facebook.stetho.inspector.protocol.ChromeDevtoolsDomain;
+import com.hjq.toast.ToastUtils;
 import com.mylhyl.circledialog.scale.ScaleLayoutConfig;
 import com.previewlibrary.ZoomMediaLoader;
 import com.zhouyou.http.EasyHttp;
@@ -37,7 +38,7 @@ import cn.yunchuang.im.stetho.RongDatabaseFilesProvider;
 import cn.yunchuang.im.stetho.RongDbFilesDumperPlugin;
 import cn.yunchuang.im.ui.activity.UserDetailActivity;
 import cn.yunchuang.im.utils.SharedPreferencesContext;
-import cn.yunchuang.im.widget.TestImageLoader;
+import cn.yunchuang.im.widget.ZoomImageLoader;
 import io.rong.imageloader.core.DisplayImageOptions;
 import io.rong.imageloader.core.display.FadeInBitmapDisplayer;
 import io.rong.imkit.RongExtensionManager;
@@ -198,14 +199,20 @@ public class App extends MultiDexApplication {
             }));
             RongExtensionManager.getInstance().registerExtensionModule(new RecognizeExtensionModule());
 
-            //网络框架
+            //网络框架，主要用来上传下载
             EasyHttp.init(this);//默认初始化
 
+            //自定义的网络类，用在fragment中做请求
+            HttpManager.init(this);
+
             //图片浏览框架
-            ZoomMediaLoader.getInstance().init(new TestImageLoader());
+            ZoomMediaLoader.getInstance().init(new ZoomImageLoader());
 
             //对话框，先初始化这个类，方便将尺寸换回原始的
             ScaleLayoutConfig.init(this);
+
+            //吐司Toast
+            ToastUtils.init(this);
         }
 
         instance = this;

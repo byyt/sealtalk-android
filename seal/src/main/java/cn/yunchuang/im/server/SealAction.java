@@ -457,20 +457,21 @@ public class SealAction extends BaseAction {
      * @param portraitUri
      * @param sex
      * @param height
-     * @param age
-     * @param location
+     * @param birthday
+     * @param suoZaiDi
      * @param qianMing
      * @param freeImgList
      * @return
      * @throws HttpException
      */
     public BaseResponse upDateUserInfo(String nickname, String portraitUri, int sex, int height,
-                                       int age, String location, String qianMing, String freeImgList)
+                                       long birthday, String suoZaiDi, String qianMing, String xqah,
+                                       String freeImgList)
             throws HttpException {
 
         String url = getURL("user/update_user_info");
         String json = JsonMananger.beanToJson(new UpdateBaseUserInfoRequest(nickname, portraitUri, sex, height,
-                age, location, qianMing, freeImgList));
+                birthday, suoZaiDi, qianMing, xqah,freeImgList));
         StringEntity entity = null;
         try {
             entity = new StringEntity(json, ENCODING);

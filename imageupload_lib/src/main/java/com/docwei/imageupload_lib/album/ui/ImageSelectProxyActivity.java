@@ -49,9 +49,11 @@ public class ImageSelectProxyActivity extends AppCompatActivity {
     private Uri mImageUri;
     private int TAKE_PHOTO = 100;
     private int SELECT_ALBUM = 101;
+    private int DELETE_PHOTO = 102;
     private String mType;
     private int mCount;
     private int position;//记录一下之前是点了哪个图片，-1代表头像，0-其他代表普通照片
+    private boolean showDelete = false;//是否展示删除照片选项，头像和添加按钮不展示
 
     /**
      * @param context
@@ -59,11 +61,12 @@ public class ImageSelectProxyActivity extends AppCompatActivity {
      * @param count    上传的数量
      * @param position 我自己加的，点了哪个图片的位置也传进来，待会再传回之前的图片
      */
-    public static void selectImage(Activity context, @UsageType String type, int count, int position) {
+    public static void selectImage(Activity context, @UsageType String type, int count, int position, boolean showDelete) {
         Intent intent = new Intent(context, ImageSelectProxyActivity.class);
         intent.putExtra(ImageConstant.TYPE, type);
         intent.putExtra(ImageConstant.COUNT, count);
         intent.putExtra("position", position);
+        intent.putExtra("showDelete", showDelete);
         context.startActivityForResult(intent, ImageConstant.REQUEST_CODE_IAMGES);
         context.overridePendingTransition(0, 0);
     }
@@ -86,6 +89,7 @@ public class ImageSelectProxyActivity extends AppCompatActivity {
         mType = intent.getStringExtra(ImageConstant.TYPE);
         mCount = intent.getIntExtra(ImageConstant.COUNT, 9);
         position = intent.getIntExtra("position", position);
+        showDelete = intent.getBooleanExtra("showDelete", showDelete);
         show(mCount);
     }
 
@@ -101,7 +105,7 @@ public class ImageSelectProxyActivity extends AppCompatActivity {
 
     private void show(final int count) {
 
-        TakePhotoVH viewHolder = new TakePhotoVH(this);
+        TakePhotoVH viewHolder = new TakePhotoVH(this, showDelete);
 
         DialogPlus dialog = DialogPlus.newDialog(this)
                 .setContentHolder(viewHolder)
@@ -123,6 +127,15 @@ public class ImageSelectProxyActivity extends AppCompatActivity {
             @Override
             public void selectAlbum() {
                 selectImageFromGallery(count);
+            }
+
+            @Override
+            public void deletePhoto() {
+                Intent intent = new Intent();
+                intent.putExtra("position", position);//将该位置传回去，然后对该位置的图片做相应处理
+                setResult(-6, intent);//返回-6就表示删除照片，自己定义的
+                finish();
+                overridePendingTransition(0, 0);
             }
         });
     }

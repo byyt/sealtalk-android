@@ -72,9 +72,11 @@ dependencies {
 
     //Glide框架的引入在CallKit模块中
     //图片自动轮播框架
-    api 'com.youth.banner:banner:1.4.10'
+//    api 'com.youth.banner:banner:1.4.10'  //需要修改框架，添加能够滑动到指定位置的方法，上线前记得拷贝最新的
+    api project(':banner')
     //图片浏览框架
-    api 'com.ycjiang:ImagePreview:2.2.2'
+//    api 'com.ycjiang:ImagePreview:2.2.2'
+    api project(':ImagePreview')
     //recyclerView的adapter框架
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
     //Glide模糊效果的框架
@@ -100,7 +102,11 @@ dependencies {
     api ('com.zhouyou:rxeasyhttp:2.1.5'){
         exclude group: 'com.squareup.okhttp3'
     }
-    //
+    //吐司Toast
+    api 'com.hjq:toast:5.8'
+    //eventbus
+    implementation 'org.greenrobot:eventbus:3.1.1'
+
     //第三方依赖库
     implementation 'com.squareup.okhttp3:logging-interceptor:3.1.2'
     implementation 'com.squareup.okhttp3:okhttp:3.4.1'

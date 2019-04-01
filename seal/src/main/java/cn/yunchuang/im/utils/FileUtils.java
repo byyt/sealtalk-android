@@ -4,6 +4,17 @@ package cn.yunchuang.im.utils;
  * Created by zhou_yuntao on 2019/3/26.
  */
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
+import android.support.v4.app.FragmentActivity;
+
+import com.hjq.toast.ToastUtils;
+import com.zhouyou.http.EasyHttp;
+import com.zhouyou.http.callback.DownloadProgressCallBack;
+import com.zhouyou.http.exception.ApiException;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -21,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.yunchuang.im.utils.code.MD5;
+import me.leefeng.promptlibrary.PromptDialog;
 
 /**
  * author : smile
@@ -31,6 +43,28 @@ public class FileUtils {
 
     private static final String TAG = "FileUtils";
 
+    private static final String SAVE_PIC_PATH = "yunchuang/pictures";
+    private static final String SAVE_VIDEO_PATH = "yunchuang/videos";
+
+    /**
+     * 图片下载保存的根目录，指的是下载后，即使删除软件依然保存着的，比如保存网上图片
+     * 大部分文件是下载到软件自身的data目录下（waka），软件卸载后这些文件也会被删掉
+     *
+     * @return
+     */
+    public static String getSavePicPath(Context context) {
+        String savefileDir = "";
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            //如果有内存卡，就保存到内存卡
+            savefileDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
+                    + SAVE_PIC_PATH;
+        } else {
+            //美有内存卡，就保存到手机存储
+            savefileDir = context.getFilesDir().getAbsolutePath() + File.separator;
+        }
+
+        return savefileDir;
+    }
 
     /**
      * 对图片重命名为服务器存储的最终文件名
@@ -62,6 +96,57 @@ public class FileUtils {
         }
     }
 
+    /**
+     * 将网络图片保存到本地相册
+     *
+     * @param activity
+     * @param imgUrl
+     */
+    public static void savePicToAlbum(final FragmentActivity activity, String imgUrl) {
+        if (activity == null) {
+            return;
+        }
+        if (!imgUrl.contains("/")) {
+            ToastUtils.show("图片不存在");
+            return;
+        }
+        final String fileName = imgUrl.substring(imgUrl.lastIndexOf('/'));
+        final PromptDialog loadingDialog = DialogUtils.getLoadingDialog(activity);
+        EasyHttp.downLoad(imgUrl)
+                .savePath(FileUtils.getSavePicPath(activity))
+                .saveName(fileName)
+                .execute(new DownloadProgressCallBack<String>() {
+                    @Override
+                    public void update(long bytesRead, long contentLength, boolean done) {
+                    }
+
+                    @Override
+                    public void onStart() {
+                        //开始下载
+                        DialogUtils.showLoading(loadingDialog);
+                    }
+
+                    @Override
+                    public void onComplete(String path) {
+                        //下载完成，path：下载文件保存的完整路径
+                        DialogUtils.dimiss(loadingDialog);
+                        ToastUtils.show("图片保存到：" + path);
+                        //保存图片后发送广播通知更新数据库
+                        File file = new File(path);
+                        if (file.exists()) {
+                            Uri uri = Uri.fromFile(file);
+                            activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiException e) {
+                        //下载失败
+                        DialogUtils.dimiss(loadingDialog);
+                        ToastUtils.show("图片保存出错");
+                    }
+                });
+    }
 
     /**
      * 对图片重命名为服务器存储的最终文件名
@@ -334,4 +419,5 @@ public class FileUtils {
             return false;
         }
     }
+
 }

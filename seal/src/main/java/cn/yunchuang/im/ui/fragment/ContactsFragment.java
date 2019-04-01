@@ -108,7 +108,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         mSidBar.setTextView(mDialogTextView);
         LayoutInflater mLayoutInflater = LayoutInflater.from(getActivity());
         mHeadView = mLayoutInflater.inflate(R.layout.item_contact_list_header,
-                                            null);
+                null);
         mUnreadTextView = (TextView) mHeadView.findViewById(R.id.tv_unread);
         RelativeLayout newFriendsLayout = (RelativeLayout) mHeadView.findViewById(R.id.re_newfriends);
         RelativeLayout groupLayout = (RelativeLayout) mHeadView.findViewById(R.id.re_chatroom);

@@ -1,1 +1,2 @@
-include ':seal', ':recognizer', ':sticker', ':IMLib', ':IMKit', ':CallLib', ':CallKit', ':RedPacket', ':contactcard',"imageupload_lib"
+include ':seal', ':recognizer', ':sticker', ':IMLib', ':IMKit', ':CallLib', ':CallKit', ':RedPacket', ':contactcard'
+include ':imageupload_lib',':banner',':ImagePreview'

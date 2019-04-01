@@ -4,7 +4,7 @@ public class ImageModel {
 
     private int id; //付费图片有id，免费图片没有
     private String imgUrl;
-    private int imgPrice;
+    private int imgPrice; //付费图片有价格，免费图片没有
 
     public int getId() {
         return id;

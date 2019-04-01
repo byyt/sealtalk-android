@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.yunchuang.im.HttpManager;
 import cn.yunchuang.im.R;
-import cn.yunchuang.im.SealUserInfoManager;
 import cn.yunchuang.im.server.response.HomepageModel;
 import cn.yunchuang.im.server.response.HomepageResponse;
 import cn.yunchuang.im.server.utils.NToast;
@@ -116,7 +116,7 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
     }
 
     private void getData() {
-        SealUserInfoManager.getInstance().getRecommendUsers(startIndex, PAGE_SIZE, new SealUserInfoManager.ResultCallback<HomepageResponse>() {
+        HttpManager.getInstance().getRecommendUsers(startIndex, PAGE_SIZE, new HttpManager.ResultCallback<HomepageResponse>() {
             @Override
             public void onSuccess(HomepageResponse homepageResponse) {
                 Log.e("xxxxxx", "getData onSuccess");
@@ -142,13 +142,9 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
                 } else {
                     NToast.shortToast(getActivity(), "获取用户信息失败");
                 }
-//                if (pullToRefreshMRecyclerView != null) {
-//                    pullToRefreshMRecyclerView.onRefreshComplete();
-//                }
 
                 mRefreshLayout.finishRefresh();
                 mRefreshLayout.resetNoMoreData();//setNoMoreData(false);
-
             }
         });
     }
@@ -211,21 +207,11 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         startIndex = 0;
         getData();
-
-//        mRefreshLayout.getLayout().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mRefreshLayout.finishRefresh();
-//                mRefreshLayout.resetNoMoreData();//setNoMoreData(false);
-//            }
-//        }, 1000);
-
     }
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         getData();
-//        refreshLayout.finishLoadMoreWithNoMoreData();
     }
 
 }

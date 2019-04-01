@@ -1,5 +1,6 @@
 package cn.yunchuang.im.ui.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -18,9 +19,14 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSONArray;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.previewlibrary.GPreviewBuilder;
+import com.previewlibrary.loader.PhotoClickListener;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
+import com.youth.banner.listener.OnBannerListener;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.text.MessageFormat;
@@ -28,7 +34,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import cn.yunchuang.im.MeService;
 import cn.yunchuang.im.R;
+import cn.yunchuang.im.event.RefreshMineInfoEvent;
 import cn.yunchuang.im.model.UserViewInfo;
 import cn.yunchuang.im.server.network.http.HttpException;
 import cn.yunchuang.im.server.response.BaseResponse;
@@ -42,9 +50,11 @@ import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.server.utils.StaticDataUtils;
 import cn.yunchuang.im.server.widget.LoadDialog;
 import cn.yunchuang.im.ui.adapter.UserDetailPicListAdapter;
+import cn.yunchuang.im.utils.DateUtils;
 import cn.yunchuang.im.widget.GlideImageLoader;
-import cn.yunchuang.im.widget.dialog.CommonDialog;
-import cn.yunchuang.im.widget.dialog.ConstantDialogUtils;
+import cn.yunchuang.im.widget.dialog_hdzy.CommonDialog;
+import cn.yunchuang.im.widget.dialog_hdzy.ConstantDialogUtils;
+import cn.yunchuang.im.zmico.SquareLayout;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
 import cn.yunchuang.im.zmico.utils.DeviceUtils;
 import cn.yunchuang.im.zmico.utils.ResourceUtils;
@@ -61,6 +71,7 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
         , NestedScrollView.OnScrollChangeListener {
 
     private NestedScrollView nestedScrollView;
+    private SquareLayout squareLayout;
     //标题栏
     private FrameLayout titleRootLayout;
     private FrameLayout titleLayoutTranslate;
@@ -100,8 +111,9 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
     private GetUserDetailModelOne userDetailModelOne;
     private GetUserDetailModelTwo userDetailModelTwo;
     private ArrayList<String> freeImageList = new ArrayList<>(); //免费图片地址集合，在banner中展示
-    private List<UserViewInfo> userViewInfoList = new ArrayList<>(); //大图集合
-    private List<ImageModel> resultImageList = new ArrayList<>(); //最原始总数据集合，免费图片加上付费图片,为了得到付费图片的id
+    private List<UserViewInfo> freeUserViewInfoList = new ArrayList<>(); //免费图片大图集合
+    private List<UserViewInfo> payUserViewInfoList = new ArrayList<>(); //付费图片大图集合，即作品一栏的图片
+    private List<ImageModel> payResultImageList = new ArrayList<>(); //最终的付费图片集合，确定哪些已经付费，哪些还未付费
     private String userId = "";
     private int imgId; //当前点击图片的id，主要针对付费图片
     private int imgPrice; //当前点击图片的id，主要针对付费图片
@@ -114,15 +126,23 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
     private static final int PAY_WECHAT = 1604;
 
     private int statusBarHeight = 0;
+    private boolean clickBannerPic = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BaseBaseUtils.setTranslucentStatus(this);
+        EventBus.getDefault().register(this);
         setContentView(R.layout.activity_user_detail_new);
         setHeadVisibility(View.GONE);
         initView();
         getUserDetailData();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     private void initView() {
@@ -130,6 +150,7 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
 
         nestedScrollView = (NestedScrollView) findViewById(R.id.user_detail_new_root_scrollview);
         nestedScrollView.setOnScrollChangeListener(this);
+        squareLayout = (SquareLayout) findViewById(R.id.user_detail_new_top_square_layout);
 
         titleRootLayout = (FrameLayout) findViewById(R.id.user_detail_new_title_root_layout);
         titleLayoutTranslate = (FrameLayout) findViewById(R.id.user_detail_new_title_layout_translate);
@@ -144,6 +165,7 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
         moreOpImgBlack = (ImageView) findViewById(R.id.user_detail_new_more_op_black);
         moreOpImgBlack.setOnClickListener(this);
         titleTv = (TextView) findViewById(R.id.user_detail_new_title_tv);
+        initMoreOrEdit();
         initTitleLayout();
 
         feedBackRateTv = (TextView) findViewById(R.id.user_detail_new_feed_back_rate);
@@ -167,22 +189,22 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
         picdapter = new UserDetailPicListAdapter(this);
-        picdapter.replaceData(userViewInfoList);
+        picdapter.replaceData(payUserViewInfoList);
         recyclerView.setAdapter(picdapter);
         picdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                imgId = resultImageList.get(position).getId();
-                imgPrice = resultImageList.get(position).getImgPrice();
-                if (StaticDataUtils.isInBlurImgUrlList(resultImageList.get(position).getImgUrl())) {
+                imgId = payResultImageList.get(position).getId();
+                imgPrice = payResultImageList.get(position).getImgPrice();
+                if (StaticDataUtils.isInBlurImgUrlList(payResultImageList.get(position).getImgUrl())) {
                     //如果点击的是需要付费的照片，则弹出框让用户付费
                     showPayImgDialog(position);
 
                 } else {
                     //否则进入大图浏览模式
-                    computeBoundsBackward(linearLayoutManager.findFirstVisibleItemPosition());
+                    computeBoundsBackwardPay(linearLayoutManager.findFirstVisibleItemPosition());
                     GPreviewBuilder.from(UserDetailActivity_New.this)
-                            .setData(userViewInfoList)
+                            .setData(payUserViewInfoList)
                             .setCurrentIndex(position)
                             .setSingleFling(true)
                             .setType(GPreviewBuilder.IndicatorType.Number)
@@ -198,6 +220,17 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
         statusBarHeight = DeviceUtils.getStatusBarHeightPixels(this);
 
         nestedScrollView.scrollTo(0, 0);
+    }
+
+    private void initMoreOrEdit() {//如果查看的是自己，右上角为编辑按钮
+        if (userId.equals(MeService.getUid())) {
+            moreOpImgTranslate.setImageResource(R.drawable.mine_fragment_bianji);
+            moreOpImgBlack.setImageResource(R.drawable.mine_fragment_bianji_black);
+        } else {
+            moreOpImgTranslate.setImageResource(R.drawable.user_detail_more_op);
+            moreOpImgBlack.setImageResource(R.drawable.user_detail_more_black);
+        }
+
     }
 
     private void initTitleLayout() {
@@ -229,17 +262,42 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
         banner.setIndicatorGravity(BannerConfig.RIGHT);
         //banner设置方法全部调用完毕时最后调用
 //        banner.start();
+        banner.setOnBannerListener(new OnBannerListener() {
+            @Override
+            public void OnBannerClick(int position) {
+                clickBannerPic = true;//点击了banner的图进入了图片浏览模式
+                computeBoundsBackwardFree(0);
+                GPreviewBuilder.from(UserDetailActivity_New.this)
+                        .setData(freeUserViewInfoList)
+                        .setCurrentIndex(position)
+                        .setSingleFling(true)
+                        .setType(GPreviewBuilder.IndicatorType.Number)
+                        .setOnPhotoClickListener(new PhotoClickListener() {//我给框架添加的一个监听
+                            @Override
+                            public void onPhotoClick(int index) {
+                                if (banner != null) {
+                                    //我给框架添加的一个方法，banner的setOnBannerListener下标从1开始
+                                    banner.setCurrentItem(index + 1);
+                                }
+                            }
+                        })
+                        .start();
+            }
+        });
     }
 
     private void setBannerData(List<ImageModel> imageModels) {
         //设置图片集合
-        List<String> freeImgUrlList = new ArrayList<>();
+        freeImageList.clear();
+        freeUserViewInfoList.clear();
         if (imageModels != null) {
             for (ImageModel imageModel : imageModels) {
-                freeImgUrlList.add(imageModel.getImgUrl());
+                freeImageList.add(imageModel.getImgUrl());
+                UserViewInfo userViewInfo = new UserViewInfo(imageModel.getImgUrl());
+                freeUserViewInfoList.add(userViewInfo);
             }
         }
-        banner.setImages(freeImgUrlList);
+        banner.setImages(freeImageList);
         banner.start();
     }
 
@@ -365,6 +423,9 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
 
     @Override
     public void onClick(View v) {
+        if (Utils.isFastClick()) {
+            return;
+        }
         switch (v.getId()) {
             case R.id.user_detail_new_wei_xin_cha_kan:
                 showPayWeChatDialog();
@@ -372,6 +433,14 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
             case R.id.user_detail_new_back_translate:
             case R.id.user_detail_new_back_black:
                 finish();
+                break;
+            case R.id.user_detail_new_more_op_translate:
+            case R.id.user_detail_new_more_op_black:
+                if (userId.equals(MeService.getUid())) {
+                    startActivity(new Intent(UserDetailActivity_New.this, MyBaseInfoActivity_new.class));
+                } else {
+
+                }
                 break;
         }
     }
@@ -394,7 +463,7 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
         heightTv.setText(MessageFormat.format("{0}{1}", String.valueOf(modelOne.getHeight()), "CM"));
         locationTv.setText(MessageFormat.format("{0}{1}", modelOne.getLocation(), "km"));
         nameTv.setText(modelOne.getNickname());
-        sexAgeTv.setText(String.valueOf(modelOne.getAge()));
+        sexAgeTv.setText(String.valueOf(DateUtils.getAge(modelOne.getBirthday())));
         followNumTv.setText(MessageFormat.format("{0}{1}", "关注 ", String.valueOf(modelOne.getFollowNum())));
         fansNumTv.setText(MessageFormat.format("{0}{1}", "粉丝 ", String.valueOf(modelOne.getFansNum())));
         qianMingTv.setText(modelOne.getQianMing());
@@ -409,7 +478,10 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
         }
         try {
             //将字符串的json数组转为list
+            ImageModel imageModel = new ImageModel();
+            imageModel.setImgUrl(modelOne.getPortraitUri());//记得把头像图片添加到轮播图里
             List<ImageModel> freeImgList = JSONArray.parseArray(modelOne.getFreeImgList(), ImageModel.class); //得到免废费图片列表
+            freeImgList.add(0, imageModel);
             setBannerData(freeImgList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -521,13 +593,13 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
     private void handlePayImgLayout(GetUserDetailModelTwo modelTwo) {
         List<ImageModel> hasPayedImgList = modelTwo.getHasPayedImgList(); //得到已经付费图片列表
         List<ImageModel> notPayedImgList = modelTwo.getNotPayedImgList(); //得到未付费图片列表
-        resultImageList.clear();
+        payResultImageList.clear();
         //两个列表拼起来
         if (hasPayedImgList != null) {
-            resultImageList.addAll(hasPayedImgList);
+            payResultImageList.addAll(hasPayedImgList);
         }
         if (notPayedImgList != null) {
-            resultImageList.addAll(notPayedImgList);
+            payResultImageList.addAll(notPayedImgList);
             ArrayList<String> blurImgUrlList = new ArrayList<>();
             for (ImageModel imageModel : notPayedImgList) {
                 blurImgUrlList.add(imageModel.getImgUrl());
@@ -536,17 +608,17 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
         } else {
             StaticDataUtils.setBlurImgUrlList(new ArrayList<String>()); //默认没有图片模糊显示
         }
-        if (resultImageList != null && resultImageList.size() > 0) {
+        if (payResultImageList != null && payResultImageList.size() > 0) {
             //有数据，则展示作品一栏
             productionsLayout.setVisibility(View.VISIBLE);
-            userViewInfoList.clear();
+            payUserViewInfoList.clear();
             UserViewInfo userViewInfo;
-            for (int i = 0; i < resultImageList.size(); i++) {
-                userViewInfo = new UserViewInfo(resultImageList.get(i).getImgUrl());
-                userViewInfo.setImgPrice(resultImageList.get(i).getImgPrice());
-                userViewInfoList.add(userViewInfo);
+            for (int i = 0; i < payResultImageList.size(); i++) {
+                userViewInfo = new UserViewInfo(payResultImageList.get(i).getImgUrl());
+                userViewInfo.setImgPrice(payResultImageList.get(i).getImgPrice());
+                payUserViewInfoList.add(userViewInfo);
             }
-            picdapter.replaceData(userViewInfoList);
+            picdapter.replaceData(payUserViewInfoList);
         } else {
             //没数据，则隐藏作品一栏
             productionsLayout.setVisibility(View.GONE);
@@ -560,7 +632,7 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
         new CommonDialog.Builder()
                 .context(UserDetailActivity_New.this)
                 .title("温馨提示")
-                .content("查看该图片需要" + resultImageList.get(position).getImgPrice()
+                .content("查看该图片需要" + payResultImageList.get(position).getImgPrice()
                         + "元，是否支付？")
                 .sureCallback(new CommonDialog.CallBack() {
                     @Override
@@ -597,25 +669,44 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
                 .showDialog(ConstantDialogUtils.LEVEL_3, ConstantDialogUtils.OPERATEWINDOW, false);
     }
 
-
     /**
-     * 大图浏览，计算每个图片的位置
+     * 付费图片大图浏览，计算每个图片的位置
      * 从第一个完整可见item逆序遍历，如果初始位置为0，则不执行方法内循环
      */
-    private void computeBoundsBackward(int firstCompletelyVisiblePos) {
-        for (int i = firstCompletelyVisiblePos; i < userViewInfoList.size(); i++) {
+    private void computeBoundsBackwardFree(int firstCompletelyVisiblePos) {
+        for (int i = firstCompletelyVisiblePos; i < freeUserViewInfoList.size(); i++) {
+            Rect bounds = new Rect();
+            squareLayout.getGlobalVisibleRect(bounds);
+            freeUserViewInfoList.get(i).setBounds(bounds);
+        }
+    }
+
+    /**
+     * 付费图片大图浏览，计算每个图片的位置
+     * 从第一个完整可见item逆序遍历，如果初始位置为0，则不执行方法内循环
+     */
+    private void computeBoundsBackwardPay(int firstCompletelyVisiblePos) {
+        for (int i = firstCompletelyVisiblePos; i < payUserViewInfoList.size(); i++) {
             View itemView = linearLayoutManager.findViewByPosition(i);
             Rect bounds = new Rect();
             if (itemView != null) {
                 ImageView thumbView = (ImageView) itemView.findViewById(R.id.user_detail_new_pic_item_img);
                 thumbView.getGlobalVisibleRect(bounds);
             }
-            userViewInfoList.get(i).setBounds(bounds);
+            payUserViewInfoList.get(i).setBounds(bounds);
         }
     }
 
     private int getDimen(int resourceId) {
         return getApplicationContext().getResources().getDimensionPixelOffset(resourceId);
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRefreshMineEvent(RefreshMineInfoEvent event) {
+        if (Utils.isNotNull(event)) {
+            getUserDetailData();
+        }
+    }
+
 
 }

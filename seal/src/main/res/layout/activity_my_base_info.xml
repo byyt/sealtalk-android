@@ -190,9 +190,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/px18"
-                    android:text="小明同学"
                     android:textColor="@color/color_666666"
-                    android:textSize="@dimen/text_px30" />
+                    android:textSize="@dimen/text_px30"
+                    tools:text="小明同学" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -232,9 +232,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/px18"
-                    android:text="男"
                     android:textColor="@color/color_666666"
-                    android:textSize="@dimen/text_px30" />
+                    android:textSize="@dimen/text_px30"
+                    tools:text="男" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -274,9 +274,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/px18"
-                    android:text="1990-01-01"
                     android:textColor="@color/color_666666"
-                    android:textSize="@dimen/text_px30" />
+                    android:textSize="@dimen/text_px30"
+                    tools:text="1990-01-01" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -316,9 +316,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/px18"
-                    android:text="180cm"
                     android:textColor="@color/color_666666"
-                    android:textSize="@dimen/text_px30" />
+                    android:textSize="@dimen/text_px30"
+                    tools:text="180cm" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -348,19 +348,22 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_px30" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" />
-
                 <TextView
                     android:id="@+id/activity_base_info_szd_tv"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/px18"
+                    android:layout_marginLeft="@dimen/px18"
                     android:layout_marginRight="@dimen/px18"
-                    android:text="深圳市"
+                    android:layout_marginStart="@dimen/px18"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:gravity="end|center_vertical"
+                    android:maxLines="1"
+                    android:singleLine="true"
                     android:textColor="@color/color_666666"
-                    android:textSize="@dimen/text_px30" />
+                    android:textSize="@dimen/text_px30"
+                    tools:text="深圳市" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -390,19 +393,22 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_px30" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" />
-
                 <TextView
                     android:id="@+id/activity_base_info_qianming_tv"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/px18"
+                    android:layout_marginLeft="@dimen/px18"
                     android:layout_marginRight="@dimen/px18"
-                    android:text="请填写"
+                    android:layout_marginStart="@dimen/px18"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:gravity="end|center_vertical"
+                    android:maxLines="1"
+                    android:singleLine="true"
                     android:textColor="@color/color_666666"
-                    android:textSize="@dimen/text_px30" />
+                    android:textSize="@dimen/text_px30"
+                    tools:text="请填写" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -432,19 +438,22 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_px30" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" />
-
                 <TextView
                     android:id="@+id/activity_base_info_xqah_tv"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/px18"
+                    android:layout_marginLeft="@dimen/px18"
                     android:layout_marginRight="@dimen/px18"
-                    android:text="健身、看电影、吃饭"
+                    android:layout_marginStart="@dimen/px18"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:gravity="end|center_vertical"
+                    android:maxLines="1"
+                    android:singleLine="true"
                     android:textColor="@color/color_666666"
-                    android:textSize="@dimen/text_px30" />
+                    android:textSize="@dimen/text_px30"
+                    tools:text="健身、看电影、吃饭" />
 
                 <ImageView
                     android:layout_width="wrap_content"
