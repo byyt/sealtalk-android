@@ -23,6 +23,7 @@ import java.util.Map;
 
 import cn.yunchuang.im.HttpManager;
 import cn.yunchuang.im.R;
+import cn.yunchuang.im.location.LocateReqManager;
 import cn.yunchuang.im.server.response.HomepageModel;
 import cn.yunchuang.im.server.response.HomepageResponse;
 import cn.yunchuang.im.server.utils.NToast;
@@ -207,6 +208,7 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         startIndex = 0;
         getData();
+        LocateReqManager.sendRequestLocation(getActivity());
     }
 
     @Override

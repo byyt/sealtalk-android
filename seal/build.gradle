@@ -106,6 +106,8 @@ dependencies {
     api 'com.hjq:toast:5.8'
     //eventbus
     implementation 'org.greenrobot:eventbus:3.1.1'
+    //权限
+    implementation 'com.yanzhenjie.permission:support:2.0.1'
 
     //第三方依赖库
     implementation 'com.squareup.okhttp3:logging-interceptor:3.1.2'

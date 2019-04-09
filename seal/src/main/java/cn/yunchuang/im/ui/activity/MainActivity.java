@@ -1,6 +1,5 @@
 package cn.yunchuang.im.ui.activity;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -16,9 +15,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,19 +24,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.yunchuang.im.R;
+import cn.yunchuang.im.location.LocateReqManager;
 import cn.yunchuang.im.server.HomeWatcherReceiver;
-import cn.yunchuang.im.server.broadcast.BroadcastManager;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.server.widget.LoadDialog;
 import cn.yunchuang.im.ui.adapter.ConversationListAdapterEx;
 import cn.yunchuang.im.ui.fragment.ContactsFragment;
 import cn.yunchuang.im.ui.fragment.HomepageFragment_new;
-import cn.yunchuang.im.ui.fragment.MineFragment;
 import cn.yunchuang.im.ui.fragment.MineFragment_new;
 import cn.yunchuang.im.ui.widget.DragPointView;
 import cn.yunchuang.im.ui.widget.MorePopWindow;
-import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
-import cn.yunchuang.im.zmico.utils.DeviceUtils;
 import io.rong.common.RLog;
 import io.rong.imkit.RongContext;
 import io.rong.imkit.RongIM;
@@ -91,6 +85,8 @@ public class MainActivity extends FragmentActivity implements
         changeSelectedTabState(0);
         initMainViewPager();
         registerHomeKeyReceiver(this);
+        //初次进来，进行一次强制定位
+        LocateReqManager.sendRequestLocation(LocateReqManager.DEFAULT_SENDER, true);
     }
 
 

@@ -53,6 +53,13 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--检测wifi状态-->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!--这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <!--用于申请调用A-GPS模块-->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <!--用于申请获取蓝牙信息进行室内定位-->
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <!--为了获取用户手机的IMEI，用来唯一的标识用户。-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
@@ -437,12 +444,6 @@
             android:name="InstallChannel"
             android:value="CHANNAL" />
 
-        <!-- 高德地图-->
-        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="e09af6a2b26c02086e9216bd07c960ae" />
-
-
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="577b2b55e0f55afbcb0026c6" />
@@ -643,6 +644,18 @@
         <meta-data
             android:name="android.max_aspect"
             android:value="2.4" />
+
+
+        <!-- 高德地图定位相关 -->
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="d27a7092668126766d7f59009a34e784">
+        </meta-data>
+        <service android:name="com.amap.api.location.APSService"/>
+        <!-- 定位服务 -->
+        <service
+            android:name="cn.yunchuang.im.location.LocationService"
+            android:enabled="true"
+            android:exported="true" />
+
     </application>
 
 

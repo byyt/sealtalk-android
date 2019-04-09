@@ -19,4 +19,12 @@ public class SealConst {
     public static final String SEALTALK_LOGING_PHONE = "loginphone";
     public static final String SEALTALK_LOGING_PASSWORD = "loginpassword";
 
+
+
+
+
+
+    //后面自己加的
+    public static final String LASTUPDATE = "lastUpdate";
+
 }
