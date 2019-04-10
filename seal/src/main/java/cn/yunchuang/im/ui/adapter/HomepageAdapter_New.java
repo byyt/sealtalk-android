@@ -14,7 +14,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.itheima.roundedimageview.RoundedImageView;
 
+import java.text.MessageFormat;
 import java.util.List;
+import java.util.Locale;
 
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.server.response.HomepageModel;
@@ -45,6 +47,7 @@ public class HomepageAdapter_New extends BaseQuickAdapter<HomepageModel, BaseVie
 //        ImageView portraitImg = helper.getView(R.id.homepage_adapter_item_portrait_old);
         RoundedImageView portraitImg = helper.getView(R.id.homepage_adapter_item_portrait);
         TextView nickName = helper.getView(R.id.homepage_adabpter_item_nickname);
+        TextView distance = helper.getView(R.id.homepage_adapter_item_distance_tv);
         ImageView imageView1 = helper.getView(R.id.homepage_adapter_item_tu_pian_one);
         ImageView imageView2 = helper.getView(R.id.homepage_adapter_item_tu_pian_two);
         ImageView imageView3 = helper.getView(R.id.homepage_adapter_item_tu_pian_three);
@@ -58,6 +61,8 @@ public class HomepageAdapter_New extends BaseQuickAdapter<HomepageModel, BaseVie
             }
         });
         nickName.setText(item.getNickname());
+        distance.setText(MessageFormat.format("{0}{1}", String.format(Locale.getDefault(),
+                "%.2f", item.getDistance()), "km"));
 
         //Glide 加载图片简单用法
 //        RequestOptions optionsPortrait = RequestOptions.bitmapTransform(new CircleCrop());

@@ -6,6 +6,7 @@ public class HomepageModel {
     private String portraitUri;
     private int sex;
     private int age;
+    private double distance;
     private String location;
     private int feedback_rate;
     private String qianMing;
@@ -50,6 +51,14 @@ public class HomepageModel {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
     }
 
     public String getLocation() {

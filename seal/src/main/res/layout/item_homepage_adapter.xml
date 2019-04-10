@@ -23,8 +23,8 @@
             android:id="@+id/homepage_adapter_item_portrait"
             android:layout_width="@dimen/px110"
             android:layout_height="@dimen/px110"
-            android:src="@drawable/de_default_portrait"
             android:scaleType="fitCenter"
+            android:src="@drawable/de_default_portrait"
             app:riv_oval="true" />
 
         <LinearLayout
@@ -65,6 +65,23 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/homepage_adapter_item_distance_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:drawableLeft="@drawable/homepage_dingwei"
+            android:drawableStart="@drawable/homepage_dingwei"
+            android:drawablePadding="@dimen/px4"
+            android:textColor="@color/color_9B999F"
+            android:textSize="@dimen/text_px26"
+            tools:text="5km" />
 
     </LinearLayout>
 
