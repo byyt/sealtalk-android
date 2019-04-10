@@ -62,7 +62,6 @@ public class LocateReqManager {
 
     // 发起定位请求，是否强制更新
     public static void sendRequestLocation(Object requester, boolean isForce) {
-        LocateManager.INSTANCE.locationRequests.add(new LocationRequest(requester));
         Intent intent = new Intent(App.getAppContext(), LocationService.class);
         intent.putExtra(SealConst.LASTUPDATE, isForce);
         App.getAppContext().startService(intent);

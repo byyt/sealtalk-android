@@ -31,6 +31,8 @@ import cn.yunchuang.im.ui.adapter.HomepageAdapter_New;
 import cn.yunchuang.im.ui.widget.MyFooter;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
 import cn.yunchuang.im.zmico.utils.DeviceUtils;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 
@@ -49,6 +51,7 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
     private int startIndex = 0;
     private static final int PAGE_SIZE = 6;
 
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -113,11 +116,11 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        compositeDisposable.clear();
     }
 
     private void getData() {
-        HttpManager.getInstance().getRecommendUsers(startIndex, PAGE_SIZE, new HttpManager.ResultCallback<HomepageResponse>() {
+        Disposable disposable = HttpManager.getInstance().getRecommendUsers(startIndex, PAGE_SIZE, new HttpManager.ResultCallback<HomepageResponse>() {
             @Override
             public void onSuccess(HomepageResponse homepageResponse) {
                 Log.e("xxxxxx", "getData onSuccess");
@@ -148,6 +151,7 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
                 mRefreshLayout.resetNoMoreData();//setNoMoreData(false);
             }
         });
+        compositeDisposable.add(disposable);
     }
 
     private void updateLiveList(List<HomepageModel> list, boolean isRefresh) {

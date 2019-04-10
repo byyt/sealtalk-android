@@ -33,6 +33,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import cn.yunchuang.im.MeService;
 import cn.yunchuang.im.R;
@@ -89,7 +90,7 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
     //个人信息
     private TextView feedBackRateTv;
     private TextView heightTv;
-    private TextView locationTv;
+    private TextView distanceTv;
     private TextView nameTv;
     private TextView sexAgeTv;
     private TextView followNumTv;
@@ -170,7 +171,7 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
 
         feedBackRateTv = (TextView) findViewById(R.id.user_detail_new_feed_back_rate);
         heightTv = (TextView) findViewById(R.id.user_detail_new_height);
-        locationTv = (TextView) findViewById(R.id.user_detail_new_location);
+        distanceTv = (TextView) findViewById(R.id.user_detail_new_location);
         nameTv = (TextView) findViewById(R.id.user_detail_new_name);
         sexAgeTv = (TextView) findViewById(R.id.user_detail_new_sex_age);
         followNumTv = (TextView) findViewById(R.id.user_detail_new_follow_num);
@@ -461,7 +462,8 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
         //个人信息
         feedBackRateTv.setText(MessageFormat.format("{0}{1}{2}", "好评率：", modelOne.getFeedback_rate(), "%"));
         heightTv.setText(MessageFormat.format("{0}{1}", String.valueOf(modelOne.getHeight()), "CM"));
-        locationTv.setText(MessageFormat.format("{0}{1}", modelOne.getLocation(), "km"));
+        //距离，保留两位小数，单位km
+        distanceTv.setText(MessageFormat.format("{0}{1}", String.format(Locale.getDefault(), "%.2f", modelOne.getDistance()), "km"));
         nameTv.setText(modelOne.getNickname());
         sexAgeTv.setText(String.valueOf(DateUtils.getAge(modelOne.getBirthday())));
         followNumTv.setText(MessageFormat.format("{0}{1}", "关注 ", String.valueOf(modelOne.getFollowNum())));

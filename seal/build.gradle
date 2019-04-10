@@ -76,7 +76,7 @@ dependencies {
     api project(':banner')
     //图片浏览框架
 //    api 'com.ycjiang:ImagePreview:2.2.2'
-    api project(':ImagePreview')
+    api project(':ImagePreview')  //需要修改框架，添加能够返回点击位置的方法，上线前记得拷贝最新的
     //recyclerView的adapter框架
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
     //Glide模糊效果的框架

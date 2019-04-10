@@ -34,6 +34,8 @@ import cn.yunchuang.im.utils.GlideUtils;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
 import cn.yunchuang.im.zmico.utils.DeviceUtils;
 import cn.yunchuang.im.zmico.utils.Utils;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by AMing on 16/6/21.
@@ -71,6 +73,8 @@ public class MineFragment_new extends BaseFragment implements View.OnClickListen
     private LinearLayout shezhiLayout;
 
     private int statusBarHeight = 0;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Nullable
     @Override
@@ -189,6 +193,7 @@ public class MineFragment_new extends BaseFragment implements View.OnClickListen
     @Override
     public void onDestroy() {
         super.onDestroy();
+        compositeDisposable.clear();
     }
 
     @Override
@@ -212,7 +217,7 @@ public class MineFragment_new extends BaseFragment implements View.OnClickListen
     }
 
     private void getMeUserInfo() {
-        HttpManager.getInstance().getUserDetailOne(MeService.getUid(), new HttpManager.ResultCallback<GetUserDetailOneResponse>() {
+        Disposable disposable = HttpManager.getInstance().getUserDetailOne(MeService.getUid(), new HttpManager.ResultCallback<GetUserDetailOneResponse>() {
             @Override
             public void onSuccess(GetUserDetailOneResponse response) {
                 if (response != null) {
@@ -236,6 +241,7 @@ public class MineFragment_new extends BaseFragment implements View.OnClickListen
                 }
             }
         });
+        compositeDisposable.add(disposable);
     }
 
     //额，发现必须要放在onCreate和onDestroy里，不然收不到，

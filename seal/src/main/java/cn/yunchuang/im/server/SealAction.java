@@ -38,6 +38,7 @@ import cn.yunchuang.im.server.request.SetGroupPortraitRequest;
 import cn.yunchuang.im.server.request.SetNameRequest;
 import cn.yunchuang.im.server.request.SetPortraitRequest;
 import cn.yunchuang.im.server.request.UpdateBaseUserInfoRequest;
+import cn.yunchuang.im.server.request.UpdateUserLocationRequest;
 import cn.yunchuang.im.server.request.VerifyCodeRequest;
 import cn.yunchuang.im.server.response.AddGroupMemberResponse;
 import cn.yunchuang.im.server.response.AddToBlackListResponse;
@@ -471,7 +472,7 @@ public class SealAction extends BaseAction {
 
         String url = getURL("user/update_user_info");
         String json = JsonMananger.beanToJson(new UpdateBaseUserInfoRequest(nickname, portraitUri, sex, height,
-                birthday, suoZaiDi, qianMing, xqah,freeImgList));
+                birthday, suoZaiDi, qianMing, xqah, freeImgList));
         StringEntity entity = null;
         try {
             entity = new StringEntity(json, ENCODING);
@@ -482,7 +483,36 @@ public class SealAction extends BaseAction {
         String result = httpManager.post(mContext, url, entity, CONTENT_TYPE);
         BaseResponse response = null;
         if (!TextUtils.isEmpty(result)) {
-            NLog.e("LoginResponse", result);
+            NLog.e("BaseResponse", result);
+            response = JsonMananger.jsonToBean(result, BaseResponse.class);
+        }
+        return response;
+    }
+
+    /**
+     * 上传地理位置即经纬度到服务器
+     *
+     * @param longitude
+     * @param latitude
+     * @return
+     * @throws HttpException
+     */
+    public BaseResponse postUserLocation(double longitude, double latitude)
+            throws HttpException {
+
+        String url = getURL("user/update_user_location");
+        String json = JsonMananger.beanToJson(new UpdateUserLocationRequest(longitude, latitude));
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(json, ENCODING);
+            entity.setContentType(CONTENT_TYPE);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String result = httpManager.post(mContext, url, entity, CONTENT_TYPE);
+        BaseResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            NLog.e("BaseResponse", result);
             response = JsonMananger.jsonToBean(result, BaseResponse.class);
         }
         return response;

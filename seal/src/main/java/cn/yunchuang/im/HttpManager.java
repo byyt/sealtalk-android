@@ -7,10 +7,12 @@ import android.os.Handler;
 import android.os.Looper;
 
 import cn.yunchuang.im.server.SealAction;
+import cn.yunchuang.im.server.response.BaseResponse;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
 import cn.yunchuang.im.server.response.HomepageResponse;
 import cn.yunchuang.im.server.utils.NLog;
 import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -120,14 +122,47 @@ public class HttpManager {
     }
 
     /**
+     * 上传地理位置即经纬度到服务器
+     *
+     * @param longitude  经度
+     * @param latitude   纬度
+     * @return
+     */
+    public Disposable postUserLocation(final double longitude, final double latitude, final ResultCallback<BaseResponse> callback){
+        return Observable.just(0)
+                .observeOn(Schedulers.io())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object object) throws Exception {
+                        BaseResponse baseResponse = null;
+                        if (!isNetworkConnected()) {
+                            onCallBackFail(callback, "网络未连接");
+                            return;
+                        }
+                        try {
+                            baseResponse = action.postUserLocation(longitude, latitude);
+                        } catch (Exception e) {
+                            onCallBackFail(callback);
+                            NLog.e(TAG, "postUserLocation occurs Exception e=" + e.toString());
+                            return;
+                        }
+                        if (callback != null) {
+                            callback.onCallback(baseResponse);
+                        }
+                    }
+                });
+    }
+
+    /**
      * 异步接口,获取首页推荐用户，分页加载
      *
      * @param startIndex 起始页
      * @param pageSize   页面大小
      * @param callback   获取首页推荐用户的回调
+     * @return
      */
-    public void getRecommendUsers(final int startIndex, final int pageSize, final ResultCallback<HomepageResponse> callback) {
-        Observable.just(0)
+    public Disposable getRecommendUsers(final int startIndex, final int pageSize, final ResultCallback<HomepageResponse> callback) {
+        return Observable.just(0)
                 .observeOn(Schedulers.io())
                 .subscribe(new Consumer<Object>() {
                     @Override
@@ -156,9 +191,10 @@ public class HttpManager {
      *
      * @param userId
      * @param callback
+     * @return
      */
-    public void getUserDetailOne(final String userId, final ResultCallback<GetUserDetailOneResponse> callback) {
-        Observable.just(0)
+    public Disposable getUserDetailOne(final String userId, final ResultCallback<GetUserDetailOneResponse> callback) {
+        return Observable.just(0)
                 .observeOn(Schedulers.io())
                 .subscribe(new Consumer<Object>() {
                     @Override

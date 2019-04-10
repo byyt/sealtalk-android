@@ -7,7 +7,8 @@ public class GetUserDetailModelOne {
     private int sex;
     private int height;
     private long birthday;//出生日期，时间戳
-    private String location; //定位信息
+    private double distance; //目标用户与自己的距离，这个值服务端是通过目标用户的经纬度与自己的经纬度来计算距离，返回的值
+    private String location; //定位信息，暂时用不到
     private String suoZaiDi; //所在地
     private int feedback_rate;
     private int followNum;
@@ -63,6 +64,14 @@ public class GetUserDetailModelOne {
 
     public void setBirthday(long birthday) {
         this.birthday = birthday;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
     }
 
     public String getLocation() {

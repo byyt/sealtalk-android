@@ -22,16 +22,12 @@ public class LocApiRespDispatch implements Runnable {
 
     private void onLocateResponse() {
         if (locateResponse.flag) {
-            changeLocateApiType(locateResponse);// 更换地理位置
+            LocationVO locationVO = new LocationVO();
+            locationVO.setLatitude(locateResponse.latitude);
+            locationVO.setLongitude(locateResponse.longitude);
+            // 定位sdk的结果存到本地，并上传到服务器，前提是与旧位置距离超过500米
+            LocateManager.INSTANCE.updateLocalLocationAndPost(locationVO);
         }
     }
 
-    private void changeLocateApiType(LocateApiResp locateResponse) {
-        LocationVO locationVO = new LocationVO();
-        locationVO.setLatitude(locateResponse.latitude);
-        locationVO.setLongitude(locateResponse.longitude); // 缓存并上传地理位置
-        LocateManager.INSTANCE.cacheLocationVO = locationVO;
-
-        LocateManager.INSTANCE.updateLocalLocationAndPost(locationVO); // 定位sdk的结果上传地理位置
-    }
 }

@@ -13,7 +13,10 @@ import java.util.TimerTask;
 
 import cn.yunchuang.im.App;
 import cn.yunchuang.im.constants.TimeConstants;
+import cn.yunchuang.im.sp.BasePref;
 import cn.yunchuang.im.zmico.utils.Utils;
+
+import static cn.yunchuang.im.sp.BasePref.KEY_LOCATE_REFRESH;
 
 
 /**
@@ -89,13 +92,13 @@ public class GaodeLocateFinder implements AMapLocationListener {
 
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
-        this.stopLocate();//只定位成功一次，就关闭了定位服务
-        Log.d("xxxxxx",amapLocation.getLatitude()+"");
-        Log.d("xxxxxx",amapLocation.getLongitude()+"");
-        Log.d("xxxxxx",amapLocation.getAddress()+"");
+        this.stopLocate();//只定位一次，就关闭了定位服务
         if (!Utils.isNull(amapLocation)) {
             if (amapLocation.getErrorCode() == 0) {
                 LocateApiResp.sendLocateSucc(amapLocation.getLatitude(), amapLocation.getLongitude());
+                //定位成功，保存定位成功的时间戳，下一次定位请求，要么强制更新要么需要大于一定时间间隔2分钟，才能进行定位
+                //即使定位成功，也需要与旧距离超过500米才会进行位置保存和上传
+                BasePref.saveLong(KEY_LOCATE_REFRESH, System.currentTimeMillis());
             } else {
                 LocateApiResp.sendLocateFail("Locate Gaode onRecv Fail locType:" + amapLocation.getErrorCode());
             }
