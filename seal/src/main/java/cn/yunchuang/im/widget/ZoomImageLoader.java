@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.yunchuang.im.R;
+import cn.yunchuang.im.server.BaseAction;
 import cn.yunchuang.im.server.utils.StaticDataUtils;
 import cn.yunchuang.im.utils.DialogUtils;
 import cn.yunchuang.im.utils.FileUtils;
@@ -34,8 +35,8 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
  * Created by yangc on 2017/9/4.
  * E-Mail:yangchaojiang@outlook.com
  * Deprecated:
+ * 大图浏览用的图片加载框架
  */
-
 public class ZoomImageLoader implements IZoomMediaLoader {
 
 
@@ -52,7 +53,7 @@ public class ZoomImageLoader implements IZoomMediaLoader {
 //                .placeholder(R.drawable.ic_default_image);//不要加这句，加上之后每次进入大图会显示一下占位图影响体验
 
         Glide.with(context).asBitmap()
-                .load(path)
+                .load(BaseAction.DOMAIN_PIC + "/" + path)
                 .apply(options)
                 .listener(new RequestListener<Bitmap>() {
                     @Override

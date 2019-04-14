@@ -12,6 +12,7 @@ import com.itheima.roundedimageview.RoundedImageView;
 
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.model.UserViewInfo;
+import cn.yunchuang.im.server.BaseAction;
 import cn.yunchuang.im.server.utils.StaticDataUtils;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
@@ -48,7 +49,7 @@ public class UserDetailPicListAdapter extends BaseQuickAdapter<UserViewInfo, Bas
                 .error(R.drawable.ic_image_zhanwei);
 
         Glide.with(context)
-                .load(item.getUrl())
+                .load(BaseAction.DOMAIN_PIC + "/" + item.getUrl())
                 .apply(options)
                 .into(thumbView);
         helper.getView(R.id.user_detail_new_pic_item_img).setTag(R.id.user_detail_new_pic_item_img, item.getUrl());

@@ -2,7 +2,9 @@ package cn.yunchuang.im.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +21,24 @@ import cn.yunchuang.im.R;
 import cn.yunchuang.im.event.RefreshLocationEvent;
 import cn.yunchuang.im.location.LocateReqManager;
 import cn.yunchuang.im.server.utils.NToast;
+import cn.yunchuang.im.ui.adapter.HompagePagerAdapter;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
 import cn.yunchuang.im.zmico.utils.DeviceUtils;
+import cn.yunchuang.im.zmico.utils.ResourceUtils;
 import cn.yunchuang.im.zmico.utils.Utils;
 
 /**
  * 首页
  */
-public class HomepageFragment_new extends BaseFragment implements View.OnClickListener {
+public class HomepageFragment_new extends BaseFragment implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
     private TextView dingweiTv;
+    private TextView jlzjTv;
+    private TextView cnxhTv;
+    private TextView hpyxTv;
+
+    private HompagePagerAdapter hompagePagerAdapter;
+    private ViewPager viewPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,8 +71,21 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
         }
 
         dingweiTv = view.findViewById(R.id.homepage_new_title_location_tv);
+        jlzjTv = view.findViewById(R.id.homepage_new_title_jlzj_tab);
+        jlzjTv.setOnClickListener(this);
+        cnxhTv = view.findViewById(R.id.homepage_new_title_cnxh_tab);
+        cnxhTv.setOnClickListener(this);
+        hpyxTv = view.findViewById(R.id.homepage_new_title_hpyx_tab);
+        hpyxTv.setOnClickListener(this);
 
-        //定位位置，采用sp保存的
+        viewPager = view.findViewById(R.id.homepage_new_view_pager);
+        viewPager.setOffscreenPageLimit(2);
+        viewPager.addOnPageChangeListener(this);
+        hompagePagerAdapter = new HompagePagerAdapter(getActivity().getSupportFragmentManager());
+        viewPager.setAdapter(hompagePagerAdapter);
+        viewPager.setCurrentItem(1);
+
+        //定位位置，默认采用sp保存的，会进行定位请求来更新这个值
         dingweiTv.setText(MeService.getMyLocation().getCity());
 
 
@@ -70,8 +93,59 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
+        if (Utils.isFastClick()) {
+            return;
+        }
         switch (v.getId()) {
+            case R.id.homepage_new_title_jlzj_tab:
+                viewPager.setCurrentItem(0);
+                break;
+            case R.id.homepage_new_title_cnxh_tab:
+                viewPager.setCurrentItem(1);
+                break;
+            case R.id.homepage_new_title_hpyx_tab:
+                viewPager.setCurrentItem(2);
+                break;
+        }
+    }
 
+    @Override
+    public void onPageScrolled(int i, float v, int i1) {
+
+    }
+
+    @Override
+    public void onPageSelected(int i) {
+        setTabStyle(i);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int i) {
+
+    }
+
+    private void setTabStyle(int position) {
+        if (position == 0) {
+            jlzjTv.setTextColor(ResourceUtils.getColor(R.color.white));
+            jlzjTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+            cnxhTv.setTextColor(ResourceUtils.getColor(R.color.color_D9D6DE));
+            cnxhTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+            hpyxTv.setTextColor(ResourceUtils.getColor(R.color.color_D9D6DE));
+            hpyxTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+        } else if (position == 1) {
+            jlzjTv.setTextColor(ResourceUtils.getColor(R.color.color_D9D6DE));
+            jlzjTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);//注意新的TextView.setTextSize默认单位就是sp
+            cnxhTv.setTextColor(ResourceUtils.getColor(R.color.white));
+            cnxhTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+            hpyxTv.setTextColor(ResourceUtils.getColor(R.color.color_D9D6DE));
+            hpyxTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+        } else {
+            jlzjTv.setTextColor(ResourceUtils.getColor(R.color.color_D9D6DE));
+            jlzjTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+            cnxhTv.setTextColor(ResourceUtils.getColor(R.color.color_D9D6DE));
+            cnxhTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+            hpyxTv.setTextColor(ResourceUtils.getColor(R.color.white));
+            hpyxTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
         }
     }
 
@@ -87,10 +161,6 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
         EventBus.getDefault().unregister(this);
     }
 
-    private void getData() {
-
-
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onRefreshLocationEvent(RefreshLocationEvent event) {

@@ -25,6 +25,7 @@ import cn.yunchuang.im.HttpManager;
 import cn.yunchuang.im.MeService;
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.event.RefreshMineInfoEvent;
+import cn.yunchuang.im.server.BaseAction;
 import cn.yunchuang.im.server.response.GetUserDetailModelOne;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
 import cn.yunchuang.im.server.utils.NToast;
@@ -223,7 +224,7 @@ public class MineFragment_new extends BaseFragment implements View.OnClickListen
                 if (response != null) {
                     GetUserDetailModelOne model = response.getResult();
                     if (model != null && getActivity() != null) {
-                        GlideUtils.load(getActivity(), model.getPortraitUri(), avatarIv);
+                        GlideUtils.load(getActivity(), BaseAction.DOMAIN_PIC + "/" + model.getPortraitUri(), avatarIv);
                         nameTv.setText(model.getNickname());
                     }
                 }

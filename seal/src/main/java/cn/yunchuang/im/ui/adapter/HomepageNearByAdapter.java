@@ -28,13 +28,13 @@ import cn.yunchuang.im.ui.activity.UserDetailActivity_New;
  * 放松入口
  * Created by mulinrui on 2017/10/12.
  */
-public class HomepageAdapter_New extends BaseQuickAdapter<HomepageModel, BaseViewHolder> {
+public class HomepageNearByAdapter extends BaseQuickAdapter<HomepageModel, BaseViewHolder> {
 
     public static final String TAG = "UserDetailPicListAdapter";
     private Context mContext;
 
-    public HomepageAdapter_New(Context context) {
-        super(R.layout.item_homepage_adapter);
+    public HomepageNearByAdapter(Context context) {
+        super(R.layout.item_homepage_nearby_adapter);
         this.mContext = context;
     }
 

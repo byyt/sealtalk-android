@@ -183,6 +183,7 @@
         <attr name="micoTabTextAppearance" format="reference"/>
         <attr name="micoTabTextColor" format="color"/>
         <attr name="micoTabSelectedTextColor" format="color"/>
+        <attr name="micoTabSelectedTextSize" format="dimension"/>
         <attr name="micoTabPaddingStart" format="dimension"/>
         <attr name="micoTabPaddingTop" format="dimension"/>
         <attr name="micoTabPaddingEnd" format="dimension"/>

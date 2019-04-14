@@ -1,17 +1,18 @@
 package cn.yunchuang.im.widget;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.net.Uri;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.youth.banner.loader.ImageLoader;
 
 import cn.yunchuang.im.R;
+import cn.yunchuang.im.server.BaseAction;
 
+/**
+ * banner用的图片加载框架
+ */
 public class GlideImageLoader extends ImageLoader {
     @Override
     public void displayImage(Context context, Object path, ImageView imageView) {
@@ -26,7 +27,7 @@ public class GlideImageLoader extends ImageLoader {
         RequestOptions options = new RequestOptions();
         options.placeholder(R.drawable.ic_image_zhanwei).error(R.drawable.ic_image_zhanwei).centerCrop();
         Glide.with(context)
-                .load(path)
+                .load(BaseAction.DOMAIN_PIC + "/" + path)
                 .apply(options)
                 .into(imageView);
 

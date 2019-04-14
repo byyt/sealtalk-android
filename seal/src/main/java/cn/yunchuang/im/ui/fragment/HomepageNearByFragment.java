@@ -7,11 +7,8 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -22,15 +19,14 @@ import java.util.List;
 import java.util.Map;
 
 import cn.yunchuang.im.HttpManager;
+import cn.yunchuang.im.MeService;
 import cn.yunchuang.im.R;
-import cn.yunchuang.im.location.LocateReqManager;
 import cn.yunchuang.im.server.response.HomepageModel;
 import cn.yunchuang.im.server.response.HomepageResponse;
 import cn.yunchuang.im.server.utils.NToast;
-import cn.yunchuang.im.ui.adapter.HomepageAdapter_New;
+import cn.yunchuang.im.ui.adapter.HomepageNearByAdapter;
 import cn.yunchuang.im.ui.widget.MyFooter;
-import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
-import cn.yunchuang.im.zmico.utils.DeviceUtils;
+import cn.yunchuang.im.zmico.utils.Utils;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
@@ -39,13 +35,12 @@ import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 /**
  * 首页--距离最近分类
  */
-public class HomepageFragmentNearBy extends BaseFragment implements View.OnClickListener, OnRefreshLoadMoreListener {
+public class HomepageNearByFragment extends LazyFragment implements View.OnClickListener, OnRefreshLoadMoreListener {
 
     private RefreshLayout mRefreshLayout;
     private RecyclerView mRecyclerView;
-    private static boolean isFirstEnter = true;
 
-    private HomepageAdapter_New mHomepageAdapter;
+    private HomepageNearByAdapter mHomepageAdapter;
 
     private int startIndex = 0;
     private static final int PAGE_SIZE = 6;
@@ -53,29 +48,17 @@ public class HomepageFragmentNearBy extends BaseFragment implements View.OnClick
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_homepage_nearby, container, false);
-        initView(view);
-        return view;
+    protected int getLayoutRes() {
+        return R.layout.activity_homepage_nearby;
     }
 
     @Override
-    public void fragmentShow() {
-        super.fragmentShow();
+    protected void onLazyLoad() {
         mRefreshLayout.autoRefresh();
     }
 
-    private void initView(View view) {
-
-        //设置标题栏高度，还有状态栏透明
-        if (getActivity() != null) {
-            int topLayoutHeight = DeviceUtils.getStatusBarHeightPixels(getActivity()) + DeviceUtils.dpToPx(48);
-            FrameLayout titleLayout = (FrameLayout) view.findViewById(R.id.user_detail_new_title_root_layout);
-            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    topLayoutHeight);
-            titleLayout.setLayoutParams(layoutParams);
-            BaseBaseUtils.setTranslucentStatus(getActivity());//状态栏透明
-        }
+    @Override
+    protected void initView(View view, LayoutInflater inflater, Bundle savedInstanceState) {
 
         mRefreshLayout = (RefreshLayout) view.findViewById(R.id.activity_homepage_refreshLayout);
         mRefreshLayout.setEnableHeaderTranslationContent(true);
@@ -92,16 +75,11 @@ public class HomepageFragmentNearBy extends BaseFragment implements View.OnClick
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mHomepageAdapter = new HomepageAdapter_New(getActivity());
+        mHomepageAdapter = new HomepageNearByAdapter(getActivity());
 
         mRecyclerView.setAdapter(mHomepageAdapter);
 
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
-
-        if (isFirstEnter) {
-            isFirstEnter = false;
-            mRefreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
-        }
 
     }
 
@@ -119,12 +97,11 @@ public class HomepageFragmentNearBy extends BaseFragment implements View.OnClick
     }
 
     private void getData() {
-        Disposable disposable = HttpManager.getInstance().getRecommendUsers(startIndex, PAGE_SIZE, new HttpManager.ResultCallback<HomepageResponse>() {
+        Disposable disposable = HttpManager.getInstance().getNearByUsers(startIndex, PAGE_SIZE, new HttpManager.ResultCallback<HomepageResponse>() {
             @Override
             public void onSuccess(HomepageResponse homepageResponse) {
-                Log.e("xxxxxx", "getData onSuccess");
                 if (homepageResponse != null) {
-                    List<HomepageModel> list = homepageResponse.getResult().getData();
+                    List<HomepageModel> list = filterMyself(homepageResponse.getResult().getData());
                     if (startIndex == 0) {
                         updateLiveList(list, true);
                     } else {
@@ -151,6 +128,20 @@ public class HomepageFragmentNearBy extends BaseFragment implements View.OnClick
             }
         });
         compositeDisposable.add(disposable);
+    }
+
+    //附近的人列表把自己过滤掉
+    private List<HomepageModel> filterMyself(List<HomepageModel> newList) {
+        List<HomepageModel> list = new ArrayList<>();
+        if (Utils.isEmptyCollection(newList)) {
+            return list;
+        }
+        for (HomepageModel homepageModel : newList) {
+            if (!homepageModel.getId().equals(MeService.getUid())) {
+                list.add(homepageModel);
+            }
+        }
+        return list;
     }
 
     private void updateLiveList(List<HomepageModel> list, boolean isRefresh) {

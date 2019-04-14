@@ -72,6 +72,7 @@ import cn.yunchuang.im.server.response.ImageModel;
 import cn.yunchuang.im.utils.DateUtils;
 import cn.yunchuang.im.utils.DialogUtils;
 import cn.yunchuang.im.utils.FileUtils;
+import cn.yunchuang.im.utils.GlideUtils;
 import cn.yunchuang.im.utils.TextViewUtils;
 import cn.yunchuang.im.utils.ViewVisibleUtils;
 import cn.yunchuang.im.widget.AddressPickTask;
@@ -216,13 +217,7 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
         if (imgUrl == null) {
             imgUrl = "";
         }
-        RequestOptions options = new RequestOptions();
-        options.placeholder(R.drawable.ic_image_zhanwei)
-                .error(R.drawable.ic_image_zhanwei);
-        Glide.with(this)
-                .load(imgUrl)
-                .apply(options)
-                .into(touxiangImg);
+        GlideUtils.load(this, BaseAction.DOMAIN_PIC + "/" + imgUrl, touxiangImg);
         UserViewInfo userViewInfo = new UserViewInfo(imgUrl);
         touXiangInfoList.add(userViewInfo);
     }
@@ -273,13 +268,7 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
         itemIv.setOnLongClickListener(this);
         ViewUtil.setTag(itemIv, position, R.id.info_tag);//得把位置存进tag，方便点击的时候知道点击了第几个
 
-        RequestOptions options = new RequestOptions();//正常加载
-        options.placeholder(R.drawable.ic_image_zhanwei)
-                .error(R.drawable.ic_image_zhanwei);
-        Glide.with(this)
-                .load(imgUrl)
-                .apply(options)
-                .into(itemIv);
+        GlideUtils.load(this, BaseAction.DOMAIN_PIC + "/" + imgUrl, itemIv);
 
         return view;
     }
@@ -301,7 +290,8 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
                     return null;
                 }
                 String nickname = nichengTv.getText().toString();
-                String portraitUri = touXiangInfoList.get(0).getUrl();
+                //上传到服务器只需后边upload/xxxx.jpg这一段，不用完整路径，把前面的域名截取掉
+                String portraitUri = touXiangInfoList.get(0).getUrl().replace(BaseAction.DOMAIN_PIC + "/", "");
                 int sex = xingbieTv.getText().toString().equals("男") ? 0 : 1;
                 int height = Integer.valueOf(shengaoTv.getText().toString().replace("cm", ""));
                 long birthday = DateUtils.date2TimeStamp(setYear + "-" + setMonth + "-" + setDay,
@@ -910,23 +900,24 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
                                 .error(R.drawable.ic_image_zhanwei);
                         if (position == -1) {//更换头像
                             Glide.with(MyBaseInfoActivity_new.this)
-                                    .load(BaseAction.DOMAIN_PIC_GET + finalFile.getName())
+                                    .load(BaseAction.DOMAIN_PIC + "/" + BaseAction.DOMAIN_PIC_UPLOAD + finalFile.getName())
                                     .apply(options)
                                     .into(tupianImg);
                             touXiangInfoList.clear();
-                            touXiangInfoList.add(new UserViewInfo(BaseAction.DOMAIN_PIC_GET + finalFile.getName()));
+                            //存入时，不用把域名存入
+                            touXiangInfoList.add(new UserViewInfo(BaseAction.DOMAIN_PIC_UPLOAD + finalFile.getName()));
                         } else if (0 <= position && position <= zhaoPianInfoList.size() - 1) {//更换普通照片
                             Glide.with(MyBaseInfoActivity_new.this)
-                                    .load(BaseAction.DOMAIN_PIC_GET + finalFile.getName())
+                                    .load(BaseAction.DOMAIN_PIC + "/" + BaseAction.DOMAIN_PIC_UPLOAD + finalFile.getName())
                                     .apply(options)
                                     .into(tupianImg);
-                            zhaoPianInfoList.set(position, new UserViewInfo(BaseAction.DOMAIN_PIC_GET + finalFile.getName()));
+                            zhaoPianInfoList.set(position, new UserViewInfo(BaseAction.DOMAIN_PIC_UPLOAD + finalFile.getName()));
                         } else {//添加照片
                             Glide.with(MyBaseInfoActivity_new.this)
-                                    .load(BaseAction.DOMAIN_PIC_GET + finalFile.getName())
+                                    .load(BaseAction.DOMAIN_PIC + "/" + BaseAction.DOMAIN_PIC_UPLOAD + finalFile.getName())
                                     .apply(options)
                                     .into(tupianImg);
-                            zhaoPianInfoList.add(new UserViewInfo(BaseAction.DOMAIN_PIC_GET + finalFile.getName()));
+                            zhaoPianInfoList.add(new UserViewInfo(BaseAction.DOMAIN_PIC_UPLOAD + finalFile.getName()));
                         }
                         ViewVisibleUtils.setVisibleGone(tupianImg, true);
                         ViewVisibleUtils.setVisibleGone(mengcengLayout, false);
@@ -972,7 +963,9 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
                         Toast.makeText(this, "有加载出错的照片，请重新选择", Toast.LENGTH_SHORT).show();
                         return freeImgList;
                     }
-                    jsonObject.put("imgUrl", userViewInfo.getUrl());
+                    //存入数据库只需后边一段，把前面域名一段去掉
+                    jsonObject.put("imgUrl", userViewInfo.getUrl()
+                            .replace(BaseAction.DOMAIN_PIC + "/", ""));
                     jsonArray.put(jsonObject);
                 }
                 freeImgList = jsonArray.toString();

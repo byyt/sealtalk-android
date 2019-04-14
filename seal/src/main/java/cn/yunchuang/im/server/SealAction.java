@@ -331,12 +331,44 @@ public class SealAction extends BaseAction {
     }
 
     /**
-     * 首页分页拉取数据
+     * 首页--猜你喜欢，分页拉取数据
      *
      * @throws HttpException
      */
     public HomepageResponse getRecommendUsers(int startIndex, int pageSize) throws HttpException {
         String url = getURL("user/get_recommend_users?");
+        String newUrl = url + "startIndex=" + startIndex + "&pageSize=" + pageSize;
+        String result = httpManager.get(mContext, newUrl);
+        HomepageResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            response = jsonToBean(result, HomepageResponse.class);
+        }
+        return response;
+    }
+
+    /**
+     * 首页--距离最近，分页拉取数据
+     *
+     * @throws HttpException
+     */
+    public HomepageResponse getNearByUsers(int startIndex, int pageSize) throws HttpException {
+        String url = getURL("user/get_nearby_users?");
+        String newUrl = url + "startIndex=" + startIndex + "&pageSize=" + pageSize;
+        String result = httpManager.get(mContext, newUrl);
+        HomepageResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            response = jsonToBean(result, HomepageResponse.class);
+        }
+        return response;
+    }
+
+    /**
+     * 首页--好评优先，分页拉取数据
+     *
+     * @throws HttpException
+     */
+    public HomepageResponse getRateUsers(int startIndex, int pageSize) throws HttpException {
+        String url = getURL("user/get_rate_users?");
         String newUrl = url + "startIndex=" + startIndex + "&pageSize=" + pageSize;
         String result = httpManager.get(mContext, newUrl);
         HomepageResponse response = null;

@@ -28,13 +28,13 @@ import cn.yunchuang.im.ui.activity.UserDetailActivity_New;
  * 放松入口
  * Created by mulinrui on 2017/10/12.
  */
-public class HomepageAdapter_New extends BaseQuickAdapter<HomepageModel, BaseViewHolder> {
+public class HomepageLikeAdapter extends BaseQuickAdapter<HomepageModel, BaseViewHolder> {
 
     public static final String TAG = "UserDetailPicListAdapter";
     private Context mContext;
 
-    public HomepageAdapter_New(Context context) {
-        super(R.layout.item_homepage_adapter);
+    public HomepageLikeAdapter(Context context) {
+        super(R.layout.item_homepage_like_adapter);
         this.mContext = context;
     }
 
@@ -62,8 +62,10 @@ public class HomepageAdapter_New extends BaseQuickAdapter<HomepageModel, BaseVie
             }
         });
         nickName.setText(item.getNickname());
+        //猜你喜欢这栏，暂时把距离给隐藏吧
         distance.setText(MessageFormat.format("{0}{1}", String.format(Locale.getDefault(),
                 "%.2f", item.getDistance()), "km"));
+        distance.setVisibility(View.GONE);
 
         //Glide 加载图片简单用法
 //        RequestOptions optionsPortrait = RequestOptions.bitmapTransform(new CircleCrop());

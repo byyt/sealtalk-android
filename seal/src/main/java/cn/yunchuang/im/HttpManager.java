@@ -124,11 +124,11 @@ public class HttpManager {
     /**
      * 上传地理位置即经纬度到服务器
      *
-     * @param longitude  经度
-     * @param latitude   纬度
+     * @param longitude 经度
+     * @param latitude  纬度
      * @return
      */
-    public Disposable postUserLocation(final double longitude, final double latitude, final ResultCallback<BaseResponse> callback){
+    public Disposable postUserLocation(final double longitude, final double latitude, final ResultCallback<BaseResponse> callback) {
         return Observable.just(0)
                 .observeOn(Schedulers.io())
                 .subscribe(new Consumer<Object>() {
@@ -154,7 +154,7 @@ public class HttpManager {
     }
 
     /**
-     * 异步接口,获取首页推荐用户，分页加载
+     * 异步接口,首页--猜你喜欢，分页加载
      *
      * @param startIndex 起始页
      * @param pageSize   页面大小
@@ -174,6 +174,72 @@ public class HttpManager {
                         }
                         try {
                             homepageResponse = action.getRecommendUsers(startIndex, pageSize);
+                        } catch (Exception e) {
+                            onCallBackFail(callback);
+                            NLog.e(TAG, "getRecommendUsers occurs Exception e=" + e.toString());
+                            return;
+                        }
+                        if (callback != null) {
+                            callback.onCallback(homepageResponse);
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 首页--距离最近，分页加载
+     *
+     * @param startIndex 起始页
+     * @param pageSize   页面大小
+     * @param callback   获取首页推荐用户的回调
+     * @return
+     */
+    public Disposable getNearByUsers(final int startIndex, final int pageSize, final ResultCallback<HomepageResponse> callback) {
+        return Observable.just(0)
+                .observeOn(Schedulers.io())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object object) throws Exception {
+                        HomepageResponse homepageResponse = null;
+                        if (!isNetworkConnected()) {
+                            onCallBackFail(callback, "网络未连接");
+                            return;
+                        }
+                        try {
+                            homepageResponse = action.getNearByUsers(startIndex, pageSize);
+                        } catch (Exception e) {
+                            onCallBackFail(callback);
+                            NLog.e(TAG, "getRecommendUsers occurs Exception e=" + e.toString());
+                            return;
+                        }
+                        if (callback != null) {
+                            callback.onCallback(homepageResponse);
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 首页--好评优先，分页加载
+     *
+     * @param startIndex 起始页
+     * @param pageSize   页面大小
+     * @param callback   获取首页推荐用户的回调
+     * @return
+     */
+    public Disposable getRateUsers(final int startIndex, final int pageSize, final ResultCallback<HomepageResponse> callback) {
+        return Observable.just(0)
+                .observeOn(Schedulers.io())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object object) throws Exception {
+                        HomepageResponse homepageResponse = null;
+                        if (!isNetworkConnected()) {
+                            onCallBackFail(callback, "网络未连接");
+                            return;
+                        }
+                        try {
+                            homepageResponse = action.getRateUsers(startIndex, pageSize);
                         } catch (Exception e) {
                             onCallBackFail(callback);
                             NLog.e(TAG, "getRecommendUsers occurs Exception e=" + e.toString());

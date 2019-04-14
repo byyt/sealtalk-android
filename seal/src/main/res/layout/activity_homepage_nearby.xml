@@ -7,8 +7,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_top" />
-
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/activity_homepage_refreshLayout"
         android:layout_width="match_parent"

@@ -16,7 +16,6 @@ import com.itheima.roundedimageview.RoundedImageView;
 
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Locale;
 
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.server.BaseAction;
@@ -28,13 +27,13 @@ import cn.yunchuang.im.ui.activity.UserDetailActivity_New;
  * 放松入口
  * Created by mulinrui on 2017/10/12.
  */
-public class HomepageAdapter_New extends BaseQuickAdapter<HomepageModel, BaseViewHolder> {
+public class HomepageRateAdapter extends BaseQuickAdapter<HomepageModel, BaseViewHolder> {
 
     public static final String TAG = "UserDetailPicListAdapter";
     private Context mContext;
 
-    public HomepageAdapter_New(Context context) {
-        super(R.layout.item_homepage_adapter);
+    public HomepageRateAdapter(Context context) {
+        super(R.layout.item_homepage_rate_adapter);
         this.mContext = context;
     }
 
@@ -48,7 +47,7 @@ public class HomepageAdapter_New extends BaseQuickAdapter<HomepageModel, BaseVie
 //        ImageView portraitImg = helper.getView(R.id.homepage_adapter_item_portrait_old);
         RoundedImageView portraitImg = helper.getView(R.id.homepage_adapter_item_portrait);
         TextView nickName = helper.getView(R.id.homepage_adabpter_item_nickname);
-        TextView distance = helper.getView(R.id.homepage_adapter_item_distance_tv);
+        TextView rate = helper.getView(R.id.homepage_adapter_item_rate_tv);
         ImageView imageView1 = helper.getView(R.id.homepage_adapter_item_tu_pian_one);
         ImageView imageView2 = helper.getView(R.id.homepage_adapter_item_tu_pian_two);
         ImageView imageView3 = helper.getView(R.id.homepage_adapter_item_tu_pian_three);
@@ -62,8 +61,7 @@ public class HomepageAdapter_New extends BaseQuickAdapter<HomepageModel, BaseVie
             }
         });
         nickName.setText(item.getNickname());
-        distance.setText(MessageFormat.format("{0}{1}", String.format(Locale.getDefault(),
-                "%.2f", item.getDistance()), "km"));
+        rate.setText(MessageFormat.format("{0}{1}{2}", "好评率：", item.getFeedback_rate(), "%"));
 
         //Glide 加载图片简单用法
 //        RequestOptions optionsPortrait = RequestOptions.bitmapTransform(new CircleCrop());

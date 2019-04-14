@@ -66,8 +66,7 @@ public class LocateReqManager {
         }
         isWorking = true;
         Intent intent = new Intent(App.getAppContext(), LocationService.class);
-        intent.putExtra(SealConst.LASTUPDATE, currentLocateRequest.getLoacateSender());
-        intent.putExtra(SealConst.SENDER, currentLocateRequest.isForce());
+        intent.putExtra(SealConst.LASTUPDATE, currentLocateRequest.isForce());
         Log.d("xxxxxx", "取出队列，开始请求：" + currentLocateRequest.getLoacateSender() + "  "
                 + currentLocateRequest.isForce());
         App.getAppContext().startService(intent);

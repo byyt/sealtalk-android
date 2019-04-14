@@ -128,8 +128,8 @@ public class DeviceUtils {
     }
 
     public static float spToPx(int sp) {
-        final float scale = Resources.getSystem().getDisplayMetrics().scaledDensity;
-        return sp * scale;
+        final float fontScale = Resources.getSystem().getDisplayMetrics().scaledDensity;
+        return (int) (sp * fontScale + 0.5f);
     }
 
     public static float pxToSp(int sp) {
