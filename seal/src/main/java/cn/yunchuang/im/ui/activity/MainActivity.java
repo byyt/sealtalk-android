@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,7 +26,6 @@ import java.util.List;
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.location.LocateReqManager;
 import cn.yunchuang.im.server.HomeWatcherReceiver;
-import cn.yunchuang.im.server.utils.LocationUtils;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.server.widget.LoadDialog;
 import cn.yunchuang.im.ui.adapter.ConversationListAdapterEx;
@@ -87,10 +85,6 @@ public class MainActivity extends FragmentActivity implements
         changeSelectedTabState(0);
         initMainViewPager();
         registerHomeKeyReceiver(this);
-        //初次进来，进行一次强制定位
-        LocateReqManager.sendRequestLocation(LocateReqManager.DEFAULT_SENDER, true);
-        double distance = LocationUtils.getDistance(22.527262,113.941719,22.527373,113.941693);
-        Log.d("xxxxxx",distance+"");
     }
 
 

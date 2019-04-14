@@ -10,6 +10,7 @@ public class LocationVO implements Serializable {
     private double latitude;
     private double longitude;
     private long lastUpdate;
+    private String city;
     private int source;
 
     public LocationVO() {
@@ -42,6 +43,14 @@ public class LocationVO implements Serializable {
 
     public void setLastUpdate(long lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String toString() {

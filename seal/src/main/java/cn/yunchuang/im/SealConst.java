@@ -26,5 +26,6 @@ public class SealConst {
 
     //后面自己加的
     public static final String LASTUPDATE = "lastUpdate";
+    public static final String SENDER = "sender";
 
 }

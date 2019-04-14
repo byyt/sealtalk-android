@@ -1,57 +1,34 @@
 package cn.yunchuang.im.ui.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import cn.yunchuang.im.HttpManager;
+import cn.yunchuang.im.MeService;
 import cn.yunchuang.im.R;
+import cn.yunchuang.im.event.RefreshLocationEvent;
 import cn.yunchuang.im.location.LocateReqManager;
-import cn.yunchuang.im.server.response.HomepageModel;
-import cn.yunchuang.im.server.response.HomepageResponse;
 import cn.yunchuang.im.server.utils.NToast;
-import cn.yunchuang.im.ui.adapter.HomepageAdapter_New;
-import cn.yunchuang.im.ui.widget.MyFooter;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
 import cn.yunchuang.im.zmico.utils.DeviceUtils;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-
-import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
+import cn.yunchuang.im.zmico.utils.Utils;
 
 /**
- * tab 2 通讯录的 Fragment
- * Created by Bob on 2015/1/25.
+ * 首页
  */
-public class HomepageFragment_new extends BaseFragment implements View.OnClickListener, OnRefreshLoadMoreListener {
+public class HomepageFragment_new extends BaseFragment implements View.OnClickListener {
 
-    private RefreshLayout mRefreshLayout;
-    private RecyclerView mRecyclerView;
-    private static boolean isFirstEnter = true;
-
-    private HomepageAdapter_New mHomepageAdapter;
-
-    private int startIndex = 0;
-    private static final int PAGE_SIZE = 6;
-
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private TextView dingweiTv;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,46 +40,31 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
     @Override
     public void fragmentShow() {
         super.fragmentShow();
-        mRefreshLayout.autoRefresh();
+
     }
 
     private void initView(View view) {
+        //启动页会进行第一次定位，如果定位成功，会保存定位成功的时间，这里就会直接用sp保存的数据
+        //点击附近的人会再次请求定位，如果发现2分钟内已经定位成功过，则直接使用sp保存的定位结果，不再进行定位
+        if (getActivity() != null && isAdded()) {
+            LocateReqManager.sendRequestLocation(getActivity(), HomepageFragment_new.class.getSimpleName(), false);
+        }
 
         //设置标题栏高度，还有状态栏透明
         if (getActivity() != null) {
-            int topLayoutHeight = DeviceUtils.getStatusBarHeightPixels(getActivity()) + DeviceUtils.dpToPx(48);
-            FrameLayout titleLayout = (FrameLayout) view.findViewById(R.id.user_detail_new_title_root_layout);
-            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+            int topLayoutHeight = DeviceUtils.getStatusBarHeightPixels(getActivity()) + DeviceUtils.dpToPx(81);
+            FrameLayout titleLayout = (FrameLayout) view.findViewById(R.id.homepage_new_title_root_layout);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     topLayoutHeight);
             titleLayout.setLayoutParams(layoutParams);
             BaseBaseUtils.setTranslucentStatus(getActivity());//状态栏透明
         }
 
-        mRefreshLayout = (RefreshLayout) view.findViewById(R.id.activity_homepage_refreshLayout);
-        mRefreshLayout.setEnableHeaderTranslationContent(true);
-        mRefreshLayout.setEnableAutoLoadMore(true);//开启自动加载功能（非必须）
-        mRefreshLayout.setEnableFooterFollowWhenNoMoreData(true);//开启自动加载功能（非必须）
-        mRefreshLayout.setPrimaryColors(getResources().getColor(R.color.color_FC6880));//设置主题颜色
-//        mRefreshLayout.(getResources().getColor(R.color.color_FC6880));//设置主题颜色
-        mRefreshLayout.setRefreshFooter(new MyFooter(getContext()));
+        dingweiTv = view.findViewById(R.id.homepage_new_title_location_tv);
 
+        //定位位置，采用sp保存的
+        dingweiTv.setText(MeService.getMyLocation().getCity());
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.activity_homepage_recyclerView);
-
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        mHomepageAdapter = new HomepageAdapter_New(getActivity());
-
-        mRecyclerView.setAdapter(mHomepageAdapter);
-
-        mRefreshLayout.setOnRefreshLoadMoreListener(this);
-
-        if (isFirstEnter) {
-            isFirstEnter = false;
-            mRefreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
-        }
 
     }
 
@@ -114,110 +76,43 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
-        compositeDisposable.clear();
+        EventBus.getDefault().unregister(this);
     }
 
     private void getData() {
-        Disposable disposable = HttpManager.getInstance().getRecommendUsers(startIndex, PAGE_SIZE, new HttpManager.ResultCallback<HomepageResponse>() {
-            @Override
-            public void onSuccess(HomepageResponse homepageResponse) {
-                Log.e("xxxxxx", "getData onSuccess");
-                if (homepageResponse != null) {
-                    List<HomepageModel> list = homepageResponse.getResult().getData();
-                    if (startIndex == 0) {
-                        updateLiveList(list, true);
-                    } else {
-                        updateLiveList(list, false);
+
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRefreshLocationEvent(RefreshLocationEvent event) {
+        //只处理本类发起的定位请求
+        if (Utils.isNotNull(event) && event.getLocateSender().equals(HomepageFragment_new.class.getSimpleName())) {
+            Log.d("xxxxxx", "onRefreshLocationEvent homepage_new");
+            if (Utils.isNotNull(event) && event.getLocationVO() != null) {
+                if (event.isLocationSuccess()) {
+                    if (dingweiTv != null) {
+                        dingweiTv.setText(event.getLocationVO().getCity());
                     }
-                    startIndex = homepageResponse.getResult().getNextIndex();
-                }
-
-            }
-
-            @Override
-            public void onError(String errString) {
-                if (getActivity() == null || !isAdded()) {
-                    return;
-                }
-                if (!TextUtils.isEmpty(errString)) {
-                    NToast.shortToast(getActivity(), errString);
                 } else {
-                    NToast.shortToast(getActivity(), "获取用户信息失败");
+                    if (getActivity() != null && isAdded()) {
+                        NToast.shortToast(getActivity(), "定位失败");
+                    }
                 }
-
-                mRefreshLayout.finishRefresh();
-                mRefreshLayout.resetNoMoreData();//setNoMoreData(false);
-            }
-        });
-        compositeDisposable.add(disposable);
-    }
-
-    private void updateLiveList(List<HomepageModel> list, boolean isRefresh) {
-        if (list == null) {
-            if (isRefresh) {
-                mRefreshLayout.finishRefresh();
-                mRefreshLayout.resetNoMoreData();//setNoMoreData(false);//恢复上拉状态
             } else {
-                mRefreshLayout.finishLoadMoreWithNoMoreData();//设置之后，将不会再触发加载事件
-            }
-            return;
-        }
-
-        if (isRefresh) {
-            mHomepageAdapter.replaceData(list);
-            mRefreshLayout.finishRefresh();
-            mRefreshLayout.resetNoMoreData();//setNoMoreData(false);//恢复上拉状态
-            return;
-        }
-
-        // 通过本地已有直播间列表构建 map{key: roomId, value: roomInfo}
-        List<HomepageModel> localList = new ArrayList<>(mHomepageAdapter.getData());
-        Map<String, HomepageModel> liveMap = new HashMap<>(); // upgrade to SparseLongArray when using API >= 18
-        for (HomepageModel model : localList) {
-            if (model.getId() != null) {
-                liveMap.put(model.getId(), model);
+                if (getActivity() != null && isAdded()) {
+                    NToast.shortToast(getActivity(), "定位失败");
+                }
             }
         }
-
-        List<HomepageModel> newList = new ArrayList<>();
-        boolean hasDuplicateRoom = false;
-        // 请求返回的直播间列表, 通过上面本地直播间 map 进行合并
-        for (HomepageModel model : list) {
-            if (model.getId() == null) {
-                continue;
-            }
-
-            if (!liveMap.containsKey(model.getId())) {
-                newList.add(model);
-            } else {
-                hasDuplicateRoom = true;
-                //替换旧的，先不做了
-
-            }
-        }
-
-        if (!newList.isEmpty()) {
-            mHomepageAdapter.addData(newList);
-            mRefreshLayout.finishLoadMore();
-        } else {
-            mRefreshLayout.finishLoadMoreWithNoMoreData();//设置之后，将不会再触发加载事件
-        }
-
-
-    }
-
-    @Override
-    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        startIndex = 0;
-        getData();
-        LocateReqManager.sendRequestLocation(getActivity());
-    }
-
-    @Override
-    public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        getData();
     }
 
 }

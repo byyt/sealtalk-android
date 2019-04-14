@@ -165,4 +165,35 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="MicoTabLayout">
+        <attr name="micoTabIndicatorColor" format="color"/>
+        <attr name="micoTabIndicatorHeight" format="dimension"/>
+        <attr name="micoTabContentStart" format="dimension"/>
+        <attr name="micoTabBackground" format="reference"/>
+        <attr name="micoTabMode">
+            <enum name="scrollable" value="0"/>
+            <enum name="fixed" value="1"/>
+        </attr>
+        <attr name="micoTabGravity">
+            <enum name="fill" value="0"/>
+            <enum name="center" value="1"/>
+        </attr>
+        <attr name="micoTabMinWidth" format="dimension"/>
+        <attr name="micoTabMaxWidth" format="dimension"/>
+        <attr name="micoTabTextAppearance" format="reference"/>
+        <attr name="micoTabTextColor" format="color"/>
+        <attr name="micoTabSelectedTextColor" format="color"/>
+        <attr name="micoTabPaddingStart" format="dimension"/>
+        <attr name="micoTabPaddingTop" format="dimension"/>
+        <attr name="micoTabPaddingEnd" format="dimension"/>
+        <attr name="micoTabPaddingBottom" format="dimension"/>
+        <attr name="micoTabPadding" format="dimension"/>
+        <attr name="micoTabIndicatorWidth" format="dimension"/>
+        <attr name="micoTabIndicatorMarginBottom" format="dimension"/>
+        <attr name="micoTabIndicatorStyleRounded" format="boolean"/>
+        <attr name="micoTabBottomDividerHeight" format="dimension"/>
+        <attr name="micoTabBottomDividerColor" format="color|reference"/>
+        <attr name="micoTabIndicator" format="reference"/>
+    </declare-styleable>
+
 </resources>

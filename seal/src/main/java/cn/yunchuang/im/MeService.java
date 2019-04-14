@@ -5,6 +5,7 @@ import cn.yunchuang.im.sp.BasePref;
 import cn.yunchuang.im.zmico.utils.Utils;
 
 import static android.content.Context.MODE_PRIVATE;
+import static cn.yunchuang.im.sp.BasePref.KEY_CITY;
 import static cn.yunchuang.im.sp.BasePref.KEY_LATITUDE;
 import static cn.yunchuang.im.sp.BasePref.KEY_LONGITUDE;
 
@@ -23,6 +24,7 @@ public class MeService {
         if (!Utils.isNull(myLocation)) {
             BasePref.saveString(KEY_LONGITUDE, String.valueOf(myLocation.getLongitude()));
             BasePref.saveString(KEY_LATITUDE, String.valueOf(myLocation.getLatitude()));
+            BasePref.saveString(KEY_CITY, String.valueOf(myLocation.getCity()));
         }
     }
 
@@ -30,6 +32,7 @@ public class MeService {
         LocationVO myLocation = new LocationVO();
         myLocation.setLongitude(Double.valueOf(BasePref.getString(KEY_LONGITUDE, "0")));
         myLocation.setLatitude(Double.valueOf(BasePref.getString(KEY_LATITUDE, "0")));
+        myLocation.setCity(BasePref.getString(KEY_CITY, ""));
         return myLocation;
     }
 

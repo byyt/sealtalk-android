@@ -17,9 +17,10 @@ public class BasePref {
     private static final String YUNCHUANG_ACCOUNT_PREFERENCE = "YUNCHUANG_ACCOUNT_PREFERENCE";
 
     //key值
-    public static final String KEY_LOCATE_REFRESH = "KEY_LOCATE_REFRESH"; //最近一次定位时间
+    public static final String KEY_LOCATE_SUCCESS = "KEY_LOCATE_SUCCESS"; //最近一次定位成功时间
     public static final String KEY_LONGITUDE = "KEY_LONGITUDE"; //
     public static final String KEY_LATITUDE = "KEY_LATITUDE";
+    public static final String KEY_CITY = "KEY_CITY";
 
     private static SharedPreferences getPreference() {
         return App.getAppContext().getSharedPreferences(YUNCHUANG_ACCOUNT_PREFERENCE, Context.MODE_PRIVATE);

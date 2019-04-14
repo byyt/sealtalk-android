@@ -1,38 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/view_operation_card_root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_top" />
-
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/activity_homepage_refreshLayout"
+    <!-- 标题栏高度会通过计算设置，状态栏高度+内容高度 -->
+    <FrameLayout
+        android:id="@+id/homepage_new_title_root_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white"
-        app:srlAccentColor="@android:color/white"
-        app:srlEnableAutoLoadMore="true"
-        app:srlEnableLoadMore="true"
-        app:srlHeaderMaxDragRate="2.5"
-        app:srlPrimaryColor="@android:color/darker_gray">
+        android:layout_height="wrap_content"
+        android:background="@drawable/rs_select_btn_common_new">
 
-        <!--srlHeaderMaxDragRate=2.5时候WaterDropHeader的下拉效果最好-->
-        <com.scwang.smartrefresh.header.WaterDropHeader
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="@dimen/px162"
+            android:layout_gravity="bottom">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/activity_homepage_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:overScrollMode="never"
-            tools:listitem="@android:layout/simple_list_item_2" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px108">
 
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+                <TextView
+                    android:id="@+id/homepage_new_title_location_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginStart="@dimen/px30"
+                    android:drawableLeft="@drawable/hompage_title_dingwei"
+                    android:drawableStart="@drawable/hompage_title_dingwei"
+                    android:textColor="@color/white"
+                    android:drawablePadding="@dimen/px10"
+                    android:textSize="@dimen/text_px30"
+                    tools:text="深圳" />
 
+                <ImageView
+                    android:id="@+id/homepage_new_title_shaixuan_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:padding="@dimen/px30"
+                    android:src="@drawable/homepage_title_shaixuan"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_px36" />
+
+            </FrameLayout>
+
+        </RelativeLayout>
+
+    </FrameLayout>
 
 </LinearLayout>

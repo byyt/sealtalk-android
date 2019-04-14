@@ -242,4 +242,10 @@
         <item name="android:windowExitAnimation">@anim/slide_out_to_bottom_200ms</item>
     </style>
 
+    <style name="TextAppearance.Tab.Default" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
 </resources>
