@@ -1,5 +1,6 @@
 package cn.yunchuang.im.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,6 +23,7 @@ import cn.yunchuang.im.R;
 import cn.yunchuang.im.event.RefreshLocationEvent;
 import cn.yunchuang.im.location.LocateReqManager;
 import cn.yunchuang.im.server.utils.NToast;
+import cn.yunchuang.im.ui.activity.ShaixuanActivity;
 import cn.yunchuang.im.ui.adapter.HompagePagerAdapter;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
 import cn.yunchuang.im.zmico.utils.DeviceUtils;
@@ -33,6 +36,7 @@ import cn.yunchuang.im.zmico.utils.Utils;
 public class HomepageFragment_new extends BaseFragment implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
     private TextView dingweiTv;
+    private ImageView shaixuanIv;
     private TextView jlzjTv;
     private TextView cnxhTv;
     private TextView hpyxTv;
@@ -71,6 +75,9 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
         }
 
         dingweiTv = view.findViewById(R.id.homepage_new_title_location_tv);
+        dingweiTv.setOnClickListener(this);
+        shaixuanIv = view.findViewById(R.id.homepage_new_title_shaixuan_iv);
+        shaixuanIv.setOnClickListener(this);
         jlzjTv = view.findViewById(R.id.homepage_new_title_jlzj_tab);
         jlzjTv.setOnClickListener(this);
         cnxhTv = view.findViewById(R.id.homepage_new_title_cnxh_tab);
@@ -97,6 +104,11 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
             return;
         }
         switch (v.getId()) {
+            case R.id.homepage_new_title_location_tv:
+                break;
+            case R.id.homepage_new_title_shaixuan_iv:
+                startShaixuanActivity();
+                break;
             case R.id.homepage_new_title_jlzj_tab:
                 viewPager.setCurrentItem(0);
                 break;
@@ -147,6 +159,11 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
             hpyxTv.setTextColor(ResourceUtils.getColor(R.color.white));
             hpyxTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
         }
+    }
+
+    private void startShaixuanActivity() {
+        Intent intent = new Intent(getActivity(), ShaixuanActivity.class);
+        startActivity(intent);
     }
 
     @Override

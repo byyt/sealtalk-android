@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_F4F4F4"
+    android:orientation="vertical">
+
+    <!-- 高度动态计算，状态栏高度+48dp -->
+    <FrameLayout
+        android:id="@+id/activity_shaixuan_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_common_new">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px96"
+            android:layout_gravity="bottom">
+
+            <ImageView
+                android:id="@+id/activity_shaixuan_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:paddingBottom="@dimen/px15"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30"
+                android:paddingTop="@dimen/px15"
+                android:src="@drawable/user_detail_back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="筛选"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_px36" />
+
+            <ImageView
+                android:id="@+id/activity_shaixuan_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:paddingBottom="@dimen/px15"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30"
+                android:paddingTop="@dimen/px15"
+                android:src="@drawable/ic_da_gou" />
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/activity_shaixuan_root_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/px20"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginStart="@dimen/px30"
+                android:layout_marginTop="@dimen/px20"
+                android:text="高级筛选"
+                android:textColor="@color/color_3C3B3B"
+                android:textSize="@dimen/text_px32" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/px26"
+                    android:layout_marginTop="@dimen/px40"
+                    android:text="性别"
+                    android:textColor="@color/color_767575"
+                    android:textSize="@dimen/text_px30" />
+
+                <LinearLayout
+                    android:layout_width="@dimen/px534"
+                    android:layout_height="@dimen/px74"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/bg_rounded_white_border_red"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/activity_shaixuan_xingbie_buxian"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_common_new_left_radius"
+                        android:gravity="center"
+                        android:text="不限"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_px32" />
+
+                    <View
+                        android:layout_width="@dimen/px2"
+                        android:layout_height="match_parent"
+                        android:background="@color/color_FC6880" />
+
+                    <TextView
+                        android:id="@+id/activity_shaixuan_xingbie_nv"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="女"
+                        android:textColor="@color/color_FC6880"
+                        android:textSize="@dimen/text_px32" />
+
+                    <View
+                        android:layout_width="@dimen/px2"
+                        android:layout_height="match_parent"
+                        android:background="@color/color_FC6880" />
+
+                    <TextView
+                        android:id="@+id/activity_shaixuan_xingbie_nan"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="男"
+                        android:textColor="@color/color_FC6880"
+                        android:textSize="@dimen/text_px32" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/px534"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/px68"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="年龄"
+                        android:textColor="@color/color_767575"
+                        android:textSize="@dimen/text_px30" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/activity_shaixuan_age_left_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start|center_vertical"
+                            android:text="18"
+                            android:textColor="@color/color_767575"
+                            android:textSize="@dimen/text_px30" />
+
+                        <TextView
+                            android:id="@+id/activity_shaixuan_age_right_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end|center_vertical"
+                            android:text="50"
+                            android:textColor="@color/color_767575"
+                            android:textSize="@dimen/text_px30" />
+
+                    </FrameLayout>
+
+                    <com.jaygoo.widget.RangeSeekBar
+                        android:id="@+id/activity_shaixuan_age_seekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:rsb_indicator_background_color="#a6c1ee"
+                        app:rsb_indicator_height="0dp"
+                        app:rsb_indicator_show_mode="alwaysHide"
+                        app:rsb_max="50"
+                        app:rsb_min="18"
+                        app:rsb_mode="range"
+                        app:rsb_progress_color="@color/color_FC6880"
+                        app:rsb_progress_default_color="@color/color_F4F4F4"
+                        app:rsb_progress_height="@dimen/px14"
+                        app:rsb_range_interval="1"
+                        app:rsb_thumb_drawable="@drawable/thumb_gradient"
+                        app:rsb_thumb_scale_ratio="1"
+                        app:rsb_thumb_size="@dimen/px36"
+                        app:rsb_tick_mark_mode="other" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/px534"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/px90"
+                    android:layout_marginTop="@dimen/px60"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="身高(cm)"
+                        android:textColor="@color/color_767575"
+                        android:textSize="@dimen/text_px30" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/activity_shaixuan_height_left_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start|center_vertical"
+                            android:text="140"
+                            android:textColor="@color/color_767575"
+                            android:textSize="@dimen/text_px30" />
+
+                        <TextView
+                            android:id="@+id/activity_shaixuan_height_right_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end|center_vertical"
+                            android:text="200"
+                            android:textColor="@color/color_767575"
+                            android:textSize="@dimen/text_px30" />
+
+                    </FrameLayout>
+
+                    <com.jaygoo.widget.RangeSeekBar
+                        android:id="@+id/activity_shaixuan_height_seekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:rsb_indicator_background_color="#a6c1ee"
+                        app:rsb_indicator_height="0dp"
+                        app:rsb_indicator_show_mode="alwaysHide"
+                        app:rsb_max="200"
+                        app:rsb_min="140"
+                        app:rsb_mode="range"
+                        app:rsb_progress_color="@color/color_FC6880"
+                        app:rsb_progress_default_color="@color/color_F4F4F4"
+                        app:rsb_progress_height="@dimen/px14"
+                        app:rsb_range_interval="1"
+                        app:rsb_thumb_drawable="@drawable/thumb_gradient"
+                        app:rsb_thumb_scale_ratio="1"
+                        app:rsb_thumb_size="@dimen/px36"
+                        app:rsb_tick_mark_mode="other" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+</LinearLayout>

@@ -108,6 +108,8 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
     //权限
     implementation 'com.yanzhenjie.permission:support:2.0.1'
+    //seekbar，双向滚动条
+    implementation 'com.github.Jay-Goo:RangeSeekBar:v2.0.6'
 
     //第三方依赖库
     implementation 'com.squareup.okhttp3:logging-interceptor:3.1.2'

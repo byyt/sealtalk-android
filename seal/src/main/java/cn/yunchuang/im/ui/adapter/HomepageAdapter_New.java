@@ -23,6 +23,7 @@ import cn.yunchuang.im.server.BaseAction;
 import cn.yunchuang.im.server.response.HomepageModel;
 import cn.yunchuang.im.server.response.ImageModel;
 import cn.yunchuang.im.ui.activity.UserDetailActivity_New;
+import cn.yunchuang.im.zmico.utils.Utils;
 
 /**
  * 放松入口
@@ -56,6 +57,9 @@ public class HomepageAdapter_New extends BaseQuickAdapter<HomepageModel, BaseVie
         rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (Utils.isFastClick()) {
+                    return;
+                }
                 Intent intent = new Intent(mContext, UserDetailActivity_New.class);
                 intent.putExtra("userId", item.getId());
                 mContext.startActivity(intent);

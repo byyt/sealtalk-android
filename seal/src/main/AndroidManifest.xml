@@ -148,12 +148,17 @@
             android:screenOrientation="portrait" />
         <!--发起聊天页面-->
 
-
-        <!--我的账号-->
+        <!-- 筛选界面 -->
         <activity
             android:name="cn.yunchuang.im.ui.activity.MyAccountActivity"
             android:screenOrientation="portrait" />
 
+        <!--我的账号-->
+        <activity
+            android:name="cn.yunchuang.im.ui.activity.ShaixuanActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- 编辑个人信息 -->
         <activity
             android:name="cn.yunchuang.im.ui.activity.MyBaseInfoActivity_new"
             android:screenOrientation="portrait" />

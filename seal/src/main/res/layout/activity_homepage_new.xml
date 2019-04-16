@@ -11,7 +11,7 @@
         android:id="@+id/homepage_new_title_root_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rs_select_btn_common_new">
+        android:background="@drawable/bg_common_new">
 
         <LinearLayout
             android:orientation="vertical"
@@ -38,7 +38,7 @@
                     tools:text="深圳" />
 
                 <ImageView
-                    android:id="@+id/homepage_new_title_shaixuan_tv"
+                    android:id="@+id/homepage_new_title_shaixuan_iv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"

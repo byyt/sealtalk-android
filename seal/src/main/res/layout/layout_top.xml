@@ -7,7 +7,7 @@
         android:id="@+id/user_detail_new_title_root_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rs_select_btn_common_new">
+        android:background="@drawable/bg_common_new">
 
         <RelativeLayout
             android:id="@+id/title"

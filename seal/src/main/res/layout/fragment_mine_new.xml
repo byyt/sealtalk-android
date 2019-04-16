@@ -20,7 +20,7 @@
                 android:id="@+id/fragment_mine_top_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/px448"
-                android:background="@drawable/rs_select_btn_common_new">
+                android:background="@drawable/bg_common_new">
 
                 <FrameLayout
                     android:id="@+id/fragment_mine_new_title_layout_translate"
