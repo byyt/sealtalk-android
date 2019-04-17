@@ -21,7 +21,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import cn.yunchuang.im.MeService;
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.event.RefreshLocationEvent;
+import cn.yunchuang.im.event.SaveShaixuanEvent;
 import cn.yunchuang.im.location.LocateReqManager;
+import cn.yunchuang.im.model.ShaixuanModel;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.ui.activity.ShaixuanActivity;
 import cn.yunchuang.im.ui.adapter.HompagePagerAdapter;
@@ -43,6 +45,8 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
 
     private HompagePagerAdapter hompagePagerAdapter;
     private ViewPager viewPager;
+
+    private ShaixuanModel shaixuanModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -163,7 +167,38 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
 
     private void startShaixuanActivity() {
         Intent intent = new Intent(getActivity(), ShaixuanActivity.class);
+        String currentFragmentName = getCurrentFragmentName();
+        intent.putExtra("fromFragmentName", currentFragmentName);
+        if (shaixuanModel == null) {
+            shaixuanModel = new ShaixuanModel();
+            shaixuanModel.setXbSelected(2);
+            shaixuanModel.setFromAge(18);
+            shaixuanModel.setToAge(50);
+            shaixuanModel.setFromHeight(140);
+            shaixuanModel.setToHeight(200);
+        }
+        intent.putExtra("shaixuanModel", shaixuanModel);
         startActivity(intent);
+    }
+
+    private String getCurrentFragmentName() {
+        String fragmentName = HomepageLikeFragment.TAG;
+        switch (viewPager.getCurrentItem()) {
+            case 0:
+                fragmentName = HomepageNearByFragment.TAG;
+                break;
+            case 1:
+                fragmentName = HomepageLikeFragment.TAG;
+                break;
+            case 2:
+                fragmentName = HomepageRateFragment.TAG;
+                break;
+        }
+        return fragmentName;
+    }
+
+    public ShaixuanModel getShaixuanModel() {
+        return shaixuanModel;
     }
 
     @Override
@@ -199,6 +234,14 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
                     NToast.shortToast(getActivity(), "定位失败");
                 }
             }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSaveShaixuanEvent(SaveShaixuanEvent event) {
+        //只处理本类发起的定位请求
+        if (Utils.isNotNull(event)) {
+            shaixuanModel = event.getShaixuanModel();
         }
     }
 

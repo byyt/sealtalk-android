@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.yunchuang.im.R;
-import cn.yunchuang.im.location.LocateReqManager;
+import cn.yunchuang.im.model.ShaixuanModel;
 import cn.yunchuang.im.server.HomeWatcherReceiver;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.server.widget.LoadDialog;
@@ -328,6 +328,13 @@ public class MainActivity extends FragmentActivity implements
         RongIM.getInstance().addUnReadMessageCountChangedObserver(this, conversationTypes);
         getConversationPush();// 获取 push 的 id 和 target
         getPushMessage();
+    }
+
+    public ShaixuanModel getShaixuanModel() {
+        if (mHomepageFragmentNew != null) {
+            return mHomepageFragmentNew.getShaixuanModel();
+        }
+        return null;
     }
 
     private void getConversationPush() {

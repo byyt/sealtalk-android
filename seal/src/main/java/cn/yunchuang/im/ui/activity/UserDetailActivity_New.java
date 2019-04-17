@@ -51,7 +51,6 @@ import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.server.utils.StaticDataUtils;
 import cn.yunchuang.im.server.widget.LoadDialog;
 import cn.yunchuang.im.ui.adapter.UserDetailPicListAdapter;
-import cn.yunchuang.im.utils.DateUtils;
 import cn.yunchuang.im.widget.GlideImageLoader;
 import cn.yunchuang.im.widget.dialog_hdzy.CommonDialog;
 import cn.yunchuang.im.widget.dialog_hdzy.ConstantDialogUtils;
@@ -465,7 +464,7 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
         //距离，保留两位小数，单位km
         distanceTv.setText(MessageFormat.format("{0}{1}", String.format(Locale.getDefault(), "%.2f", modelOne.getDistance()), "km"));
         nameTv.setText(modelOne.getNickname());
-        sexAgeTv.setText(String.valueOf(DateUtils.getAge(modelOne.getBirthday())));
+        sexAgeTv.setText(String.valueOf(modelOne.getAge()));
         followNumTv.setText(MessageFormat.format("{0}{1}", "关注 ", String.valueOf(modelOne.getFollowNum())));
         fansNumTv.setText(MessageFormat.format("{0}{1}", "粉丝 ", String.valueOf(modelOne.getFansNum())));
         qianMingTv.setText(modelOne.getQianMing());

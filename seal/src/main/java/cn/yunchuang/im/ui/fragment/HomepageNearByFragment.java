@@ -2,6 +2,7 @@ package cn.yunchuang.im.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,10 @@ import android.view.View;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,9 +26,12 @@ import java.util.Map;
 import cn.yunchuang.im.HttpManager;
 import cn.yunchuang.im.MeService;
 import cn.yunchuang.im.R;
+import cn.yunchuang.im.event.SaveShaixuanEvent;
+import cn.yunchuang.im.model.ShaixuanModel;
 import cn.yunchuang.im.server.response.HomepageModel;
 import cn.yunchuang.im.server.response.HomepageResponse;
 import cn.yunchuang.im.server.utils.NToast;
+import cn.yunchuang.im.ui.activity.MainActivity;
 import cn.yunchuang.im.ui.adapter.HomepageNearByAdapter;
 import cn.yunchuang.im.ui.widget.MyFooter;
 import cn.yunchuang.im.zmico.utils.Utils;
@@ -37,6 +45,8 @@ import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
  */
 public class HomepageNearByFragment extends LazyFragment implements View.OnClickListener, OnRefreshLoadMoreListener {
 
+    public static final String TAG = "HomepageNearByFragment";
+
     private RefreshLayout mRefreshLayout;
     private RecyclerView mRecyclerView;
 
@@ -44,6 +54,8 @@ public class HomepageNearByFragment extends LazyFragment implements View.OnClick
 
     private int startIndex = 0;
     private static final int PAGE_SIZE = 6;
+
+    private ShaixuanModel shaixuanModel;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -59,6 +71,10 @@ public class HomepageNearByFragment extends LazyFragment implements View.OnClick
 
     @Override
     protected void initView(View view, LayoutInflater inflater, Bundle savedInstanceState) {
+
+        if (getActivity() != null && getActivity() instanceof MainActivity) {
+            shaixuanModel = ((MainActivity) getActivity()).getShaixuanModel();
+        }
 
         mRefreshLayout = (RefreshLayout) view.findViewById(R.id.activity_homepage_refreshLayout);
         mRefreshLayout.setEnableHeaderTranslationContent(true);
@@ -90,43 +106,38 @@ public class HomepageNearByFragment extends LazyFragment implements View.OnClick
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        compositeDisposable.clear();
-    }
-
     private void getData() {
-        Disposable disposable = HttpManager.getInstance().getNearByUsers(startIndex, PAGE_SIZE, new HttpManager.ResultCallback<HomepageResponse>() {
-            @Override
-            public void onSuccess(HomepageResponse homepageResponse) {
-                if (homepageResponse != null) {
-                    List<HomepageModel> list = filterMyself(homepageResponse.getResult().getData());
-                    if (startIndex == 0) {
-                        updateLiveList(list, true);
-                    } else {
-                        updateLiveList(list, false);
+        Disposable disposable = HttpManager.getInstance().getNearByUsers(startIndex, PAGE_SIZE, shaixuanModel,
+                new HttpManager.ResultCallback<HomepageResponse>() {
+                    @Override
+                    public void onSuccess(HomepageResponse homepageResponse) {
+                        if (homepageResponse != null) {
+                            List<HomepageModel> list = filterMyself(homepageResponse.getResult().getData());
+                            if (startIndex == 0) {
+                                updateLiveList(list, true);
+                            } else {
+                                updateLiveList(list, false);
+                            }
+                            startIndex = homepageResponse.getResult().getNextIndex();
+                        }
+
                     }
-                    startIndex = homepageResponse.getResult().getNextIndex();
-                }
 
-            }
+                    @Override
+                    public void onError(String errString) {
+                        if (getActivity() == null || !isAdded()) {
+                            return;
+                        }
+                        if (!TextUtils.isEmpty(errString)) {
+                            NToast.shortToast(getActivity(), errString);
+                        } else {
+                            NToast.shortToast(getActivity(), "获取用户信息失败");
+                        }
 
-            @Override
-            public void onError(String errString) {
-                if (getActivity() == null || !isAdded()) {
-                    return;
-                }
-                if (!TextUtils.isEmpty(errString)) {
-                    NToast.shortToast(getActivity(), errString);
-                } else {
-                    NToast.shortToast(getActivity(), "获取用户信息失败");
-                }
-
-                mRefreshLayout.finishRefresh();
-                mRefreshLayout.resetNoMoreData();//setNoMoreData(false);
-            }
-        });
+                        mRefreshLayout.finishRefresh();
+                        mRefreshLayout.resetNoMoreData();//setNoMoreData(false);
+                    }
+                });
         compositeDisposable.add(disposable);
     }
 
@@ -207,6 +218,35 @@ public class HomepageNearByFragment extends LazyFragment implements View.OnClick
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         getData();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+        compositeDisposable.clear();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSaveShaixuanEvent(SaveShaixuanEvent event) {
+        //只处理本类发起的筛选请求
+        if (Utils.isNotNull(event)) {
+            shaixuanModel = event.getShaixuanModel();
+            if (event.getFromFragmentName().equals(TAG)) {
+                if (mHomepageAdapter != null && Utils.isNotEmptyCollection(mHomepageAdapter.getData())) {
+                    mRecyclerView.scrollToPosition(0);
+                }
+                if (mRefreshLayout != null) {
+                    mRefreshLayout.autoRefresh();
+                }
+            }
+        }
     }
 
 }

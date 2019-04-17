@@ -296,11 +296,12 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
                 int height = Integer.valueOf(shengaoTv.getText().toString().replace("cm", ""));
                 long birthday = DateUtils.date2TimeStamp(setYear + "-" + setMonth + "-" + setDay,
                         "yyyy-MM-dd");
+                int age = DateUtils.getAgeFromTimeStamp(birthday);
                 String suozaidi = setProvince + "/" + setCity;
                 String qianMing = qianMingTv.getText().toString();
                 String xqah = xqahTv.getText().toString();
                 return action.upDateUserInfo(nickname, portraitUri, sex, height,
-                        birthday, suozaidi, qianMing, xqah, freeImgList);
+                        birthday, age, suozaidi, qianMing, xqah, freeImgList);
         }
         return null;
     }

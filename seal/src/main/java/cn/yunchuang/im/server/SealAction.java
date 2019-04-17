@@ -9,6 +9,7 @@ import org.apache.http.entity.StringEntity;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import cn.yunchuang.im.model.ShaixuanModel;
 import cn.yunchuang.im.server.network.http.HttpException;
 import cn.yunchuang.im.server.request.AddGroupMemberRequest;
 import cn.yunchuang.im.server.request.AddToBlackListRequest;
@@ -335,9 +336,19 @@ public class SealAction extends BaseAction {
      *
      * @throws HttpException
      */
-    public HomepageResponse getRecommendUsers(int startIndex, int pageSize) throws HttpException {
+    public HomepageResponse getRecommendUsers(int startIndex, int pageSize, ShaixuanModel model) throws HttpException {
         String url = getURL("user/get_recommend_users?");
         String newUrl = url + "startIndex=" + startIndex + "&pageSize=" + pageSize;
+        if (model != null) {
+            //设置过了年龄筛选
+            if (model.getFromAge() != 18 || model.getToAge() != 50) {
+                newUrl += "&fromAge=" + model.getFromAge() + "&toAge=" + model.getToAge();
+            }
+            //设置过了身高
+            if (model.getFromHeight() != 140 || model.getToHeight() != 200) {
+                newUrl += "&fromHeight=" + model.getFromHeight() + "&toHeight=" + model.getToHeight();
+            }
+        }
         String result = httpManager.get(mContext, newUrl);
         HomepageResponse response = null;
         if (!TextUtils.isEmpty(result)) {
@@ -351,9 +362,19 @@ public class SealAction extends BaseAction {
      *
      * @throws HttpException
      */
-    public HomepageResponse getNearByUsers(int startIndex, int pageSize) throws HttpException {
+    public HomepageResponse getNearByUsers(int startIndex, int pageSize, ShaixuanModel model) throws HttpException {
         String url = getURL("user/get_nearby_users?");
         String newUrl = url + "startIndex=" + startIndex + "&pageSize=" + pageSize;
+        if (model != null) {
+            //设置过了年龄筛选
+            if (model.getFromAge() != 18 || model.getToAge() != 50) {
+                newUrl += "&fromAge=" + model.getFromAge() + "&toAge=" + model.getToAge();
+            }
+            //设置过了身高
+            if (model.getFromHeight() != 140 || model.getToHeight() != 200) {
+                newUrl += "&fromHeight=" + model.getFromHeight() + "&toHeight=" + model.getToHeight();
+            }
+        }
         String result = httpManager.get(mContext, newUrl);
         HomepageResponse response = null;
         if (!TextUtils.isEmpty(result)) {
@@ -367,9 +388,19 @@ public class SealAction extends BaseAction {
      *
      * @throws HttpException
      */
-    public HomepageResponse getRateUsers(int startIndex, int pageSize) throws HttpException {
+    public HomepageResponse getRateUsers(int startIndex, int pageSize, ShaixuanModel model) throws HttpException {
         String url = getURL("user/get_rate_users?");
         String newUrl = url + "startIndex=" + startIndex + "&pageSize=" + pageSize;
+        if (model != null) {
+            //设置过了年龄筛选
+            if (model.getFromAge() != 18 || model.getToAge() != 50) {
+                newUrl += "&fromAge=" + model.getFromAge() + "&toAge=" + model.getToAge();
+            }
+            //设置过了身高
+            if (model.getFromHeight() != 140 || model.getToHeight() != 200) {
+                newUrl += "&fromHeight=" + model.getFromHeight() + "&toHeight=" + model.getToHeight();
+            }
+        }
         String result = httpManager.get(mContext, newUrl);
         HomepageResponse response = null;
         if (!TextUtils.isEmpty(result)) {
@@ -491,6 +522,7 @@ public class SealAction extends BaseAction {
      * @param sex
      * @param height
      * @param birthday
+     * @param age
      * @param suoZaiDi
      * @param qianMing
      * @param freeImgList
@@ -498,13 +530,13 @@ public class SealAction extends BaseAction {
      * @throws HttpException
      */
     public BaseResponse upDateUserInfo(String nickname, String portraitUri, int sex, int height,
-                                       long birthday, String suoZaiDi, String qianMing, String xqah,
+                                       long birthday, int age, String suoZaiDi, String qianMing, String xqah,
                                        String freeImgList)
             throws HttpException {
 
         String url = getURL("user/update_user_info");
         String json = JsonMananger.beanToJson(new UpdateBaseUserInfoRequest(nickname, portraitUri, sex, height,
-                birthday, suoZaiDi, qianMing, xqah, freeImgList));
+                birthday, age, suoZaiDi, qianMing, xqah, freeImgList));
         StringEntity entity = null;
         try {
             entity = new StringEntity(json, ENCODING);

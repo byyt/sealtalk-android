@@ -61,12 +61,12 @@ public class DateUtils {
     }
 
     /**
-     * 根据出生日期得到年龄
+     * 根据出生日期时间戳得到年龄，显示年龄时用到
      *
      * @param timestamp 出生日期的时间戳
      * @return
      */
-    public static int getAge(long timestamp) {
+    public static int getAgeFromTimeStamp(long timestamp) {
         Calendar calendar = Calendar.getInstance();
         int currentYear = calendar.get(Calendar.YEAR);
         int currentMonth = calendar.get(Calendar.MONTH) + 1;
@@ -82,6 +82,26 @@ public class DateUtils {
         } else {
             return age + 1;
         }
+    }
+
+    /**
+     * 根据年龄得到出生日期时间戳，根据年龄筛选时用到，
+     * 用不到了，年龄直接存到数据库里，直接根据年龄来筛选
+     *
+     * @param age 年龄
+     * @return
+     */
+    public static long getTimeStampFromAge(int age) {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR) - age;
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        //最少从当前日期后一天，年份减去对应年龄
+        String houYiTian = getSpecifiedDayAfter(year + "-" + currentMonth + "-" + currentDay);
+
+        return date2TimeStamp(houYiTian, "yyyy-MM-dd");
+
     }
 
     /**
@@ -183,5 +203,49 @@ public class DateUtils {
         return null;
     }
 
+    /**
+     * 获得指定日期的前一天
+     *
+     * @param specifiedDay
+     * @return
+     * @throws Exception
+     */
+    public static String getSpecifiedDayBefore(String specifiedDay) {
+//SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        Date date = null;
+        try {
+            date = new SimpleDateFormat("yy-MM-dd").parse(specifiedDay);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c.setTime(date);
+        int day = c.get(Calendar.DATE);
+        c.set(Calendar.DATE, day - 1);
 
+        String dayBefore = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+        return dayBefore;
+    }
+
+    /**
+     * 获得指定日期的后一天
+     *
+     * @param specifiedDay
+     * @return
+     */
+    public static String getSpecifiedDayAfter(String specifiedDay) {
+        Calendar c = Calendar.getInstance();
+        Date date = null;
+        try {
+            date = new SimpleDateFormat("yy-MM-dd").parse(specifiedDay);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c.setTime(date);
+        int day = c.get(Calendar.DATE);
+        c.set(Calendar.DATE, day + 1);
+
+        String dayAfter = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+        return dayAfter;
+    }
 }

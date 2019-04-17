@@ -12,19 +12,21 @@ public class UpdateBaseUserInfoRequest {
     private int sex;
     private int height;
     private long birthday;
+    private int age;
     private String suoZaiDi;
     private String qianMing;
     private String xqah;
     private String freeImgList; //免费图片列表，是一个json数组的字符串
 
     public UpdateBaseUserInfoRequest(String nickname, String portraitUri, int sex, int height,
-                                     long birthday, String suoZaiDi, String qianMing, String xqah,
+                                     long birthday, int age, String suoZaiDi, String qianMing, String xqah,
                                      String freeImgList) {
         this.nickname = nickname;
         this.portraitUri = portraitUri;
         this.sex = sex;
         this.height = height;
         this.birthday = birthday;
+        this.age = age;
         this.suoZaiDi = suoZaiDi;
         this.qianMing = qianMing;
         this.xqah = xqah;
@@ -69,6 +71,14 @@ public class UpdateBaseUserInfoRequest {
 
     public void setBirthday(long birthday) {
         this.birthday = birthday;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 
     public String getSuoZaiDi() {

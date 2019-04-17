@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Looper;
 
+import cn.yunchuang.im.model.ShaixuanModel;
 import cn.yunchuang.im.server.SealAction;
 import cn.yunchuang.im.server.response.BaseResponse;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
@@ -156,12 +157,14 @@ public class HttpManager {
     /**
      * 异步接口,首页--猜你喜欢，分页加载
      *
-     * @param startIndex 起始页
-     * @param pageSize   页面大小
-     * @param callback   获取首页推荐用户的回调
+     * @param startIndex    起始页
+     * @param pageSize      页面大小
+     * @param shaixuanModel 筛选条件
+     * @param callback      获取首页推荐用户的回调
      * @return
      */
-    public Disposable getRecommendUsers(final int startIndex, final int pageSize, final ResultCallback<HomepageResponse> callback) {
+    public Disposable getRecommendUsers(final int startIndex, final int pageSize, final ShaixuanModel shaixuanModel,
+                                        final ResultCallback<HomepageResponse> callback) {
         return Observable.just(0)
                 .observeOn(Schedulers.io())
                 .subscribe(new Consumer<Object>() {
@@ -173,7 +176,7 @@ public class HttpManager {
                             return;
                         }
                         try {
-                            homepageResponse = action.getRecommendUsers(startIndex, pageSize);
+                            homepageResponse = action.getRecommendUsers(startIndex, pageSize, shaixuanModel);
                         } catch (Exception e) {
                             onCallBackFail(callback);
                             NLog.e(TAG, "getRecommendUsers occurs Exception e=" + e.toString());
@@ -189,12 +192,14 @@ public class HttpManager {
     /**
      * 首页--距离最近，分页加载
      *
-     * @param startIndex 起始页
-     * @param pageSize   页面大小
-     * @param callback   获取首页推荐用户的回调
+     * @param startIndex    起始页
+     * @param pageSize      页面大小
+     * @param shaixuanModel 筛选条件
+     * @param callback      获取首页推荐用户的回调
      * @return
      */
-    public Disposable getNearByUsers(final int startIndex, final int pageSize, final ResultCallback<HomepageResponse> callback) {
+    public Disposable getNearByUsers(final int startIndex, final int pageSize, final ShaixuanModel shaixuanModel,
+                                     final ResultCallback<HomepageResponse> callback) {
         return Observable.just(0)
                 .observeOn(Schedulers.io())
                 .subscribe(new Consumer<Object>() {
@@ -206,7 +211,7 @@ public class HttpManager {
                             return;
                         }
                         try {
-                            homepageResponse = action.getNearByUsers(startIndex, pageSize);
+                            homepageResponse = action.getNearByUsers(startIndex, pageSize, shaixuanModel);
                         } catch (Exception e) {
                             onCallBackFail(callback);
                             NLog.e(TAG, "getRecommendUsers occurs Exception e=" + e.toString());
@@ -222,12 +227,14 @@ public class HttpManager {
     /**
      * 首页--好评优先，分页加载
      *
-     * @param startIndex 起始页
-     * @param pageSize   页面大小
-     * @param callback   获取首页推荐用户的回调
+     * @param startIndex    起始页
+     * @param pageSize      页面大小
+     * @param shaixuanModel 筛选条件
+     * @param callback      获取首页推荐用户的回调
      * @return
      */
-    public Disposable getRateUsers(final int startIndex, final int pageSize, final ResultCallback<HomepageResponse> callback) {
+    public Disposable getRateUsers(final int startIndex, final int pageSize, final ShaixuanModel shaixuanModel,
+                                   final ResultCallback<HomepageResponse> callback) {
         return Observable.just(0)
                 .observeOn(Schedulers.io())
                 .subscribe(new Consumer<Object>() {
@@ -239,7 +246,7 @@ public class HttpManager {
                             return;
                         }
                         try {
-                            homepageResponse = action.getRateUsers(startIndex, pageSize);
+                            homepageResponse = action.getRateUsers(startIndex, pageSize, shaixuanModel);
                         } catch (Exception e) {
                             onCallBackFail(callback);
                             NLog.e(TAG, "getRecommendUsers occurs Exception e=" + e.toString());

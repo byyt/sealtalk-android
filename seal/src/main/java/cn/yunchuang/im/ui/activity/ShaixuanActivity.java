@@ -17,7 +17,10 @@ import com.jaygoo.widget.RangeSeekBar;
 import java.text.DecimalFormat;
 
 import cn.yunchuang.im.R;
+import cn.yunchuang.im.event.SaveShaixuanEvent;
+import cn.yunchuang.im.model.ShaixuanModel;
 import cn.yunchuang.im.server.network.http.HttpException;
+import cn.yunchuang.im.ui.fragment.HomepageLikeFragment;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
 import cn.yunchuang.im.zmico.utils.DeviceUtils;
 import cn.yunchuang.im.zmico.utils.ResourceUtils;
@@ -45,6 +48,14 @@ public class ShaixuanActivity extends BaseActivity implements View.OnClickListen
     private RangeSeekBar heightSeekBar;
 
     private int xbSelected = 2;
+    private int fromAge = 18;
+    private int toAge = 500;
+    private int fromHeight = 140;
+    private int toHeight = 200;
+
+    //从哪个fragment 进来的，保存筛选条件的时候，发个event，只更新该fragment数据，其他fragment保留筛选条件
+    private String fromFragmentName = HomepageLikeFragment.TAG;
+    private ShaixuanModel shaixuanModel = new ShaixuanModel();
 
     DecimalFormat decimalFormat;
 
@@ -59,6 +70,17 @@ public class ShaixuanActivity extends BaseActivity implements View.OnClickListen
 
     private void initView() {
         decimalFormat = new DecimalFormat("0");//将浮点数转为精度为整数，内部四舍五入？
+        if (getIntent() != null) {
+            fromFragmentName = getIntent().getStringExtra("fromFragmentName");
+            shaixuanModel = (ShaixuanModel) getIntent().getSerializableExtra("shaixuanModel");
+            if (shaixuanModel != null) {
+                xbSelected = shaixuanModel.getXbSelected();
+                fromAge = shaixuanModel.getFromAge();
+                toAge = shaixuanModel.getToAge();
+                fromHeight = shaixuanModel.getFromHeight();
+                toHeight = shaixuanModel.getToHeight();
+            }
+        }
 
         nestedScrollView = (NestedScrollView) findViewById(R.id.activity_shaixuan_root_scrollview);
 
@@ -120,6 +142,7 @@ public class ShaixuanActivity extends BaseActivity implements View.OnClickListen
         heightSeekBar.setValue(140, 200);
 
         initTitleLayout();
+        initData();
         nestedScrollView.scrollTo(0, 0);
     }
 
@@ -127,6 +150,16 @@ public class ShaixuanActivity extends BaseActivity implements View.OnClickListen
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 DeviceUtils.dpToPx(48) + DeviceUtils.getStatusBarHeightPixels(this));
         titleLayout.setLayoutParams(layoutParams);
+    }
+
+    private void initData() {
+        xbSelected(xbSelected);
+        ageLeftTv.setText(String.valueOf(fromAge));
+        ageRightTv.setText(String.valueOf(toAge));
+        ageSeekBar.setValue(fromAge, toAge);
+        heightLeftTv.setText(String.valueOf(fromHeight));
+        heightRightTv.setText(String.valueOf(toHeight));
+        heightSeekBar.setValue(fromHeight, toHeight);
     }
 
 
@@ -146,7 +179,7 @@ public class ShaixuanActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
             case R.id.activity_shaixuan_save:
-//                shangchuan(shangchuanUrl);
+                saveShaixuan();
                 finish();
                 break;
             case R.id.activity_shaixuan_xingbie_buxian:
@@ -191,6 +224,20 @@ public class ShaixuanActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
+    private void saveShaixuan() {
+        fromAge = Integer.valueOf(ageLeftTv.getText().toString());
+        toAge = Integer.valueOf(ageRightTv.getText().toString());
+        fromHeight = Integer.valueOf(heightLeftTv.getText().toString());
+        toHeight = Integer.valueOf(heightRightTv.getText().toString());
+        ShaixuanModel shaixuanModel = new ShaixuanModel();
+        shaixuanModel.setXbSelected(xbSelected);
+        shaixuanModel.setFromAge(fromAge);
+        shaixuanModel.setToAge(toAge);
+        shaixuanModel.setFromHeight(fromHeight);
+        shaixuanModel.setToHeight(toHeight);
+
+        SaveShaixuanEvent.postEvent(shaixuanModel, fromFragmentName);
+    }
 
     @Override
     public Object doInBackground(int requestCode, String id) throws HttpException {
@@ -216,8 +263,5 @@ public class ShaixuanActivity extends BaseActivity implements View.OnClickListen
 
         }
     }
-
-    static public final int REQUEST_CODE_ASK_PERMISSIONS = 101;
-
 
 }

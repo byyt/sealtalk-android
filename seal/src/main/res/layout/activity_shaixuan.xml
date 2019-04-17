@@ -215,7 +215,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="身高(cm)"
+                        android:text="身高-cm"
                         android:textColor="@color/color_767575"
                         android:textSize="@dimen/text_px30" />
 
@@ -266,6 +266,36 @@
 
             </LinearLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/px20"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginStart="@dimen/px30"
+                android:layout_marginTop="@dimen/px20"
+                android:text="用户名或ID筛选"
+                android:textColor="@color/color_3C3B3B"
+                android:textSize="@dimen/text_px32" />
+
+            <TextView
+                android:id="@+id/activity_shaixuan_name_or_id_search_tv"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px96"
+                android:layout_marginEnd="@dimen/px16"
+                android:layout_marginLeft="@dimen/px16"
+                android:layout_marginRight="@dimen/px16"
+                android:layout_marginStart="@dimen/px16"
+                android:background="@drawable/bg_rounded_white_border_while"
+                android:drawableEnd="@drawable/ic_shaixuan_chazhao"
+                android:drawableRight="@drawable/ic_shaixuan_chazhao"
+                android:gravity="center_vertical|start"
+                android:hint="请输入用户名或ID号"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30"
+                android:textColorHint="@color/color_B2B2B2"
+                android:textSize="@dimen/text_px32" />
 
         </LinearLayout>
 
