@@ -3,6 +3,7 @@ package cn.yunchuang.im.ui.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +36,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import cn.yunchuang.im.App;
 import cn.yunchuang.im.MeService;
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.event.RefreshMineInfoEvent;
@@ -51,6 +53,7 @@ import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.server.utils.StaticDataUtils;
 import cn.yunchuang.im.server.widget.LoadDialog;
 import cn.yunchuang.im.ui.adapter.UserDetailPicListAdapter;
+import cn.yunchuang.im.ui.widget.AgeSexView;
 import cn.yunchuang.im.widget.GlideImageLoader;
 import cn.yunchuang.im.widget.dialog_hdzy.CommonDialog;
 import cn.yunchuang.im.widget.dialog_hdzy.ConstantDialogUtils;
@@ -91,7 +94,7 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
     private TextView heightTv;
     private TextView distanceTv;
     private TextView nameTv;
-    private TextView sexAgeTv;
+    private AgeSexView ageSexView;
     private TextView followNumTv;
     private TextView fansNumTv;
     private TextView qianMingTv;
@@ -172,7 +175,7 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
         heightTv = (TextView) findViewById(R.id.user_detail_new_height);
         distanceTv = (TextView) findViewById(R.id.user_detail_new_location);
         nameTv = (TextView) findViewById(R.id.user_detail_new_name);
-        sexAgeTv = (TextView) findViewById(R.id.user_detail_new_sex_age);
+        ageSexView = (AgeSexView) findViewById(R.id.user_detail_new_age_sex_view);
         followNumTv = (TextView) findViewById(R.id.user_detail_new_follow_num);
         fansNumTv = (TextView) findViewById(R.id.user_detail_new_fans_num);
         qianMingTv = (TextView) findViewById(R.id.user_detail_new_qian_ming);
@@ -464,7 +467,7 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
         //距离，保留两位小数，单位km
         distanceTv.setText(MessageFormat.format("{0}{1}", String.format(Locale.getDefault(), "%.2f", modelOne.getDistance()), "km"));
         nameTv.setText(modelOne.getNickname());
-        sexAgeTv.setText(String.valueOf(modelOne.getAge()));
+        ageSexView.setAgeAndSex(modelOne.getAge(), modelOne.getSex());
         followNumTv.setText(MessageFormat.format("{0}{1}", "关注 ", String.valueOf(modelOne.getFollowNum())));
         fansNumTv.setText(MessageFormat.format("{0}{1}", "粉丝 ", String.valueOf(modelOne.getFansNum())));
         qianMingTv.setText(modelOne.getQianMing());
@@ -566,6 +569,23 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
         //付费图片付费情况
         handlePayImgLayout(modelTwo);
 
+    }
+
+    private void setSexStyle(TextView xbnl, GetUserDetailModelOne item) {
+        xbnl.setText(String.valueOf(item.getAge()));
+        if (item.getSex() == 1) {
+            Drawable drawable = App.getAppContext().getResources().getDrawable(R.drawable.icon_woman);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            xbnl.setCompoundDrawables(drawable, null, null, null);
+            xbnl.setTextColor(ResourceUtils.getColor(R.color.color_FC6880));
+            xbnl.setBackground(ResourceUtils.getDrawable(R.drawable.ic_sex_woman_bg));
+        } else {
+            Drawable drawable = App.getAppContext().getResources().getDrawable(R.drawable.icon_man);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            xbnl.setCompoundDrawables(drawable, null, null, null);
+            xbnl.setTextColor(ResourceUtils.getColor(R.color.color_65ACDE));
+            xbnl.setBackground(ResourceUtils.getDrawable(R.drawable.ic_sex_man_bg));
+        }
     }
 
     private void handleWeChatIdentifyImgLayout(GetUserDetailModelTwo modelTwo) {

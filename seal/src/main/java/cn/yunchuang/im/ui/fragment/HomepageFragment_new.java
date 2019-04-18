@@ -242,6 +242,16 @@ public class HomepageFragment_new extends BaseFragment implements View.OnClickLi
         //只处理本类发起的定位请求
         if (Utils.isNotNull(event)) {
             shaixuanModel = event.getShaixuanModel();
+            if (shaixuanIv == null) {
+                return;
+            }
+            if (shaixuanModel != null && (shaixuanModel.getXbSelected() != 2 ||
+                    shaixuanModel.getFromAge() != 18 || shaixuanModel.getToAge() != 50 ||
+                    shaixuanModel.getFromHeight() != 140 || shaixuanModel.getToHeight() != 200)) {
+                shaixuanIv.setImageResource(R.drawable.homepage_title_shaixuan_yx);
+            } else {
+                shaixuanIv.setImageResource(R.drawable.homepage_title_shaixuan);
+            }
         }
     }
 

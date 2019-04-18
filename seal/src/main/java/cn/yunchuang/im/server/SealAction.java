@@ -340,6 +340,10 @@ public class SealAction extends BaseAction {
         String url = getURL("user/get_recommend_users?");
         String newUrl = url + "startIndex=" + startIndex + "&pageSize=" + pageSize;
         if (model != null) {
+            //设置过了性别筛选
+            if (model.getXbSelected() != 2) {
+                newUrl += "&xbSelected=" + model.getXbSelected();
+            }
             //设置过了年龄筛选
             if (model.getFromAge() != 18 || model.getToAge() != 50) {
                 newUrl += "&fromAge=" + model.getFromAge() + "&toAge=" + model.getToAge();
@@ -366,6 +370,10 @@ public class SealAction extends BaseAction {
         String url = getURL("user/get_nearby_users?");
         String newUrl = url + "startIndex=" + startIndex + "&pageSize=" + pageSize;
         if (model != null) {
+            //设置过了性别筛选
+            if (model.getXbSelected() != 2) {
+                newUrl += "&xbSelected=" + model.getXbSelected();
+            }
             //设置过了年龄筛选
             if (model.getFromAge() != 18 || model.getToAge() != 50) {
                 newUrl += "&fromAge=" + model.getFromAge() + "&toAge=" + model.getToAge();
@@ -392,6 +400,10 @@ public class SealAction extends BaseAction {
         String url = getURL("user/get_rate_users?");
         String newUrl = url + "startIndex=" + startIndex + "&pageSize=" + pageSize;
         if (model != null) {
+            //设置过了性别筛选
+            if (model.getXbSelected() != 2) {
+                newUrl += "&xbSelected=" + model.getXbSelected();
+            }
             //设置过了年龄筛选
             if (model.getFromAge() != 18 || model.getToAge() != 50) {
                 newUrl += "&fromAge=" + model.getFromAge() + "&toAge=" + model.getToAge();

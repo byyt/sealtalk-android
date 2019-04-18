@@ -83,8 +83,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/user_detail_location"
-                        android:drawableStart="@drawable/user_detail_location"
                         android:drawablePadding="@dimen/px4"
+                        android:drawableStart="@drawable/user_detail_location"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_px26"
                         tools:text="5km" />
@@ -115,21 +115,13 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_px32" />
 
-                    <TextView
-                        android:id="@+id/user_detail_new_sex_age"
-                        android:layout_width="@dimen/px76"
+                    <cn.yunchuang.im.ui.widget.AgeSexView
+                        android:id="@+id/user_detail_new_age_sex_view"
+                        android:layout_width="@dimen/px70"
                         android:layout_height="@dimen/px34"
-                        android:layout_marginLeft="@dimen/px36"
-                        android:layout_marginStart="@dimen/px36"
-                        android:background="@drawable/user_detail_sex_bg"
-                        android:drawableLeft="@drawable/icon_woman"
-                        android:drawablePadding="@dimen/px10"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="@dimen/px10"
-                        android:paddingStart="@dimen/px10"
-                        android:text="22"
-                        android:textColor="@color/color_FC6880"
-                        android:textSize="@dimen/text_px22" />
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginStart="@dimen/px30" />
 
 
                 </LinearLayout>

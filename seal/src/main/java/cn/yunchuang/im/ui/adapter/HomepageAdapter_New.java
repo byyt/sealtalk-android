@@ -2,6 +2,7 @@ package cn.yunchuang.im.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,6 +19,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
 
+import cn.yunchuang.im.App;
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.server.BaseAction;
 import cn.yunchuang.im.server.response.HomepageModel;
@@ -39,7 +41,6 @@ public class HomepageAdapter_New extends BaseQuickAdapter<HomepageModel, BaseVie
         this.mContext = context;
     }
 
-
     @Override
     protected void convert(BaseViewHolder helper, final HomepageModel item) {
         if (item == null) {
@@ -49,6 +50,7 @@ public class HomepageAdapter_New extends BaseQuickAdapter<HomepageModel, BaseVie
 //        ImageView portraitImg = helper.getView(R.id.homepage_adapter_item_portrait_old);
         RoundedImageView portraitImg = helper.getView(R.id.homepage_adapter_item_portrait);
         TextView nickName = helper.getView(R.id.homepage_adabpter_item_nickname);
+        TextView xbnl = helper.getView(R.id.homepage_adapter_item_xb_nl_tv);
         TextView distance = helper.getView(R.id.homepage_adapter_item_distance_tv);
         ImageView imageView1 = helper.getView(R.id.homepage_adapter_item_tu_pian_one);
         ImageView imageView2 = helper.getView(R.id.homepage_adapter_item_tu_pian_two);
@@ -65,6 +67,7 @@ public class HomepageAdapter_New extends BaseQuickAdapter<HomepageModel, BaseVie
                 mContext.startActivity(intent);
             }
         });
+        setSexStyle(xbnl, item);
         nickName.setText(item.getNickname());
         distance.setText(MessageFormat.format("{0}{1}", String.format(Locale.getDefault(),
                 "%.2f", item.getDistance()), "km"));
@@ -107,5 +110,18 @@ public class HomepageAdapter_New extends BaseQuickAdapter<HomepageModel, BaseVie
 
     }
 
+    private void setSexStyle(TextView xbnl, HomepageModel item) {
+        if (item.getSex() == 1) {
+            xbnl.setText("女");
+            Drawable drawable = App.getAppContext().getResources().getDrawable(R.drawable.icon_woman);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            xbnl.setCompoundDrawables(drawable, null, null, null);
+        } else {
+            xbnl.setText("男");
+            Drawable drawable = App.getAppContext().getResources().getDrawable(R.drawable.icon_man);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            xbnl.setCompoundDrawables(drawable, null, null, null);
+        }
+    }
 
 }

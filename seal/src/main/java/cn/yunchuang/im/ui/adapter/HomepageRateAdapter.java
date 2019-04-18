@@ -2,6 +2,7 @@ package cn.yunchuang.im.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,11 +18,14 @@ import com.itheima.roundedimageview.RoundedImageView;
 import java.text.MessageFormat;
 import java.util.List;
 
+import cn.yunchuang.im.App;
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.server.BaseAction;
 import cn.yunchuang.im.server.response.HomepageModel;
 import cn.yunchuang.im.server.response.ImageModel;
 import cn.yunchuang.im.ui.activity.UserDetailActivity_New;
+import cn.yunchuang.im.ui.widget.AgeSexView;
+import cn.yunchuang.im.zmico.utils.ResourceUtils;
 
 /**
  * 放松入口
@@ -44,7 +48,7 @@ public class HomepageRateAdapter extends BaseQuickAdapter<HomepageModel, BaseVie
             return;
         }
         LinearLayout rootLayout = helper.getView(R.id.homepage_adabpter_item_root_layout);
-//        ImageView portraitImg = helper.getView(R.id.homepage_adapter_item_portrait_old);
+        AgeSexView ageSexView = helper.getView(R.id.homepage_adapter_item_age_sex_view);
         RoundedImageView portraitImg = helper.getView(R.id.homepage_adapter_item_portrait);
         TextView nickName = helper.getView(R.id.homepage_adabpter_item_nickname);
         TextView rate = helper.getView(R.id.homepage_adapter_item_rate_tv);
@@ -61,6 +65,7 @@ public class HomepageRateAdapter extends BaseQuickAdapter<HomepageModel, BaseVie
             }
         });
         nickName.setText(item.getNickname());
+        ageSexView.setAgeAndSex(item.getAge(),item.getSex());
         rate.setText(MessageFormat.format("{0}{1}{2}", "好评率：", item.getFeedback_rate(), "%"));
 
         //Glide 加载图片简单用法
@@ -100,6 +105,5 @@ public class HomepageRateAdapter extends BaseQuickAdapter<HomepageModel, BaseVie
                 .into(imageView3);
 
     }
-
 
 }

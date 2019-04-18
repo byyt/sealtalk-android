@@ -2,6 +2,7 @@ package cn.yunchuang.im.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,11 +19,14 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
 
+import cn.yunchuang.im.App;
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.server.BaseAction;
 import cn.yunchuang.im.server.response.HomepageModel;
 import cn.yunchuang.im.server.response.ImageModel;
 import cn.yunchuang.im.ui.activity.UserDetailActivity_New;
+import cn.yunchuang.im.ui.widget.AgeSexView;
+import cn.yunchuang.im.zmico.utils.ResourceUtils;
 
 /**
  * 放松入口
@@ -45,7 +49,7 @@ public class HomepageLikeAdapter extends BaseQuickAdapter<HomepageModel, BaseVie
             return;
         }
         LinearLayout rootLayout = helper.getView(R.id.homepage_adabpter_item_root_layout);
-//        ImageView portraitImg = helper.getView(R.id.homepage_adapter_item_portrait_old);
+        AgeSexView ageSexView = helper.getView(R.id.homepage_adapter_item_age_sex_view);
         RoundedImageView portraitImg = helper.getView(R.id.homepage_adapter_item_portrait);
         TextView nickName = helper.getView(R.id.homepage_adabpter_item_nickname);
         TextView distance = helper.getView(R.id.homepage_adapter_item_distance_tv);
@@ -62,6 +66,7 @@ public class HomepageLikeAdapter extends BaseQuickAdapter<HomepageModel, BaseVie
             }
         });
         nickName.setText(item.getNickname());
+        ageSexView.setAgeAndSex(item.getAge(),item.getSex());
         //猜你喜欢这栏，暂时把距离给隐藏吧
         distance.setText(MessageFormat.format("{0}{1}", String.format(Locale.getDefault(),
                 "%.2f", item.getDistance()), "km"));
@@ -104,6 +109,5 @@ public class HomepageLikeAdapter extends BaseQuickAdapter<HomepageModel, BaseVie
                 .into(imageView3);
 
     }
-
 
 }

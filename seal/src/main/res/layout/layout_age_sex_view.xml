@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/xb_nl_tv"
+        android:layout_width="@dimen/px70"
+        android:layout_height="@dimen/px34"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/ic_sex_woman_bg"
+        android:drawableLeft="@drawable/icon_woman"
+        android:drawablePadding="@dimen/px8"
+        android:drawableStart="@drawable/icon_woman"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/px8"
+        android:paddingStart="@dimen/px8"
+        android:text="22"
+        android:textColor="@color/color_FC6880"
+        android:textSize="@dimen/text_px23" />
+
+</FrameLayout>
