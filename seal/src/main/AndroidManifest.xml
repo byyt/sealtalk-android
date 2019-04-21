@@ -54,12 +54,12 @@
     <!--检测wifi状态-->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!--这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <!--用于申请调用A-GPS模块-->
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <!--用于申请获取蓝牙信息进行室内定位-->
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <!--为了获取用户手机的IMEI，用来唯一的标识用户。-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
@@ -110,7 +110,7 @@
 
         <activity
             android:name="cn.yunchuang.im.ui.activity.LoginActivityTest"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <!--主页面-->
         <activity
@@ -153,7 +153,7 @@
             android:name="cn.yunchuang.im.ui.activity.MyAccountActivity"
             android:screenOrientation="portrait" />
 
-        <!--我的账号-->
+        <!--筛选界面，新-->
         <activity
             android:name="cn.yunchuang.im.ui.activity.ShaixuanActivity"
             android:screenOrientation="portrait" />
@@ -161,6 +161,11 @@
         <!-- 编辑个人信息 -->
         <activity
             android:name="cn.yunchuang.im.ui.activity.MyBaseInfoActivity_new"
+            android:screenOrientation="portrait" />
+
+        <!-- 约Ta，项目选择 -->
+        <activity
+            android:name="cn.yunchuang.im.ui.activity.YueTaXmxzActivity"
             android:screenOrientation="portrait" />
 
         <!--新消息提醒-->
@@ -652,9 +657,10 @@
 
 
         <!-- 高德地图定位相关 -->
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="d27a7092668126766d7f59009a34e784">
-        </meta-data>
-        <service android:name="com.amap.api.location.APSService"/>
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="d27a7092668126766d7f59009a34e784"></meta-data>
+        <service android:name="com.amap.api.location.APSService" />
         <!-- 定位服务 -->
         <service
             android:name="cn.yunchuang.im.location.LocationService"

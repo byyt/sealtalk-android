@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/px28"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_marginStart="@dimen/px30"
+        android:layout_marginTop="@dimen/px88"
+        android:text="对方还未填写出租的技能哦～"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_px32" />
+
+
+</LinearLayout>

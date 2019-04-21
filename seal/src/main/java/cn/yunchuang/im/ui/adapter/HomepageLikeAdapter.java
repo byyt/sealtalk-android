@@ -2,7 +2,6 @@ package cn.yunchuang.im.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,14 +18,14 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
 
-import cn.yunchuang.im.App;
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.server.BaseAction;
 import cn.yunchuang.im.server.response.HomepageModel;
 import cn.yunchuang.im.server.response.ImageModel;
 import cn.yunchuang.im.ui.activity.UserDetailActivity_New;
+import cn.yunchuang.im.ui.activity.YueTaXmxzActivity;
 import cn.yunchuang.im.ui.widget.AgeSexView;
-import cn.yunchuang.im.zmico.utils.ResourceUtils;
+import cn.yunchuang.im.zmico.utils.Utils;
 
 /**
  * 放松入口
@@ -56,17 +55,62 @@ public class HomepageLikeAdapter extends BaseQuickAdapter<HomepageModel, BaseVie
         ImageView imageView1 = helper.getView(R.id.homepage_adapter_item_tu_pian_one);
         ImageView imageView2 = helper.getView(R.id.homepage_adapter_item_tu_pian_two);
         ImageView imageView3 = helper.getView(R.id.homepage_adapter_item_tu_pian_three);
+        ImageView yueta = helper.getView(R.id.homepage_adapter_item_yue_ta_iv);
+        ImageView sixinta = helper.getView(R.id.homepage_adapter_item_si_xin_ta_iv);
+        ImageView dashangta = helper.getView(R.id.homepage_adapter_item_da_shang_ta_iv);
+        ImageView shipinta = helper.getView(R.id.homepage_adapter_item_shi_pin_ta_iv);
 
         rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (Utils.isFastClick()) {
+                    return;
+                }
                 Intent intent = new Intent(mContext, UserDetailActivity_New.class);
                 intent.putExtra("userId", item.getId());
                 mContext.startActivity(intent);
             }
         });
+        yueta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Utils.isFastClick()) {
+                    return;
+                }
+                Intent intent = new Intent(mContext, YueTaXmxzActivity.class);
+                intent.putExtra("userId", item.getId());
+                mContext.startActivity(intent);
+            }
+        });
+        sixinta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Utils.isFastClick()) {
+                    return;
+                }
+
+            }
+        });
+        dashangta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Utils.isFastClick()) {
+                    return;
+                }
+
+            }
+        });
+        shipinta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Utils.isFastClick()){
+                    return;
+                }
+            }
+        });
+
         nickName.setText(item.getNickname());
-        ageSexView.setAgeAndSex(item.getAge(),item.getSex());
+        ageSexView.setAgeAndSex(item.getAge(), item.getSex());
         //猜你喜欢这栏，暂时把距离给隐藏吧
         distance.setText(MessageFormat.format("{0}{1}", String.format(Locale.getDefault(),
                 "%.2f", item.getDistance()), "km"));

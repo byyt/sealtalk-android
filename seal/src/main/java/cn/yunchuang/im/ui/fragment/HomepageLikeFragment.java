@@ -141,6 +141,7 @@ public class HomepageLikeFragment extends LazyFragment implements View.OnClickLi
 
                         mRefreshLayout.finishRefresh();
                         mRefreshLayout.resetNoMoreData();//setNoMoreData(false);
+                        mRefreshLayout.finishLoadMoreWithNoMoreData();//设置之后，将不会再触发加载事件
                     }
                 });
         compositeDisposable.add(disposable);

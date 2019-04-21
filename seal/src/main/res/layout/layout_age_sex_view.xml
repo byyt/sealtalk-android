@@ -5,16 +5,18 @@
 
     <TextView
         android:id="@+id/xb_nl_tv"
-        android:layout_width="@dimen/px70"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/px34"
         android:layout_gravity="center_vertical"
         android:background="@drawable/ic_sex_woman_bg"
         android:drawableLeft="@drawable/icon_woman"
-        android:drawablePadding="@dimen/px8"
+        android:drawablePadding="@dimen/px4"
         android:drawableStart="@drawable/icon_woman"
         android:gravity="center_vertical"
-        android:paddingLeft="@dimen/px8"
-        android:paddingStart="@dimen/px8"
+        android:paddingEnd="@dimen/px12"
+        android:paddingLeft="@dimen/px12"
+        android:paddingRight="@dimen/px12"
+        android:paddingStart="@dimen/px12"
         android:text="22"
         android:textColor="@color/color_FC6880"
         android:textSize="@dimen/text_px23" />

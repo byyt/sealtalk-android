@@ -20,11 +20,18 @@ public class SealConst {
     public static final String SEALTALK_LOGING_PASSWORD = "loginpassword";
 
 
-
-
-
-
     //后面自己加的
     public static final String LASTUPDATE = "lastUpdate";
+
+    //性别排号
+    public static final int SEX_MAN = 0;
+    public static final int SEX_WOMAN = 1;
+    public static final int SEX_ALL = 2;
+
+    //技能排号
+    public static final int SKILL_PAO_BU = 1;
+    public static final int SKILL_JIAN_SHEN = 2;
+    public static final int SKILL_CHI_FAN = 3;
+    public static final int SKILL_KAN_DIAN_YING = 4;
 
 }

@@ -5,6 +5,7 @@
     android:id="@+id/homepage_adabpter_item_root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_homepage_adapter_item_layout"
     android:orientation="vertical">
 
     <View
@@ -54,8 +55,8 @@
 
                 <cn.yunchuang.im.ui.widget.AgeSexView
                     android:id="@+id/homepage_adapter_item_age_sex_view"
-                    android:layout_width="@dimen/px70"
-                    android:layout_height="@dimen/px34"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical" />
 
                 <ImageView
@@ -232,6 +233,7 @@
         android:layout_marginRight="@dimen/px30"
         android:layout_marginStart="@dimen/px30"
         android:layout_marginTop="@dimen/text_px26"
+        android:layout_marginBottom="@dimen/px30"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -239,7 +241,7 @@
             android:id="@+id/homepage_adapter_item_yue_ta_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_yue_ta" />
+            android:src="@drawable/bg_homepage_adapter_item_yue_ta" />
 
         <View
             android:layout_width="0dp"
@@ -250,7 +252,7 @@
             android:id="@+id/homepage_adapter_item_si_xin_ta_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_si_xin_ta" />
+            android:src="@drawable/bg_homepage_adapter_item_si_xin_ta" />
 
         <View
             android:layout_width="0dp"
@@ -261,7 +263,7 @@
             android:id="@+id/homepage_adapter_item_da_shang_ta_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_da_shang_ta" />
+            android:src="@drawable/bg_homepage_adapter_item_da_shang_ta" />
 
         <View
             android:layout_width="0dp"
@@ -272,14 +274,8 @@
             android:id="@+id/homepage_adapter_item_shi_pin_ta_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_shi_pin_ta" />
+            android:src="@drawable/bg_homepage_adapter_item_shi_pin_ta" />
 
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/px10"
-        android:layout_marginTop="@dimen/px30"
-        android:background="@color/color_F6F5F4" />
 
 </LinearLayout>

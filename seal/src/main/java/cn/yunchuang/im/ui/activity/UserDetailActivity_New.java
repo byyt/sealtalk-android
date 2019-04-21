@@ -28,11 +28,9 @@ import com.youth.banner.listener.OnBannerListener;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,6 +46,7 @@ import cn.yunchuang.im.server.response.GetUserDetailModelTwo;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
 import cn.yunchuang.im.server.response.GetUserDetailTwoResponse;
 import cn.yunchuang.im.server.response.ImageModel;
+import cn.yunchuang.im.server.response.SkillModel;
 import cn.yunchuang.im.server.utils.CommonUtils;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.server.utils.StaticDataUtils;
@@ -62,6 +61,11 @@ import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
 import cn.yunchuang.im.zmico.utils.DeviceUtils;
 import cn.yunchuang.im.zmico.utils.ResourceUtils;
 import cn.yunchuang.im.zmico.utils.Utils;
+
+import static cn.yunchuang.im.SealConst.SKILL_CHI_FAN;
+import static cn.yunchuang.im.SealConst.SKILL_JIAN_SHEN;
+import static cn.yunchuang.im.SealConst.SKILL_KAN_DIAN_YING;
+import static cn.yunchuang.im.SealConst.SKILL_PAO_BU;
 
 //CallKit start 1
 //CallKit end 1
@@ -492,40 +496,45 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
         }
     }
 
+    //更新技能列表
     private void updateSkillLayout(GetUserDetailModelOne modelOne) {
+        if (skillsLayout != null) {
+            skillsLayout.removeAllViews();
+        }
         String skillJsonStr = modelOne.getSkills();
         if (skillJsonStr == null || skillJsonStr.equals("")) {
             return;
         }
         try {
-            JSONObject jsonObject = new JSONObject(skillJsonStr);
-            Iterator iterator = jsonObject.keys();
-            //如果数据不为空，添加Ta的技能这一行
-            if (iterator.hasNext()) {
-                View skillTitleView = LayoutInflater.from(this).inflate(R.layout.layout_user_detail_skill_top_title, null);
-                skillsLayout.addView(skillTitleView);
+            List<SkillModel> skillList = JSONArray.parseArray(skillJsonStr, SkillModel.class); //得到技能列表
+            if (Utils.isEmptyCollection(skillList)) {
+                return;
             }
+            //如果数据不为空，添加Ta的技能这一行
+            View skillTitleView = LayoutInflater.from(this).inflate(R.layout.layout_user_detail_skill_top_title, null);
+            skillsLayout.addView(skillTitleView);
             //一次添加技能列表，遍历json的key和value
-            while (iterator.hasNext()) {
-                String key = (String) iterator.next();
-                String value = jsonObject.getString(key);
+            for (int i = 0; i < skillList.size(); i++) {
+                int type = skillList.get(i).getType();
+                String name = skillList.get(i).getName();
+                int price = skillList.get(i).getPrice();
 
                 View view = LayoutInflater.from(this).inflate(R.layout.layout_user_detail_skill_item, null);
                 ImageView imageView = (ImageView) view.findViewById(R.id.user_detail_new_skill_item_iv);
                 TextView nameTv = (TextView) view.findViewById(R.id.user_detail_new_skill_item_name_tv);
                 TextView priceTv = (TextView) view.findViewById(R.id.user_detail_new_skill_item_price_tv);
 
-                switch (key) {
-                    case "跑步":
+                switch (type) {
+                    case SKILL_PAO_BU:
                         imageView.setImageResource(R.drawable.user_detail_paobu);
                         break;
-                    case "健身":
+                    case SKILL_JIAN_SHEN:
                         imageView.setImageResource(R.drawable.user_detail_jianshen);
                         break;
-                    case "吃饭":
+                    case SKILL_CHI_FAN:
                         imageView.setImageResource(R.drawable.user_detail_chifan);
                         break;
-                    case "看电影":
+                    case SKILL_KAN_DIAN_YING:
                         imageView.setImageResource(R.drawable.user_detail_kandianying);
                         break;
                     default:
@@ -533,8 +542,8 @@ public class UserDetailActivity_New extends BaseActivity implements View.OnClick
                         imageView.setImageResource(R.drawable.user_detail_paobu);
                         break;
                 }
-                nameTv.setText(key);
-                priceTv.setText(value);
+                nameTv.setText(name);
+                priceTv.setText(price + "元／小时");
 
                 skillsLayout.addView(view);
 

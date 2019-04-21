@@ -117,8 +117,8 @@
 
                     <cn.yunchuang.im.ui.widget.AgeSexView
                         android:id="@+id/user_detail_new_age_sex_view"
-                        android:layout_width="@dimen/px70"
-                        android:layout_height="@dimen/px34"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="@dimen/px30"
                         android:layout_marginStart="@dimen/px30" />

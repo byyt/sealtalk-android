@@ -17,7 +17,7 @@ public class GetUserDetailModelOne {
     private String qianMing;
     private String xqah;
     private String freeImgList; //免费图片列表，是一个json数组的字符串
-    private String skills;//技能，是一个json字符串
+    private String skills;//技能，是一个json数组的字符串
 
     public String getId() {
         return id;
