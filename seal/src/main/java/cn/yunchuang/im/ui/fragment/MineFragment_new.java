@@ -224,7 +224,7 @@ public class MineFragment_new extends BaseFragment implements View.OnClickListen
                 if (response != null) {
                     GetUserDetailModelOne model = response.getResult();
                     if (model != null && getActivity() != null) {
-                        GlideUtils.load(getActivity(), BaseAction.DOMAIN_PIC + "/" + model.getPortraitUri(), avatarIv);
+                        GlideUtils.load(getActivity(), model.getPortraitUri(), avatarIv);
                         nameTv.setText(model.getNickname());
                     }
                 }

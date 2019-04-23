@@ -168,6 +168,11 @@
             android:name="cn.yunchuang.im.ui.activity.YueTaXmxzActivity"
             android:screenOrientation="portrait" />
 
+        <!-- 约Ta，时间、时长、地点选择，付预约金 -->
+        <activity
+            android:name="cn.yunchuang.im.ui.activity.YueTaMsytActivity"
+            android:screenOrientation="portrait" />
+
         <!--新消息提醒-->
         <activity
             android:name="cn.yunchuang.im.ui.activity.NewMessageRemindActivity"

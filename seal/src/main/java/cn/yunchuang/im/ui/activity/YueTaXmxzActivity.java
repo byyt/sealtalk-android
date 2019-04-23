@@ -1,6 +1,7 @@
 package cn.yunchuang.im.ui.activity;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -107,7 +108,12 @@ public class YueTaXmxzActivity extends BaseActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.activity_xmxz_next:
-                finish();
+                Intent intent = new Intent(mContext, YueTaMsytActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("userId", userId);
+                bundle.putSerializable("skillModel", seletSkillModel);
+                intent.putExtras(bundle);
+                startActivity(intent);
                 break;
         }
     }
@@ -164,6 +170,7 @@ public class YueTaXmxzActivity extends BaseActivity implements View.OnClickListe
 
                 if (i == 0) {//默认选中第一个
                     ViewVisibleUtils.setVisibleGone(selectIv, true);
+                    seletSkillModel = skillModel;
                 } else {
                     ViewVisibleUtils.setVisibleGone(selectIv, false);
                 }

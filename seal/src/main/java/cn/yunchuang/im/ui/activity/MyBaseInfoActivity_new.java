@@ -217,7 +217,7 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
         if (imgUrl == null) {
             imgUrl = "";
         }
-        GlideUtils.load(this, BaseAction.DOMAIN_PIC + "/" + imgUrl, touxiangImg);
+        GlideUtils.load(this, imgUrl, touxiangImg);
         UserViewInfo userViewInfo = new UserViewInfo(imgUrl);
         touXiangInfoList.add(userViewInfo);
     }
@@ -268,7 +268,7 @@ public class MyBaseInfoActivity_new extends BaseActivity implements View.OnClick
         itemIv.setOnLongClickListener(this);
         ViewUtil.setTag(itemIv, position, R.id.info_tag);//得把位置存进tag，方便点击的时候知道点击了第几个
 
-        GlideUtils.load(this, BaseAction.DOMAIN_PIC + "/" + imgUrl, itemIv);
+        GlideUtils.load(this, imgUrl, itemIv);
 
         return view;
     }

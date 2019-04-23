@@ -1,10 +1,13 @@
 package cn.yunchuang.im.server.response;
 
-public class SkillModel {
+import java.io.Serializable;
+
+public class SkillModel implements Serializable {
 
     private int type; //技能类型，客户端服务端统一规定好，就比如性别规定好男是0，女是1一样
     private String name;
     private int price;
+    private String desc;
 
     public int getType() {
         return type;
@@ -28,5 +31,13 @@ public class SkillModel {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }

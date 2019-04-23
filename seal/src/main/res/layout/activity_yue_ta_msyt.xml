@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_F4F4F4"
+    android:orientation="vertical">
+
+    <!-- 高度动态计算，状态栏高度+48dp -->
+    <FrameLayout
+        android:id="@+id/activity_msyt_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_common_new">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px96"
+            android:layout_gravity="bottom">
+
+            <ImageView
+                android:id="@+id/activity_msyt_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:paddingBottom="@dimen/px15"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30"
+                android:paddingTop="@dimen/px15"
+                android:src="@drawable/user_detail_back" />
+
+            <TextView
+                android:id="@+id/activity_msyt_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_px36"
+                tools:text="约Ta跑步" />
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/activity_msyt_root_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_F4F4F4"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px20" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px170"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.itheima.roundedimageview.RoundedImageView
+                    android:id="@+id/activity_msyt_portrait"
+                    android:layout_width="@dimen/px110"
+                    android:layout_height="@dimen/px110"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginStart="@dimen/px30"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/de_default_portrait"
+                    app:riv_oval="true" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/px36"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/px16"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/activity_msyt_nickname"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/color_3C3B3B"
+                            android:textSize="@dimen/text_px30"
+                            tools:text="小明同学" />
+
+                        <cn.yunchuang.im.ui.widget.AgeSexView
+                            android:id="@+id/activity_msyt_age_sex_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="@dimen/px20"
+                            android:layout_marginStart="@dimen/px20"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/activity_msyt_distance_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:drawableLeft="@drawable/homepage_dingwei"
+                        android:drawablePadding="@dimen/px4"
+                        android:drawableStart="@drawable/homepage_dingwei"
+                        android:textColor="@color/color_9B999F"
+                        android:textSize="@dimen/text_px26"
+                        android:visibility="gone"
+                        tools:text="5km"
+                        tools:visibility="visible" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px20" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px110"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="预约项目"
+                    android:textColor="@color/color_3C3B3B"
+                    android:textSize="@dimen/text_px32" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px1"
+                android:background="@color/color_E4E4E4" />
+
+            <FrameLayout
+                android:id="@+id/activity_msyt_skill_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px170"
+                android:background="@drawable/bg_homepage_adapter_item_layout"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/activity_msyt_skill_name_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="跑步"
+                            android:textColor="@color/color_3C3B3B"
+                            android:textSize="@dimen/text_px32" />
+
+                        <TextView
+                            android:id="@+id/activity_msyt_skill_price_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="@dimen/px20"
+                            android:layout_marginStart="@dimen/px20"
+                            android:text="300元／小时"
+                            android:textColor="@color/color_3C3B3B"
+                            android:textSize="@dimen/text_px32" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/activity_msyt_skill_decs_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="@dimen/px30"
+                        android:text="跑步有助身体健康"
+                        android:textColor="@color/color_9B999F"
+                        android:textSize="@dimen/text_px28" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:src="@drawable/mine_fragment_more_gray" />
+
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px20" />
+
+            <LinearLayout
+                android:id="@+id/activity_msyt_yuyue_shijian_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px110"
+                android:background="@drawable/bg_homepage_adapter_item_layout"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="预约时间"
+                    android:textColor="@color/color_3C3B3B"
+                    android:textSize="@dimen/text_px32" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/activity_msyt_yuyue_shijian_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/px30"
+                    android:layout_marginRight="@dimen/px30"
+                    android:hint="请选择"
+                    android:textColor="@color/color_3C3B3B"
+                    android:textColorHint="@color/color_9B999F"
+                    android:textSize="@dimen/text_px32" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/mine_fragment_more_gray" />
+
+            </LinearLayout>
+
+            <include layout="@layout/layout_1px_line" />
+
+            <LinearLayout
+                android:id="@+id/activity_msyt_yuyue_shichang_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px110"
+                android:background="@drawable/bg_homepage_adapter_item_layout"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="预约时长"
+                    android:textColor="@color/color_3C3B3B"
+                    android:textSize="@dimen/text_px32" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/activity_msyt_yuyue_shichang_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/px30"
+                    android:layout_marginRight="@dimen/px30"
+                    android:hint="请选择"
+                    android:textColor="@color/color_3C3B3B"
+                    android:textColorHint="@color/color_9B999F"
+                    android:textSize="@dimen/text_px32" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/mine_fragment_more_gray" />
+
+            </LinearLayout>
+
+            <include layout="@layout/layout_1px_line" />
+
+            <LinearLayout
+                android:id="@+id/activity_msyt_yuyue_didian_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px110"
+                android:background="@drawable/bg_homepage_adapter_item_layout"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="预约地点"
+                    android:textColor="@color/color_3C3B3B"
+                    android:textSize="@dimen/text_px32" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/activity_msyt_yuyue_didian_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/px30"
+                    android:layout_marginRight="@dimen/px30"
+                    android:hint="请选择公共场合"
+                    android:textColor="@color/color_3C3B3B"
+                    android:textColorHint="@color/color_9B999F"
+                    android:textSize="@dimen/text_px32" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/mine_fragment_more_gray" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/px15"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginStart="@dimen/px30"
+                android:layout_marginTop="@dimen/px12"
+                android:text="为了您和对方的人身安全，请选择公共场合见面"
+                android:textColor="@color/color_F76260"
+                android:textSize="@dimen/px28" />
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+
+</LinearLayout>
