@@ -1,5 +1,7 @@
 package cn.yunchuang.im.utils;
 
+import android.support.annotation.NonNull;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,6 +35,16 @@ public class DateUtils {
                 .format(new Date(timestamp * 1000)));
     }
 
+    public static String getHour(long timestamp) {
+        return String.valueOf(new SimpleDateFormat("HH", Locale.CHINA)
+                .format(new Date(timestamp * 1000)));
+    }
+
+    public static String getMinute(long timestamp) {
+        return String.valueOf(new SimpleDateFormat("mm", Locale.CHINA)
+                .format(new Date(timestamp * 1000)));
+    }
+
     public static String getHMS(long timestamp) {
         return String.valueOf(new SimpleDateFormat("HH:mm:ss", Locale.CHINA)
                 .format(new Date(timestamp * 1000)));
@@ -42,6 +54,32 @@ public class DateUtils {
         return String.valueOf(new SimpleDateFormat("HH:mm:ss", Locale.CHINA)
                 .format(new Date(timestamp * 1000)));
     }
+
+    public static int getCurrentYear() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.YEAR);
+    }
+
+    public static int getCurrentMonth() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.MONTH) + 1;
+    }
+
+    public static int getCurrentDay() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public static int getCurrentHour() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.HOUR_OF_DAY);
+    }
+
+    public static int getCurrentMinute() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.MINUTE);
+    }
+
 
     /**
      * 日期格式字符串转换成时间戳
@@ -248,4 +286,29 @@ public class DateUtils {
         String dayAfter = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
         return dayAfter;
     }
+
+    /**
+     * 如果不满足两位数，则补充0
+     *
+     * @param number
+     * @return
+     */
+    @NonNull
+    public static String fillZero(int number) {
+        return number < 10 ? "0" + number : "" + number;
+    }
+
+    /**
+     * 指定时间的，n小时之后，也可以指定0
+     *
+     * @param timestamp  单位是秒
+     * @param hoursLater
+     * @return 返回n小时之后是几小时
+     */
+    public static String getHoursLater(long timestamp, int hoursLater) {
+        long newTs = timestamp + hoursLater * 60 * 60;
+        return getHour(newTs);
+    }
+
+
 }

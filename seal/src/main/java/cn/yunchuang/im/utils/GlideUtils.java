@@ -17,7 +17,7 @@ public class GlideUtils {
     public static void load(Context context, String url, ImageView imageView) {
         RequestOptions options = new RequestOptions();
         options.placeholder(R.drawable.ic_image_zhanwei)
-                .error(R.drawable.ic_image_zhanwei);
+                .error(R.drawable.ic_image_zhanwei).centerCrop();
         Glide.with(context)
                 .load(BaseAction.DOMAIN_PIC + "/" + url)
                 .apply(options)

@@ -25,6 +25,9 @@ public class TriplePicker extends WheelPicker {
     private int selectedFirstIndex = 0;
     private int selectedSecondIndex = 0;
     private int selectedThirdIndex = 0;
+    private WheelView firstView;
+    private WheelView secondView;
+    private WheelView thirdView;
     private OnWheelListener onWheelListener;
     private OnPickListener onPickListener;
     private CharSequence firstPrefixLabel, firstSuffixLabel;
@@ -39,6 +42,19 @@ public class TriplePicker extends WheelPicker {
         this.secondData = secondData;
         this.thirdData = thirdData;
     }
+
+    public WheelView getFirstView() {
+        return firstView;
+    }
+
+    public WheelView getSecondView() {
+        return secondView;
+    }
+
+    public WheelView getThirdView() {
+        return thirdView;
+    }
+
 
     public void setSelectedIndex(int firstIndex, int secondIndex, int thirdIndex) {
         if (firstIndex >= 0 && firstIndex < firstData.size()) {
@@ -60,6 +76,40 @@ public class TriplePicker extends WheelPicker {
     public void setSecondLabel(CharSequence secondPrefixLabel, CharSequence secondSuffixLabel) {
         this.secondPrefixLabel = secondPrefixLabel;
         this.secondSuffixLabel = secondSuffixLabel;
+    }
+
+    //联动用的
+    public void setFirstSelected(int index) {
+        selectedFirstIndex = index;
+        firstView.setItems(firstData, selectedFirstIndex);
+    }
+
+    public void setSecondSelected(int index) {
+        selectedSecondIndex = index;
+        secondView.setItems(secondData, selectedSecondIndex);
+    }
+
+    public void setThirdSelected(int index) {
+        selectedThirdIndex = index;
+        thirdView.setItems(thirdData, selectedThirdIndex);
+    }
+
+    public void setFirstData(List<String> firstData, int selectedFirstIndex) {
+        this.firstData = firstData;
+        this.selectedFirstIndex= selectedFirstIndex;
+        firstView.setItems(firstData, selectedFirstIndex);
+    }
+
+    public void setSecondData(List<String> secondData, int selectedSecondIndex) {
+        this.secondData = secondData;
+        this.selectedSecondIndex = selectedSecondIndex;
+        secondView.setItems(secondData, selectedSecondIndex);
+    }
+
+    public void setThirdData(List<String> thirdData, int selectedThirdIndex) {
+        this.thirdData = thirdData;
+        this.selectedThirdIndex = selectedThirdIndex;
+        thirdView.setItems(thirdData, selectedThirdIndex);
     }
 
     public void setThirdLabel(CharSequence thirdPrefixLabel, CharSequence thirdSuffixLabel) {
@@ -100,7 +150,7 @@ public class TriplePicker extends WheelPicker {
             firstPrefixLabelView.setText(firstPrefixLabel);
             layout.addView(firstPrefixLabelView);
         }
-        final WheelView firstView = createWheelView();
+        firstView = createWheelView();
         firstView.setLayoutParams(new LinearLayout.LayoutParams(0, WRAP_CONTENT, 1.0f));
         layout.addView(firstView);
         if (!TextUtils.isEmpty(firstSuffixLabel)) {
@@ -115,7 +165,7 @@ public class TriplePicker extends WheelPicker {
             secondPrefixLabelView.setText(secondPrefixLabel);
             layout.addView(secondPrefixLabelView);
         }
-        final WheelView secondView = createWheelView();
+        secondView = createWheelView();
         secondView.setLayoutParams(new LinearLayout.LayoutParams(0, WRAP_CONTENT, 1.0f));
         layout.addView(secondView);
         if (!TextUtils.isEmpty(secondSuffixLabel)) {
@@ -130,7 +180,7 @@ public class TriplePicker extends WheelPicker {
             thirdPrefixLabelView.setText(thirdPrefixLabel);
             layout.addView(thirdPrefixLabelView);
         }
-        final WheelView thirdView = createWheelView();
+        thirdView = createWheelView();
         thirdView.setLayoutParams(new LinearLayout.LayoutParams(0, WRAP_CONTENT, 1.0f));
         layout.addView(thirdView);
         if (!TextUtils.isEmpty(thirdSuffixLabel)) {
