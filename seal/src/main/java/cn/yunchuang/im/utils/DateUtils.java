@@ -299,16 +299,63 @@ public class DateUtils {
     }
 
     /**
-     * 指定时间的，n小时之后，也可以指定0
+     * 指定时间的，n小时之后的小时是多少
      *
      * @param timestamp  单位是秒
      * @param hoursLater
      * @return 返回n小时之后是几小时
      */
-    public static String getHoursLater(long timestamp, int hoursLater) {
+    public static String getHourHoursLater(long timestamp, int hoursLater) {
         long newTs = timestamp + hoursLater * 60 * 60;
         return getHour(newTs);
     }
 
 
+    /**
+     * 指定时间的，n小时之后的日期是多少
+     *
+     * @param timestamp  单位是秒
+     * @param hoursLater
+     * @return
+     */
+    public static String getDateHoursLater(long timestamp, int hoursLater) {
+        long newTs = timestamp + hoursLater * 60 * 60;
+        return getDay(newTs);
+    }
+
+    /**
+     * 指定时间的，n小时之后的月份是多少
+     *
+     * @param timestamp  单位是秒
+     * @param hoursLater
+     * @return
+     */
+    public static String getMonthHoursLater(long timestamp, int hoursLater) {
+        long newTs = timestamp + hoursLater * 60 * 60;
+        return getMonth(newTs);
+    }
+
+    /**
+     * 指定时间的，n小时之后的年是多少
+     *
+     * @param timestamp  单位是秒
+     * @param hoursLater
+     * @return
+     */
+    public static String getYearHoursLater(long timestamp, int hoursLater) {
+        long newTs = timestamp + hoursLater * 60 * 60;
+        return getYear(newTs);
+    }
+
+    /**
+     * 指定时间的，n小时之后的日期是多少
+     *
+     * @param timestamp  单位是秒
+     * @param hoursLater
+     * @return
+     */
+    public static String getYMDHoursLater(long timestamp, int hoursLater) {
+        long newTs = timestamp + hoursLater * 60 * 60;
+        return getDay(newTs);
+    }
 }

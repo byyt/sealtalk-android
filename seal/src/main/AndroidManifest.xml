@@ -173,6 +173,11 @@
             android:name="cn.yunchuang.im.ui.activity.YueTaMsytActivity"
             android:screenOrientation="portrait" />
 
+        <!-- 约Ta，地点选择 -->
+        <activity
+            android:name="cn.yunchuang.im.location.PoiKeywordSearchActivity"
+            android:screenOrientation="portrait" />
+
         <!--新消息提醒-->
         <activity
             android:name="cn.yunchuang.im.ui.activity.NewMessageRemindActivity"

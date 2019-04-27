@@ -1,8 +1,9 @@
 package cn.yunchuang.im.ui.activity;
 
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.Nullable;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.amap.api.services.core.LatLonPoint;
 import com.itheima.roundedimageview.RoundedImageView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -23,6 +29,8 @@ import cn.qqtheme.framework.picker.WheelPicker;
 import cn.qqtheme.framework.util.ConvertUtils;
 import cn.qqtheme.framework.widget.WheelView;
 import cn.yunchuang.im.R;
+import cn.yunchuang.im.event.SaveDdxzEvent;
+import cn.yunchuang.im.location.PoiKeywordSearchActivity;
 import cn.yunchuang.im.server.network.http.HttpException;
 import cn.yunchuang.im.server.response.GetUserDetailModelOne;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
@@ -72,17 +80,34 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
 
     private SkillModel seletSkillModel = new SkillModel();
 
+    private String yysjYear;
+    private String yysjMonth;
+    private String yysjDate;
+    private String yysjHour;
+    private String yysjMinute;
     private long yysjTs;
-    private int yyscHours;
-    private String yydd;
+    private int yysc;
+    private LatLonPoint yyddPoint; //最终选择地点的经纬度
+    private String yyddName; //选择地点的名称
+
+    private boolean isYysjTsZq = false; //预约时间是否选择正确
+    private boolean isYyscZq = false; //预约时长是否选择正确
+    private boolean isYyddZq = false; //预约地点是否选择正确
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         BaseBaseUtils.setTranslucentStatus(this);//状态栏透明
         setContentView(R.layout.activity_yue_ta_msyt);
         setHeadVisibility(View.GONE);
         initView();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     private void initView() {
@@ -163,11 +188,11 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
             case R.id.activity_msyt_yuyue_shichang_layout:
                 onYyscPicker();
                 break;
+            case R.id.activity_msyt_yuyue_didian_layout:
+                Intent intent2 = new Intent(YueTaMsytActivity.this, PoiKeywordSearchActivity.class);
+                startActivity(intent2);
+                break;
         }
-    }
-
-    private void saveShaixuan() {
-
     }
 
     private void updateDataOne(GetUserDetailOneResponse getUserDetailOneResponse) {
@@ -205,7 +230,7 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
             dates.add("后天");
         }
         long currentTs = Calendar.getInstance().getTimeInMillis() / 1000;
-        String hourLater = DateUtils.getHoursLater(currentTs, 3);
+        String hourLater = DateUtils.getHourHoursLater(currentTs, 3);
         String minute = DateUtils.getMinute(currentTs);
         ArrayList<String> hours = new ArrayList<>();
         ArrayList<String> minutes = new ArrayList<>();
@@ -220,11 +245,90 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
         picker.setOnPickListener(new TriplePicker.OnPickListener() {
             @Override
             public void onPicked(int selectedFirstIndex, int selectedSecondIndex, int selectedThirdIndex) {
-                Log.d("xxxxxx", selectedFirstIndex + "");
-                Log.d("xxxxxx", selectedSecondIndex + "");
-                Log.d("xxxxxx", selectedThirdIndex + "");
                 if (picker.getSelectedFirstItem().equals("尽快")) {
-                    yyShijianTv.setText("尽快（" + picker.getSelectedSecondItem() + ":" + picker.getSelectedThirdItem() + "之前）");
+                    long currentTs = Calendar.getInstance().getTimeInMillis() / 1000;
+                    yysjYear = DateUtils.getYearHoursLater(currentTs, 3);
+                    yysjMonth = DateUtils.getMonthHoursLater(currentTs, 3);
+                    yysjDate = DateUtils.getDateHoursLater(currentTs, 3);
+                    yysjHour = picker.getSelectedSecondItem();
+                    yysjMinute = picker.getSelectedThirdItem();
+                    yysjTs = DateUtils.date2TimeStamp(yysjYear + "-" + yysjMonth + "-" + yysjDate + " "
+                                    + yysjHour + ":" + yysjMinute,
+                            "yyyy-MM-dd HH:mm");
+                    //确保日期不出错，最后确定的时间必须大于当前时间
+                    if (yysjTs <= currentTs) {
+                        NToast.shortToast(YueTaMsytActivity.this, "选择时间必须大于当前时间");
+                        //租不可以点
+                        isYysjTsZq = false;
+                    } else {
+                        yyShijianTv.setText("尽快 " + yysjYear + "-" + yysjMonth + "-" + yysjDate + " " +
+                                picker.getSelectedSecondItem() + ":" + picker.getSelectedThirdItem() + "前");
+                        //租可以点击
+                        isYysjTsZq = true;
+                    }
+                } else if (picker.getSelectedFirstItem().equals("今天")) {
+                    long currentTs = Calendar.getInstance().getTimeInMillis() / 1000;
+                    yysjYear = DateUtils.getYearHoursLater(currentTs, 0);
+                    yysjMonth = DateUtils.getMonthHoursLater(currentTs, 0);
+                    yysjDate = DateUtils.getDateHoursLater(currentTs, 0);
+                    yysjHour = picker.getSelectedSecondItem();
+                    yysjMinute = picker.getSelectedThirdItem();
+                    yysjTs = DateUtils.date2TimeStamp(yysjYear + "-" + yysjMonth + "-" + yysjDate + " "
+                                    + yysjHour + ":" + yysjMinute,
+                            "yyyy-MM-dd HH:mm");
+                    //确保日期不出错，最后确定的时间必须大于当前时间
+                    if (yysjTs <= currentTs) {
+                        NToast.shortToast(YueTaMsytActivity.this, "选择时间必须大于当前时间");
+                        //租不可以点
+                        isYysjTsZq = false;
+                    } else {
+                        yyShijianTv.setText(yysjYear + "-" + yysjMonth + "-" + yysjDate + " " +
+                                picker.getSelectedSecondItem() + ":" + picker.getSelectedThirdItem());
+                        //租可以点击
+                        isYysjTsZq = true;
+                    }
+                } else if (picker.getSelectedFirstItem().equals("明天")) {
+                    long currentTs = Calendar.getInstance().getTimeInMillis() / 1000;
+                    yysjYear = DateUtils.getYearHoursLater(currentTs, 24);
+                    yysjMonth = DateUtils.getMonthHoursLater(currentTs, 24);
+                    yysjDate = DateUtils.getDateHoursLater(currentTs, 24);
+                    yysjHour = picker.getSelectedSecondItem();
+                    yysjMinute = picker.getSelectedThirdItem();
+                    yysjTs = DateUtils.date2TimeStamp(yysjYear + "-" + yysjMonth + "-" + yysjDate + " "
+                                    + yysjHour + ":" + yysjMinute,
+                            "yyyy-MM-dd HH:mm");
+                    //确保日期不出错，最后确定的时间必须大于当前时间
+                    if (yysjTs <= currentTs) {
+                        NToast.shortToast(YueTaMsytActivity.this, "选择时间必须大于当前时间");
+                        //租不可以点
+                        isYysjTsZq = false;
+                    } else {
+                        yyShijianTv.setText(yysjYear + "-" + yysjMonth + "-" + yysjDate + " " +
+                                picker.getSelectedSecondItem() + ":" + picker.getSelectedThirdItem());
+                        //租可以点击
+                        isYysjTsZq = true;
+                    }
+                } else {
+                    long currentTs = Calendar.getInstance().getTimeInMillis() / 1000;
+                    yysjYear = DateUtils.getYearHoursLater(currentTs, 48);
+                    yysjMonth = DateUtils.getMonthHoursLater(currentTs, 48);
+                    yysjDate = DateUtils.getDateHoursLater(currentTs, 48);
+                    yysjHour = picker.getSelectedSecondItem();
+                    yysjMinute = picker.getSelectedThirdItem();
+                    yysjTs = DateUtils.date2TimeStamp(yysjYear + "-" + yysjMonth + "-" + yysjDate + " "
+                                    + yysjHour + ":" + yysjMinute,
+                            "yyyy-MM-dd HH:mm");
+                    //确保日期不出错，最后确定的时间必须大于当前时间
+                    if (yysjTs <= currentTs) {
+                        NToast.shortToast(YueTaMsytActivity.this, "选择时间必须大于当前时间");
+                        //租不可以点
+                        isYysjTsZq = false;
+                    } else {
+                        yyShijianTv.setText(yysjYear + "-" + yysjMonth + "-" + yysjDate + " " +
+                                picker.getSelectedSecondItem() + ":" + picker.getSelectedThirdItem());
+                        //租可以点击
+                        isYysjTsZq = true;
+                    }
                 }
             }
         });
@@ -234,7 +338,7 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
                 if (index == 0) {
                     //选的尽快，则默认选择3小时之后，
                     long currentTs = Calendar.getInstance().getTimeInMillis() / 1000;
-                    String hourLater = DateUtils.getHoursLater(currentTs, 3);
+                    String hourLater = DateUtils.getHourHoursLater(currentTs, 3);
                     String minute = DateUtils.getMinute(currentTs);
                     ArrayList<String> hours = new ArrayList<>();
                     ArrayList<String> minutes = new ArrayList<>();
@@ -315,7 +419,7 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void onYyscPicker() {
-        String[] shiChangArray = new String[]{"1小时", "2小时", "3小时", "4小时", "5小时", "6小时",
+        final String[] shiChangArray = new String[]{"1小时", "2小时", "3小时", "4小时", "5小时", "6小时",
                 "7小时", "8小时", "9小时", "10小时", "11小时", "12小时"};
         OptionPicker picker = new OptionPicker(this, shiChangArray);
         setPickerStyle(picker);
@@ -323,7 +427,9 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
         picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
             @Override
             public void onOptionPicked(int index, String item) {
-
+                yyShichangTv.setText(shiChangArray[index]);
+                yysc = index + 1;
+                isYyscZq = true;
             }
         });
         picker.setSelectedItem("2小时");
@@ -390,6 +496,23 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
             case GET_USER_DETAIL_ONE:
                 NToast.shortToast(mContext, "获取个人信息失败");
                 break;
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSaveDdxzEvent(SaveDdxzEvent event) {
+        //只处理本类发起的定位请求
+        if (Utils.isNotNull(event)) {
+            yyddPoint = event.getSelectedPoint();
+            if (yyddPoint == null) {
+                NToast.shortToast(YueTaMsytActivity.this, "地址选择出错，请重新选择");
+                //租不能点
+                isYyddZq = false;
+                return;
+            }
+            yyddName = event.getSelectedName();
+            yyDidianTv.setText(yyddName);
+            isYyddZq = true;
         }
     }
 }
