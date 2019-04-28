@@ -24,12 +24,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
-                android:paddingStart="@dimen/px30"
-                android:paddingLeft="@dimen/px30"
-                android:paddingTop="@dimen/px15"
-                android:paddingEnd="@dimen/px30"
-                android:paddingRight="@dimen/px30"
                 android:paddingBottom="@dimen/px15"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30"
+                android:paddingTop="@dimen/px15"
                 android:src="@drawable/user_detail_back" />
 
             <TextView
@@ -49,6 +49,7 @@
         android:id="@+id/activity_msyt_root_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
         android:scrollbars="none">
 
         <LinearLayout
@@ -74,8 +75,8 @@
                     android:id="@+id/activity_msyt_portrait"
                     android:layout_width="@dimen/px110"
                     android:layout_height="@dimen/px110"
-                    android:layout_marginStart="@dimen/px30"
                     android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginStart="@dimen/px30"
                     android:scaleType="fitCenter"
                     android:src="@drawable/de_default_portrait"
                     app:riv_oval="true" />
@@ -107,8 +108,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginStart="@dimen/px20"
                             android:layout_marginLeft="@dimen/px20"
+                            android:layout_marginStart="@dimen/px20"
                             android:visibility="gone"
                             tools:visibility="visible" />
 
@@ -119,9 +120,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:drawableStart="@drawable/homepage_dingwei"
                         android:drawableLeft="@drawable/homepage_dingwei"
                         android:drawablePadding="@dimen/px4"
+                        android:drawableStart="@drawable/homepage_dingwei"
                         android:textColor="@color/color_9B999F"
                         android:textSize="@dimen/text_px26"
                         android:visibility="gone"
@@ -142,10 +143,10 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingStart="@dimen/px30"
-                android:paddingLeft="@dimen/px30"
                 android:paddingEnd="@dimen/px30"
-                android:paddingRight="@dimen/px30">
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -167,10 +168,10 @@
                 android:layout_height="@dimen/px170"
                 android:background="@drawable/bg_homepage_adapter_item_layout"
                 android:orientation="horizontal"
-                android:paddingStart="@dimen/px30"
-                android:paddingLeft="@dimen/px30"
                 android:paddingEnd="@dimen/px30"
-                android:paddingRight="@dimen/px30">
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -197,8 +198,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginStart="@dimen/px20"
                             android:layout_marginLeft="@dimen/px20"
+                            android:layout_marginStart="@dimen/px20"
                             android:text="300元／小时"
                             android:textColor="@color/color_3C3B3B"
                             android:textSize="@dimen/text_px32" />
@@ -235,10 +236,10 @@
                 android:background="@drawable/bg_homepage_adapter_item_layout"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingStart="@dimen/px30"
-                android:paddingLeft="@dimen/px30"
                 android:paddingEnd="@dimen/px30"
-                android:paddingRight="@dimen/px30">
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -281,10 +282,10 @@
                 android:background="@drawable/bg_homepage_adapter_item_layout"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingStart="@dimen/px30"
-                android:paddingLeft="@dimen/px30"
                 android:paddingEnd="@dimen/px30"
-                android:paddingRight="@dimen/px30">
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -327,10 +328,10 @@
                 android:background="@drawable/bg_homepage_adapter_item_layout"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingStart="@dimen/px30"
-                android:paddingLeft="@dimen/px30"
                 android:paddingEnd="@dimen/px30"
-                android:paddingRight="@dimen/px30">
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -367,23 +368,248 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/px30"
-                android:layout_marginLeft="@dimen/px30"
-                android:layout_marginTop="@dimen/px12"
                 android:layout_marginBottom="@dimen/px15"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginStart="@dimen/px30"
+                android:layout_marginTop="@dimen/px12"
                 android:text="为了您和对方的人身安全，请选择公共场合见面"
                 android:textColor="@color/color_F76260"
                 android:textSize="@dimen/px28" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px90"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginStart="@dimen/px30"
+                        android:text="预付款"
+                        android:textColor="@color/color_3C3B3B"
+                        android:textSize="@dimen/text_px32" />
+
+                    <TextView
+                        android:id="@+id/activity_msyt_yfk_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/px10"
+                        android:layout_marginStart="@dimen/px10"
+                        android:text="¥180元"
+                        android:textColor="@color/color_FD0303"
+                        android:textSize="@dimen/text_px32" />
+
+                    <TextView
+                        android:id="@+id/activity_msyt_zj_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/px15"
+                        android:layout_marginStart="@dimen/px15"
+                        android:text="总价¥660元"
+                        android:textColor="@color/color_3BB035"
+                        android:textSize="@dimen/text_px24" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/activity_msyt_jggc_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/px30"
+                        android:layout_marginRight="@dimen/px30"
+                        android:text="价格构成?"
+                        android:textColor="@color/color_0076FF"
+                        android:textSize="@dimen/text_px24" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px1"
+                    android:layout_marginEnd="@dimen/px30"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginRight="@dimen/px30"
+                    android:layout_marginStart="@dimen/px30"
+                    android:background="@color/color_E4E4E4" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/px30"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginRight="@dimen/px30"
+                    android:layout_marginStart="@dimen/px30"
+                    android:layout_marginTop="@dimen/px20"
+                    android:text="预约需要支付一定的意向金，对方接收后，方可支付全款。款项 将由平台全程担保，预约不成功，意向金将按规则返还。"
+                    android:textColor="@color/color_9B999F"
+                    android:textSize="@dimen/text_px24" />
+
+                <TextView
+                    android:id="@+id/activity_msyt_fhgz_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/px20"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginStart="@dimen/px30"
+                    android:layout_marginTop="@dimen/px10"
+                    android:text="返还规则?"
+                    android:textColor="@color/color_0076FF"
+                    android:textSize="@dimen/text_px24" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/px20"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px110"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginStart="@dimen/px30"
+                        android:text="支付方式"
+                        android:textColor="@color/color_3C3B3B"
+                        android:textSize="@dimen/text_px32" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/activity_msyt_ptdbzf_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/px30"
+                        android:layout_marginRight="@dimen/px30"
+                        android:text="平台担保支付?"
+                        android:textColor="@color/color_0076FF"
+                        android:textSize="@dimen/text_px24" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px1"
+                    android:background="@color/color_E4E4E4" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px90"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/px40"
+                        android:layout_height="@dimen/px40"
+                        android:layout_marginLeft="@dimen/px50"
+                        android:layout_marginStart="@dimen/px50"
+                        android:src="@drawable/ic_msyy_qbzf" />
+
+                    <TextView
+                        android:id="@+id/activity_msyt_qbzf_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginStart="@dimen/px30"
+                        android:text="钱包支付（余额：¥0元）"
+                        android:textColor="@color/color_3C3B3B"
+                        android:textSize="@dimen/text_px28" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:id="@+id/activity_msyt_qbzf_iv"
+                        android:layout_width="@dimen/px40"
+                        android:layout_height="@dimen/px40"
+                        android:layout_marginEnd="@dimen/px30"
+                        android:layout_marginRight="@dimen/px30"
+                        android:src="@drawable/ic_xmxz_da_gou" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px1"
+                    android:background="@color/color_E4E4E4" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px90"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/px40"
+                        android:layout_height="@dimen/px30"
+                        android:layout_marginLeft="@dimen/px50"
+                        android:layout_marginStart="@dimen/px50"
+                        android:src="@drawable/ic_msyy_wxzf" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginStart="@dimen/px30"
+                        android:text="钱包支付（余额：¥0元）"
+                        android:textColor="@color/color_3C3B3B"
+                        android:textSize="@dimen/text_px28" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:id="@+id/activity_msyt_wxzf_iv"
+                        android:layout_width="@dimen/px40"
+                        android:layout_height="@dimen/px40"
+                        android:layout_marginEnd="@dimen/px30"
+                        android:layout_marginRight="@dimen/px30"
+                        android:src="@drawable/ic_xmxz_da_gou" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/activity_msyt_btn"
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:background="@drawable/bg_common_new"
-                android:layout_marginStart="@dimen/px30"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px90"
+                android:layout_marginBottom="@dimen/px120"
+                android:layout_marginEnd="@dimen/px30"
                 android:layout_marginLeft="@dimen/px30"
+                android:layout_marginRight="@dimen/px30"
+                android:layout_marginStart="@dimen/px30"
                 android:layout_marginTop="@dimen/px30"
-                android:text="马上租Ta" />
+                android:background="@drawable/bg_common_new_8_radius"
+                android:gravity="center"
+                android:text="马上约Ta"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_px36" />
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
