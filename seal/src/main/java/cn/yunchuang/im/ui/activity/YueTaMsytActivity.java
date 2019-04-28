@@ -3,7 +3,6 @@ package cn.yunchuang.im.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +31,7 @@ import cn.yunchuang.im.R;
 import cn.yunchuang.im.event.SaveDdxzEvent;
 import cn.yunchuang.im.location.PoiKeywordSearchActivity;
 import cn.yunchuang.im.server.network.http.HttpException;
+import cn.yunchuang.im.server.response.BaseResponse;
 import cn.yunchuang.im.server.response.GetUserDetailModelOne;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
 import cn.yunchuang.im.server.response.SkillModel;
@@ -72,8 +72,11 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
     private LinearLayout yyDidianLayout;
     private TextView yyDidianTv;
 
+    private TextView msytTv;
 
     private static final int GET_USER_DETAIL_ONE = 1601;
+    private static final int MSZT_PAY = 1602;
+    private static final int MSZT_CREATE_ORDER = 1603;
 
     private PromptDialog loadingDialog;
     private String userId = "";
@@ -145,6 +148,9 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
         yyDidianLayout.setOnClickListener(this);
         yyDidianTv = (TextView) findViewById(R.id.activity_msyt_yuyue_didian_tv);
 
+        msytTv = (TextView) findViewById(R.id.activity_msyt_btn);
+        msytTv.setOnClickListener(this);
+
         loadingDialog = DialogUtils.getLoadingDialog(this);
 
         initTitleLayout();
@@ -192,6 +198,9 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
                 Intent intent2 = new Intent(YueTaMsytActivity.this, PoiKeywordSearchActivity.class);
                 startActivity(intent2);
                 break;
+            case R.id.activity_msyt_btn:
+                startPay();
+                break;
         }
     }
 
@@ -212,6 +221,26 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
         distanceTv.setText(MessageFormat.format("{0}{1}", String.format(Locale.getDefault(),
                 "%.2f", modelOne.getDistance()), "km"));
 
+    }
+
+    private void startPay() {
+        if (!isYysjTsZq) {
+            NToast.shortToast(this, "预约时间还未选择或选择错误，请重新选择");
+            return;
+        }
+        if (!isYyscZq) {
+            NToast.shortToast(this, "预约时长还未选择，请重新选择");
+            return;
+        }
+        if (!isYyddZq) {
+            NToast.shortToast(this, "预约地点还未选择或选择错误，请重新选择");
+            return;
+        }
+        request(MSZT_PAY);
+    }
+
+    private void startCreateOrder() {
+        request(MSZT_CREATE_ORDER);
     }
 
     public void onYysjPicker() {
@@ -463,6 +492,10 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
         switch (requestCode) {
             case GET_USER_DETAIL_ONE:
                 return action.getUserDetailOne(userId);
+            case MSZT_PAY:
+                return action.postMsztPay(123);//订单id先随便填一个，后期再看是先支付再下单还是先下单得到订单号再支付
+            case MSZT_CREATE_ORDER:
+//                return action.postMsztPay(123);//下单
         }
         return null;
     }
@@ -480,6 +513,14 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
                         NToast.shortToast(mContext, "获取个人信息失败");
                     }
                     break;
+                case MSZT_PAY:
+                    BaseResponse baseResponse = (BaseResponse) result;
+                    if (baseResponse.getCode() == 200) {
+                        startCreateOrder();
+                    } else {
+                        NToast.shortToast(mContext, "支付失败");
+                    }
+                    break;
             }
         }
     }
@@ -495,6 +536,9 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
         switch (requestCode) {
             case GET_USER_DETAIL_ONE:
                 NToast.shortToast(mContext, "获取个人信息失败");
+                break;
+            case MSZT_PAY:
+                NToast.shortToast(mContext, "支付失败");
                 break;
         }
     }

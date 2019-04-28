@@ -24,12 +24,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
-                android:paddingBottom="@dimen/px15"
-                android:paddingEnd="@dimen/px30"
-                android:paddingLeft="@dimen/px30"
-                android:paddingRight="@dimen/px30"
                 android:paddingStart="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
                 android:paddingTop="@dimen/px15"
+                android:paddingEnd="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingBottom="@dimen/px15"
                 android:src="@drawable/user_detail_back" />
 
             <TextView
@@ -74,8 +74,8 @@
                     android:id="@+id/activity_msyt_portrait"
                     android:layout_width="@dimen/px110"
                     android:layout_height="@dimen/px110"
-                    android:layout_marginLeft="@dimen/px30"
                     android:layout_marginStart="@dimen/px30"
+                    android:layout_marginLeft="@dimen/px30"
                     android:scaleType="fitCenter"
                     android:src="@drawable/de_default_portrait"
                     app:riv_oval="true" />
@@ -107,8 +107,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/px20"
                             android:layout_marginStart="@dimen/px20"
+                            android:layout_marginLeft="@dimen/px20"
                             android:visibility="gone"
                             tools:visibility="visible" />
 
@@ -119,9 +119,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+                        android:drawableStart="@drawable/homepage_dingwei"
                         android:drawableLeft="@drawable/homepage_dingwei"
                         android:drawablePadding="@dimen/px4"
-                        android:drawableStart="@drawable/homepage_dingwei"
                         android:textColor="@color/color_9B999F"
                         android:textSize="@dimen/text_px26"
                         android:visibility="gone"
@@ -142,10 +142,10 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingEnd="@dimen/px30"
+                android:paddingStart="@dimen/px30"
                 android:paddingLeft="@dimen/px30"
-                android:paddingRight="@dimen/px30"
-                android:paddingStart="@dimen/px30">
+                android:paddingEnd="@dimen/px30"
+                android:paddingRight="@dimen/px30">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -167,10 +167,10 @@
                 android:layout_height="@dimen/px170"
                 android:background="@drawable/bg_homepage_adapter_item_layout"
                 android:orientation="horizontal"
-                android:paddingEnd="@dimen/px30"
+                android:paddingStart="@dimen/px30"
                 android:paddingLeft="@dimen/px30"
-                android:paddingRight="@dimen/px30"
-                android:paddingStart="@dimen/px30">
+                android:paddingEnd="@dimen/px30"
+                android:paddingRight="@dimen/px30">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -197,8 +197,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/px20"
                             android:layout_marginStart="@dimen/px20"
+                            android:layout_marginLeft="@dimen/px20"
                             android:text="300元／小时"
                             android:textColor="@color/color_3C3B3B"
                             android:textSize="@dimen/text_px32" />
@@ -235,10 +235,10 @@
                 android:background="@drawable/bg_homepage_adapter_item_layout"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingEnd="@dimen/px30"
+                android:paddingStart="@dimen/px30"
                 android:paddingLeft="@dimen/px30"
-                android:paddingRight="@dimen/px30"
-                android:paddingStart="@dimen/px30">
+                android:paddingEnd="@dimen/px30"
+                android:paddingRight="@dimen/px30">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -281,10 +281,10 @@
                 android:background="@drawable/bg_homepage_adapter_item_layout"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingEnd="@dimen/px30"
+                android:paddingStart="@dimen/px30"
                 android:paddingLeft="@dimen/px30"
-                android:paddingRight="@dimen/px30"
-                android:paddingStart="@dimen/px30">
+                android:paddingEnd="@dimen/px30"
+                android:paddingRight="@dimen/px30">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -327,10 +327,10 @@
                 android:background="@drawable/bg_homepage_adapter_item_layout"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingEnd="@dimen/px30"
+                android:paddingStart="@dimen/px30"
                 android:paddingLeft="@dimen/px30"
-                android:paddingRight="@dimen/px30"
-                android:paddingStart="@dimen/px30">
+                android:paddingEnd="@dimen/px30"
+                android:paddingRight="@dimen/px30">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -367,13 +367,23 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/px15"
-                android:layout_marginLeft="@dimen/px30"
                 android:layout_marginStart="@dimen/px30"
+                android:layout_marginLeft="@dimen/px30"
                 android:layout_marginTop="@dimen/px12"
+                android:layout_marginBottom="@dimen/px15"
                 android:text="为了您和对方的人身安全，请选择公共场合见面"
                 android:textColor="@color/color_F76260"
                 android:textSize="@dimen/px28" />
+
+            <TextView
+                android:id="@+id/activity_msyt_btn"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_common_new"
+                android:layout_marginStart="@dimen/px30"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginTop="@dimen/px30"
+                android:text="马上租Ta" />
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

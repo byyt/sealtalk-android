@@ -24,6 +24,7 @@ import cn.yunchuang.im.server.request.DismissGroupRequest;
 import cn.yunchuang.im.server.request.FriendInvitationRequest;
 import cn.yunchuang.im.server.request.JoinGroupRequest;
 import cn.yunchuang.im.server.request.LoginRequest;
+import cn.yunchuang.im.server.request.MsztPayRequest;
 import cn.yunchuang.im.server.request.PayImgRequest;
 import cn.yunchuang.im.server.request.PayWeChatRequest;
 import cn.yunchuang.im.server.request.QuitGroupRequest;
@@ -578,6 +579,35 @@ public class SealAction extends BaseAction {
 
         String url = getURL("user/update_user_location");
         String json = JsonMananger.beanToJson(new UpdateUserLocationRequest(longitude, latitude));
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(json, ENCODING);
+            entity.setContentType(CONTENT_TYPE);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String result = httpManager.post(mContext, url, entity, CONTENT_TYPE);
+        BaseResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            NLog.e("BaseResponse", result);
+            response = JsonMananger.jsonToBean(result, BaseResponse.class);
+        }
+        return response;
+    }
+
+    /**
+     * 马上租Ta，付费接口（应该是微信支付成功后再调用这个接口），这个接口调用成功后，再调用马上租Ta，下单接口
+     * 很可能是先下单，成功后返回个订单号再付费，后期再改吧
+     *
+     * @param msztOrderId
+     * @return
+     * @throws HttpException
+     */
+    public BaseResponse postMsztPay(long msztOrderId)
+            throws HttpException {
+
+        String url = getURL("user/mszt_pay");
+        String json = JsonMananger.beanToJson(new MsztPayRequest(msztOrderId));
         StringEntity entity = null;
         try {
             entity = new StringEntity(json, ENCODING);
