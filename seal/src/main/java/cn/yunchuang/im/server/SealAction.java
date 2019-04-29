@@ -625,6 +625,35 @@ public class SealAction extends BaseAction {
     }
 
     /**
+     * 马上租Ta，创建订单接口（付完了预付款）（应该是微信支付成功后再调用这个接口），这个接口调用成功后，再调用马上租Ta，下单接口
+     * 很可能是先下单，成功后返回个订单号再付费，后期再改吧
+     *
+     * @param msztOrderId
+     * @return
+     * @throws HttpException
+     */
+    public BaseResponse postMsztCreateOrder(long msztOrderId)
+            throws HttpException {
+
+        String url = getURL("user/mszt_create_order");
+        String json = JsonMananger.beanToJson(new MsztPayRequest(msztOrderId));
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(json, ENCODING);
+            entity.setContentType(CONTENT_TYPE);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String result = httpManager.post(mContext, url, entity, CONTENT_TYPE);
+        BaseResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            NLog.e("BaseResponse", result);
+            response = JsonMananger.jsonToBean(result, BaseResponse.class);
+        }
+        return response;
+    }
+
+    /**
      * 设置自己的昵称
      *
      * @param nickname 昵称

@@ -3,6 +3,7 @@ package cn.yunchuang.im.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +29,11 @@ import cn.qqtheme.framework.picker.WheelPicker;
 import cn.qqtheme.framework.util.ConvertUtils;
 import cn.qqtheme.framework.widget.WheelView;
 import cn.yunchuang.im.R;
+import cn.yunchuang.im.SealConst;
 import cn.yunchuang.im.event.SaveDdxzEvent;
 import cn.yunchuang.im.location.PoiKeywordSearchActivity;
 import cn.yunchuang.im.server.network.http.HttpException;
+import cn.yunchuang.im.server.request.MsztCreateOrderRequest;
 import cn.yunchuang.im.server.response.BaseResponse;
 import cn.yunchuang.im.server.response.GetUserDetailModelOne;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
@@ -91,11 +94,13 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
     private long yysjTs;
     private int yysc;
     private LatLonPoint yyddPoint; //最终选择地点的经纬度
-    private String yyddName; //选择地点的名称
+    private String yydd; //选择地点的名称
 
     private boolean isYysjTsZq = false; //预约时间是否选择正确
     private boolean isYyscZq = false; //预约时长是否选择正确
     private boolean isYyddZq = false; //预约地点是否选择正确
+
+    private MsztCreateOrderRequest orderRequest = new MsztCreateOrderRequest();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,6 +229,10 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void startPay() {
+        if(TextUtils.isEmpty(userId)){
+            NToast.shortToast(this, "用户信息出错，请重新选择");
+            return;
+        }
         if (!isYysjTsZq) {
             NToast.shortToast(this, "预约时间还未选择或选择错误，请重新选择");
             return;
@@ -240,6 +249,13 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void startCreateOrder() {
+        orderRequest.setReceiveUserId(userId);
+        orderRequest.setStatus(SealConst.MSZT_ORDER_STATUS_YFYFK);
+        orderRequest.setYysj(yysjTs);
+        orderRequest.setYysc(yysc);
+        orderRequest.setLongitude(yyddPoint.getLongitude());
+        orderRequest.setLatitude(yyddPoint.getLatitude());
+        orderRequest.setYydd(yydd);
         request(MSZT_CREATE_ORDER);
     }
 
@@ -495,7 +511,7 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
             case MSZT_PAY:
                 return action.postMsztPay(123);//订单id先随便填一个，后期再看是先支付再下单还是先下单得到订单号再支付
             case MSZT_CREATE_ORDER:
-//                return action.postMsztPay(123);//下单
+                return action.postMsztCreateOrder(123);//下单
         }
         return null;
     }
@@ -521,6 +537,14 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
                         NToast.shortToast(mContext, "支付失败");
                     }
                     break;
+                case MSZT_CREATE_ORDER:
+                    BaseResponse baseResponse2 = (BaseResponse) result;
+                    if (baseResponse2.getCode() == 200) {
+                        NToast.shortToast(mContext, "下单成功");
+                    } else {
+                        NToast.shortToast(mContext, "下单失败");
+                    }
+                    break;
             }
         }
     }
@@ -540,6 +564,9 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
             case MSZT_PAY:
                 NToast.shortToast(mContext, "支付失败");
                 break;
+            case MSZT_CREATE_ORDER:
+                NToast.shortToast(mContext, "下单失败");
+                break;
         }
     }
 
@@ -554,8 +581,8 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
                 isYyddZq = false;
                 return;
             }
-            yyddName = event.getSelectedName();
-            yyDidianTv.setText(yyddName);
+            yydd = event.getSelectedName();
+            yyDidianTv.setText(yydd);
             isYyddZq = true;
         }
     }

@@ -34,4 +34,14 @@ public class SealConst {
     public static final int SKILL_CHI_FAN = 3;
     public static final int SKILL_KAN_DIAN_YING = 4;
 
+    //马上租Ta，订单当前所处的状态
+    public static final int MSZT_ORDER_STATUS_WFYFK = 0; // 未付预付款
+    public static final int MSZT_ORDER_STATUS_YFYFK = 1; // 已付预付款待被租方接受
+    public static final int MSZT_ORDER_STATUS_DFQK = 2; // 被租方已接受，待租方付全款
+    public static final int MSZT_ORDER_STATUS_DJQR = 3; // 租方见到被租方，点击确认
+    public static final int MSZT_ORDER_STATUS_ZZ = 4; // 双方无纠纷后48小时后将钱转给被租方
+    public static final int MSZT_ORDER_STATUS_WJSTK = 5; // 已退钱回给租方（已付预付款，被租方没有接受，全额退款）
+    public static final int MSZT_ORDER_STATUS_WFQKTK = 6; // 已退钱回给租方（被租方接受了，租方未付全款，扣除一定费用后退回给租方）
+    public static final int MSZT_ORDER_STATUS_JFTK = 7; // 已退钱回给租方（点击确认后，租方和被租方后期发生纠纷，根据情况退钱回给被租方或被租方）
+
 }
