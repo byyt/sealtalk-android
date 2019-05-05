@@ -16,6 +16,7 @@ public class MsztCreateOrderRequest {
     private String yydd;
     private double advancePayment;
     private double totalPayment;
+    private int zffs;
     private long yfkTs;
     private long jsTs;
     private long qrTs;
@@ -94,6 +95,14 @@ public class MsztCreateOrderRequest {
 
     public void setTotalPayment(double totalPayment) {
         this.totalPayment = totalPayment;
+    }
+
+    public int getZffs() {
+        return zffs;
+    }
+
+    public void setZffs(int zffs) {
+        this.zffs = zffs;
     }
 
     public long getYfkTs() {

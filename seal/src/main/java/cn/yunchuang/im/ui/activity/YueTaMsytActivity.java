@@ -52,6 +52,9 @@ import cn.yunchuang.im.zmico.utils.ResourceUtils;
 import cn.yunchuang.im.zmico.utils.Utils;
 import me.leefeng.promptlibrary.PromptDialog;
 
+import static cn.yunchuang.im.SealConst.ZFFS_QB;
+import static cn.yunchuang.im.SealConst.ZFFS_WX;
+
 
 public class YueTaMsytActivity extends BaseActivity implements View.OnClickListener {
 
@@ -75,6 +78,13 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
     private LinearLayout yyDidianLayout;
     private TextView yyDidianTv;
 
+    private TextView yfkTv;
+    private TextView zjTv;
+    private LinearLayout qbzfLayout;
+    private TextView qbzfTv;
+    private ImageView qbzfIv;
+    private LinearLayout wxzfLayout;
+    private ImageView wxzfIv;
     private TextView msytTv;
 
     private static final int GET_USER_DETAIL_ONE = 1601;
@@ -99,6 +109,13 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
     private boolean isYysjTsZq = false; //预约时间是否选择正确
     private boolean isYyscZq = false; //预约时长是否选择正确
     private boolean isYyddZq = false; //预约地点是否选择正确
+
+    private int advancePayment = 0; //预付款金额
+    private int totalPayment = 0;  //总金额
+
+    private long lastClickTime;
+
+    private int currentZffs = ZFFS_QB;//当前支付方式
 
     private MsztCreateOrderRequest orderRequest = new MsztCreateOrderRequest();
 
@@ -153,12 +170,23 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
         yyDidianLayout.setOnClickListener(this);
         yyDidianTv = (TextView) findViewById(R.id.activity_msyt_yuyue_didian_tv);
 
+        yfkTv = (TextView) findViewById(R.id.activity_msyt_yfk_tv);
+        zjTv = (TextView) findViewById(R.id.activity_msyt_zj_tv);
+        qbzfLayout = (LinearLayout) findViewById(R.id.activity_msyt_qbzf_layout);
+        qbzfLayout.setOnClickListener(this);
+        qbzfTv = (TextView) findViewById(R.id.activity_msyt_qbzf_tv);
+        qbzfIv = (ImageView) findViewById(R.id.activity_msyt_qbzf_iv);
+        wxzfLayout = (LinearLayout) findViewById(R.id.activity_msyt_wxzf_layout);
+        wxzfLayout.setOnClickListener(this);
+        wxzfIv = (ImageView) findViewById(R.id.activity_msyt_wxzf_iv);
+
         msytTv = (TextView) findViewById(R.id.activity_msyt_btn);
         msytTv.setOnClickListener(this);
 
         loadingDialog = DialogUtils.getLoadingDialog(this);
 
         initTitleLayout();
+        setZffs(currentZffs);
         getData();
     }
 
@@ -203,9 +231,31 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
                 Intent intent2 = new Intent(YueTaMsytActivity.this, PoiKeywordSearchActivity.class);
                 startActivity(intent2);
                 break;
+            case R.id.activity_msyt_qbzf_layout:
+                setZffs(ZFFS_QB);
+                break;
+            case R.id.activity_msyt_wxzf_layout:
+                setZffs(ZFFS_WX);
+                break;
             case R.id.activity_msyt_btn:
+                if (isFastClickOneMinute()) {
+                    //一秒内点击了多次
+                    NToast.shortToast(YueTaMsytActivity.this, "请不要重复支付");
+                    return;
+                }
                 startPay();
                 break;
+        }
+    }
+
+    // 是否是过快点击，一秒内点击支付两次，
+    private boolean isFastClickOneMinute() {
+        long time = System.currentTimeMillis();
+        if (lastClickTime < time && time - lastClickTime <= 1100) {
+            return true;
+        } else {
+            lastClickTime = time;
+            return false;
         }
     }
 
@@ -228,8 +278,20 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
 
     }
 
+    private void setZffs(int zffs) {
+        if (zffs == ZFFS_QB) {
+            qbzfIv.setVisibility(View.VISIBLE);
+            wxzfIv.setVisibility(View.GONE);
+            currentZffs = ZFFS_QB;
+        } else {
+            qbzfIv.setVisibility(View.GONE);
+            wxzfIv.setVisibility(View.VISIBLE);
+            currentZffs = ZFFS_WX;
+        }
+    }
+
     private void startPay() {
-        if(TextUtils.isEmpty(userId)){
+        if (TextUtils.isEmpty(userId) || seletSkillModel == null) {
             NToast.shortToast(this, "用户信息出错，请重新选择");
             return;
         }
@@ -256,6 +318,10 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
         orderRequest.setLongitude(yyddPoint.getLongitude());
         orderRequest.setLatitude(yyddPoint.getLatitude());
         orderRequest.setYydd(yydd);
+        orderRequest.setAdvancePayment(advancePayment);
+        orderRequest.setTotalPayment(totalPayment);
+        orderRequest.setZffs(currentZffs);
+        orderRequest.setYfkTs(System.currentTimeMillis() / 1000);
         request(MSZT_CREATE_ORDER);
     }
 
@@ -472,8 +538,17 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
         picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
             @Override
             public void onOptionPicked(int index, String item) {
+                if (seletSkillModel == null) {
+                    NToast.shortToast(YueTaMsytActivity.this, "用户信息出错，请重新选择");
+                    isYyscZq = false;
+                    return;
+                }
                 yyShichangTv.setText(shiChangArray[index]);
                 yysc = index + 1;
+                advancePayment = yysc * seletSkillModel.getPrice() * 3 / 10;
+                totalPayment = yysc * seletSkillModel.getPrice() * 11 / 10;
+                yfkTv.setText("¥" + advancePayment + "元");
+                zjTv.setText("¥" + totalPayment + "元");
                 isYyscZq = true;
             }
         });
@@ -511,7 +586,7 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
             case MSZT_PAY:
                 return action.postMsztPay(123);//订单id先随便填一个，后期再看是先支付再下单还是先下单得到订单号再支付
             case MSZT_CREATE_ORDER:
-                return action.postMsztCreateOrder(123);//下单
+                return action.postMsztCreateOrder(orderRequest);//下单
         }
         return null;
     }
@@ -541,6 +616,12 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
                     BaseResponse baseResponse2 = (BaseResponse) result;
                     if (baseResponse2.getCode() == 200) {
                         NToast.shortToast(mContext, "下单成功");
+                        Intent intent = new Intent(mContext, WodeXuqiuXqActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("userId", userId);
+                        bundle.putSerializable("skillModel", seletSkillModel);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
                     } else {
                         NToast.shortToast(mContext, "下单失败");
                     }

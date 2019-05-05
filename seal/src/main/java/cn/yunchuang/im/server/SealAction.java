@@ -24,6 +24,7 @@ import cn.yunchuang.im.server.request.DismissGroupRequest;
 import cn.yunchuang.im.server.request.FriendInvitationRequest;
 import cn.yunchuang.im.server.request.JoinGroupRequest;
 import cn.yunchuang.im.server.request.LoginRequest;
+import cn.yunchuang.im.server.request.MsztCreateOrderRequest;
 import cn.yunchuang.im.server.request.MsztPayRequest;
 import cn.yunchuang.im.server.request.PayImgRequest;
 import cn.yunchuang.im.server.request.PayWeChatRequest;
@@ -628,15 +629,15 @@ public class SealAction extends BaseAction {
      * 马上租Ta，创建订单接口（付完了预付款）（应该是微信支付成功后再调用这个接口），这个接口调用成功后，再调用马上租Ta，下单接口
      * 很可能是先下单，成功后返回个订单号再付费，后期再改吧
      *
-     * @param msztOrderId
+     * @param orderRequest
      * @return
      * @throws HttpException
      */
-    public BaseResponse postMsztCreateOrder(long msztOrderId)
+    public BaseResponse postMsztCreateOrder(MsztCreateOrderRequest orderRequest)
             throws HttpException {
 
         String url = getURL("user/mszt_create_order");
-        String json = JsonMananger.beanToJson(new MsztPayRequest(msztOrderId));
+        String json = JsonMananger.beanToJson(orderRequest);
         StringEntity entity = null;
         try {
             entity = new StringEntity(json, ENCODING);

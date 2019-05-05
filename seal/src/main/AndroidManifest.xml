@@ -178,6 +178,11 @@
             android:name="cn.yunchuang.im.location.PoiKeywordSearchActivity"
             android:screenOrientation="portrait" />
 
+        <!-- 我的需求，详情 -->
+        <activity
+            android:name="cn.yunchuang.im.ui.activity.WodeXuqiuXqActivity"
+            android:screenOrientation="portrait" />
+
         <!--新消息提醒-->
         <activity
             android:name="cn.yunchuang.im.ui.activity.NewMessageRemindActivity"

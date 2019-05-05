@@ -5,7 +5,7 @@
     android:id="@+id/homepage_adabpter_item_root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_homepage_adapter_item_layout"
+    android:background="@drawable/bg_common_while_press_e4e4e4"
     android:orientation="vertical">
 
     <View

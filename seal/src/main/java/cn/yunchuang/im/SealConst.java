@@ -34,6 +34,10 @@ public class SealConst {
     public static final int SKILL_CHI_FAN = 3;
     public static final int SKILL_KAN_DIAN_YING = 4;
 
+    //支付方式
+    public static final int ZFFS_QB = 0;  //钱包
+    public static final int ZFFS_WX = 1;  //微信
+
     //马上租Ta，订单当前所处的状态
     public static final int MSZT_ORDER_STATUS_WFYFK = 0; // 未付预付款
     public static final int MSZT_ORDER_STATUS_YFYFK = 1; // 已付预付款待被租方接受

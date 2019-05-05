@@ -166,7 +166,7 @@
                 android:id="@+id/activity_msyt_skill_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/px170"
-                android:background="@drawable/bg_homepage_adapter_item_layout"
+                android:background="@drawable/bg_common_while_press_e4e4e4"
                 android:orientation="horizontal"
                 android:paddingEnd="@dimen/px30"
                 android:paddingLeft="@dimen/px30"
@@ -233,7 +233,7 @@
                 android:id="@+id/activity_msyt_yuyue_shijian_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/px110"
-                android:background="@drawable/bg_homepage_adapter_item_layout"
+                android:background="@drawable/bg_common_while_press_e4e4e4"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingEnd="@dimen/px30"
@@ -257,9 +257,9 @@
                     android:id="@+id/activity_msyt_yuyue_shijian_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:layout_marginEnd="@dimen/px30"
                     android:layout_marginRight="@dimen/px30"
+                    android:gravity="end"
                     android:hint="请选择"
                     android:textColor="@color/color_3C3B3B"
                     android:textColorHint="@color/color_9B999F"
@@ -279,7 +279,7 @@
                 android:id="@+id/activity_msyt_yuyue_shichang_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/px110"
-                android:background="@drawable/bg_homepage_adapter_item_layout"
+                android:background="@drawable/bg_common_while_press_e4e4e4"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingEnd="@dimen/px30"
@@ -303,9 +303,9 @@
                     android:id="@+id/activity_msyt_yuyue_shichang_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:layout_marginEnd="@dimen/px30"
                     android:layout_marginRight="@dimen/px30"
+                    android:gravity="end"
                     android:hint="请选择"
                     android:textColor="@color/color_3C3B3B"
                     android:textColorHint="@color/color_9B999F"
@@ -325,7 +325,7 @@
                 android:id="@+id/activity_msyt_yuyue_didian_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/px110"
-                android:background="@drawable/bg_homepage_adapter_item_layout"
+                android:background="@drawable/bg_common_while_press_e4e4e4"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingEnd="@dimen/px30"
@@ -349,9 +349,9 @@
                     android:id="@+id/activity_msyt_yuyue_didian_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:layout_marginEnd="@dimen/px30"
                     android:layout_marginRight="@dimen/px30"
+                    android:gravity="end"
                     android:hint="请选择公共场合"
                     android:textColor="@color/color_3C3B3B"
                     android:textColorHint="@color/color_9B999F"
@@ -403,7 +403,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/px10"
                         android:layout_marginStart="@dimen/px10"
-                        android:text="¥180元"
+                        android:text="¥0元"
                         android:textColor="@color/color_FD0303"
                         android:textSize="@dimen/text_px32" />
 
@@ -413,7 +413,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/px15"
                         android:layout_marginStart="@dimen/px15"
-                        android:text="总价¥660元"
+                        android:text="总价¥0元"
                         android:textColor="@color/color_3BB035"
                         android:textSize="@dimen/text_px24" />
 
@@ -514,16 +514,19 @@
                     android:background="@color/color_E4E4E4" />
 
                 <LinearLayout
+                    android:id="@+id/activity_msyt_qbzf_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/px90"
+                    android:layout_height="@dimen/px100"
+                    android:background="@drawable/bg_common_while_press_e4e4e4"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="@dimen/px40"
-                        android:layout_height="@dimen/px40"
+                        android:layout_height="@dimen/px30"
                         android:layout_marginLeft="@dimen/px50"
                         android:layout_marginStart="@dimen/px50"
+                        android:scaleType="fitXY"
                         android:src="@drawable/ic_msyy_qbzf" />
 
                     <TextView
@@ -547,7 +550,8 @@
                         android:layout_height="@dimen/px40"
                         android:layout_marginEnd="@dimen/px30"
                         android:layout_marginRight="@dimen/px30"
-                        android:src="@drawable/ic_xmxz_da_gou" />
+                        android:src="@drawable/ic_xmxz_da_gou"
+                        android:visibility="visible" />
 
                 </LinearLayout>
 
@@ -557,8 +561,10 @@
                     android:background="@color/color_E4E4E4" />
 
                 <LinearLayout
+                    android:id="@+id/activity_msyt_wxzf_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/px90"
+                    android:layout_height="@dimen/px100"
+                    android:background="@drawable/bg_common_while_press_e4e4e4"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -574,7 +580,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/px30"
                         android:layout_marginStart="@dimen/px30"
-                        android:text="钱包支付（余额：¥0元）"
+                        android:text="微信支付"
                         android:textColor="@color/color_3C3B3B"
                         android:textSize="@dimen/text_px28" />
 
@@ -589,7 +595,8 @@
                         android:layout_height="@dimen/px40"
                         android:layout_marginEnd="@dimen/px30"
                         android:layout_marginRight="@dimen/px30"
-                        android:src="@drawable/ic_xmxz_da_gou" />
+                        android:src="@drawable/ic_xmxz_da_gou"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -599,13 +606,13 @@
                 android:id="@+id/activity_msyt_btn"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/px90"
-                android:layout_marginBottom="@dimen/px120"
+                android:layout_marginBottom="@dimen/px200"
                 android:layout_marginEnd="@dimen/px30"
                 android:layout_marginLeft="@dimen/px30"
                 android:layout_marginRight="@dimen/px30"
                 android:layout_marginStart="@dimen/px30"
-                android:layout_marginTop="@dimen/px30"
-                android:background="@drawable/bg_common_new_8_radius"
+                android:layout_marginTop="@dimen/px50"
+                android:background="@drawable/bg_common_new_8_radius_press"
                 android:gravity="center"
                 android:text="马上约Ta"
                 android:textColor="@color/white"

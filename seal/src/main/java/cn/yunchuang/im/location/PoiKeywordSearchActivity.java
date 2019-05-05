@@ -266,7 +266,7 @@ public class PoiKeywordSearchActivity extends FragmentActivity implements
                 @Override
                 public void onClick(View v) {
                     selectedPoint = item.getPoint();
-                    selectedName = item.getName();
+                    selectedName = item.getName().trim();
 
                     searchText.setText(selectedName);
                     searchText.setSelection(selectedName.length());
