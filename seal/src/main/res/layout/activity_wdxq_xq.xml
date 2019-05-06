@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_F4F4F4"
@@ -355,10 +357,180 @@
                         android:background="@drawable/bg_wdxq_line_red"
                         android:visibility="gone" />
 
-
                 </FrameLayout>
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/px20"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px170"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <com.itheima.roundedimageview.RoundedImageView
+                        android:id="@+id/activity_wdxq_xq_portrait"
+                        android:layout_width="@dimen/px110"
+                        android:layout_height="@dimen/px110"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/de_default_portrait"
+                        app:riv_oval="true" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/px30"
+                        android:layout_marginStart="@dimen/px30"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/px16"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/activity_wdxq_xq_nickname"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:textColor="@color/color_3C3B3B"
+                                android:textSize="@dimen/text_px30"
+                                tools:text="小明同学" />
+
+                            <cn.yunchuang.im.ui.widget.AgeSexView
+                                android:id="@+id/activity_wdxq_xq_age_sex_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="@dimen/px20"
+                                android:layout_marginStart="@dimen/px20"
+                                android:visibility="gone"
+                                tools:visibility="visible" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/activity_wdxq_xq_zhuti_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/color_8B8B8B"
+                            android:textSize="@dimen/text_px26"
+                            tools:text="主题：跑步"
+                            tools:visibility="visible" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:text="总价¥660元"
+                            android:textColor="@color/color_FD0303"
+                            android:textSize="@dimen/text_px30" />
+                        tools:text="总价¥660元" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/px4"
+                            android:gravity="end"
+                            android:text="预付款¥180元"
+                            android:textColor="@color/color_3BB035"
+                            android:textSize="@dimen/text_px26" />
+                        tools:text="预付款¥180元" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="@dimen/px35"
+                        android:layout_height="@dimen/px35"
+                        android:layout_marginLeft="@dimen/px20"
+                        android:layout_marginStart="@dimen/px20"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_wdxq_xq_jg_wh" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px1"
+                    android:background="@color/color_E4E4E4" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px100"
+                    android:gravity="start|center_vertical"
+                    android:text="预约时间：2019-05-16 14:00"
+                    android:textColor="@color/color_3C3B3B"
+                    android:textSize="@dimen/text_px30" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px1"
+                    android:background="@color/color_E4E4E4" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px100"
+                    android:gravity="start|center_vertical"
+                    android:text="预约时长：2小时"
+                    android:textColor="@color/color_3C3B3B"
+                    android:textSize="@dimen/text_px30" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px1"
+                    android:background="@color/color_E4E4E4" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px100"
+                    android:gravity="start|center_vertical"
+                    android:text="预约地点：高新园(地铁站)"
+                    android:textColor="@color/color_3C3B3B"
+                    android:textSize="@dimen/text_px30" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/activity_wdxq_xq_fxx_btn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px90"
+                android:layout_marginBottom="@dimen/px200"
+                android:layout_marginEnd="@dimen/px30"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginRight="@dimen/px30"
+                android:layout_marginStart="@dimen/px30"
+                android:layout_marginTop="@dimen/px30"
+                android:background="@drawable/bg_common_new_8_radius_press"
+                android:gravity="center"
+                android:text="发消息"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_px36" />
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

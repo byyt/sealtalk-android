@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.itheima.roundedimageview.RoundedImageView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +24,9 @@ import cn.yunchuang.im.server.response.SkillModel;
 import cn.yunchuang.im.server.utils.CommonUtils;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.server.widget.LoadDialog;
+import cn.yunchuang.im.ui.widget.AgeSexView;
 import cn.yunchuang.im.utils.DialogUtils;
+import cn.yunchuang.im.utils.GlideUtils;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
 import cn.yunchuang.im.zmico.utils.DeviceUtils;
 import cn.yunchuang.im.zmico.utils.ResourceUtils;
@@ -36,6 +40,9 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
     private ImageView backImg;
     private TextView nextTv;
 
+    private RoundedImageView portraitIv;
+    private TextView nameTv;
+    private AgeSexView ageSexView;
 
     private View dot1;
     private View dot2;
@@ -83,6 +90,10 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
         backImg.setOnClickListener(this);
         nextTv = (TextView) findViewById(R.id.activity_xmxz_next);
         nextTv.setOnClickListener(this);
+
+        portraitIv = (RoundedImageView) findViewById(R.id.activity_wdxq_xq_portrait);
+        nameTv = (TextView) findViewById(R.id.activity_wdxq_xq_nickname);
+        ageSexView = (AgeSexView) findViewById(R.id.activity_wdxq_xq_age_sex_view);
 
         dot1 = (View) findViewById(R.id.activity_wdxq_xq_jd_1_dot);
         dot2 = (View) findViewById(R.id.activity_wdxq_xq_jd_2_dot);
@@ -172,8 +183,12 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
             return;
         }
 
+        GlideUtils.load(this, modelOne.getPortraitUri(), portraitIv);
+        nameTv.setVisibility(View.VISIBLE);
+        nameTv.setText(modelOne.getNickname());
+        ageSexView.setVisibility(View.VISIBLE);
+        ageSexView.setAgeAndSex(modelOne.getAge(), modelOne.getSex());
         setJindu(5);
-
 
     }
 
@@ -198,53 +213,22 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
         }
         if (jindu > 0 && jindu < 3) {
             jinduLine1.setVisibility(View.VISIBLE);
-            jinduLine1.post(new Runnable() {
-                @Override
-                public void run() {
-                    setJinduRedLine(jinduLine1, dots.get(jindu - 1));
-                }
-            });
+            setJinduRedLine(jinduLine1, dots.get(jindu - 1));
             jinduLine2.setVisibility(View.GONE);
         } else if (jindu == 3) {
             jinduLine1.setVisibility(View.VISIBLE);
-            jinduLine1.post(new Runnable() {
-                @Override
-                public void run() {
-                    setJinduRedLineMatchParent(jinduLine1);
-                }
-            });
+            setJinduRedLineMatchParent(jinduLine1);
             jinduLine2.setVisibility(View.GONE);
         } else if (jindu > 3 && jindu < 6) {
             jinduLine1.setVisibility(View.VISIBLE);
-            jinduLine1.post(new Runnable() {
-                @Override
-                public void run() {
-                    setJinduRedLineMatchParent(jinduLine1);
-                }
-            });
+            setJinduRedLineMatchParent(jinduLine1);
             jinduLine2.setVisibility(View.VISIBLE);
-            jinduLine2.post(new Runnable() {
-                @Override
-                public void run() {
-                    setJinduRedLine(jinduLine2, dots.get(jindu - 1));
-                }
-            });
-
+            setJinduRedLine(jinduLine2, dots.get(jindu - 1));
         } else {
             jinduLine1.setVisibility(View.VISIBLE);
-            jinduLine1.post(new Runnable() {
-                @Override
-                public void run() {
-                    setJinduRedLineMatchParent(jinduLine1);
-                }
-            });
+            setJinduRedLineMatchParent(jinduLine1);
             jinduLine2.setVisibility(View.VISIBLE);
-            jinduLine2.post(new Runnable() {
-                @Override
-                public void run() {
-                    setJinduRedLineMatchParent(jinduLine2);
-                }
-            });
+            setJinduRedLineMatchParent(jinduLine2);
         }
     }
 
