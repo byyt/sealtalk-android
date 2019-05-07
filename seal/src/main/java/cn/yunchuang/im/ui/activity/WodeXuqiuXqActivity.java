@@ -18,6 +18,8 @@ import java.util.List;
 
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.server.network.http.HttpException;
+import cn.yunchuang.im.server.response.GetMsztOrderModel;
+import cn.yunchuang.im.server.response.GetMsztOrderResponse;
 import cn.yunchuang.im.server.response.GetUserDetailModelOne;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
 import cn.yunchuang.im.server.response.SkillModel;
@@ -62,6 +64,7 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
     private View jinduLine2;
 
     private static final int GET_USER_DETAIL_ONE = 1601;
+    private static final int GET_MSZT_ORDER = 1602;
 
     private PromptDialog loadingDialog;
     private String userId = "";
@@ -144,6 +147,7 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
     private void getData() {
         DialogUtils.showLoading(loadingDialog);
         request(GET_USER_DETAIL_ONE);
+        request(GET_MSZT_ORDER);
     }
 
 
@@ -189,6 +193,18 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
         ageSexView.setVisibility(View.VISIBLE);
         ageSexView.setAgeAndSex(modelOne.getAge(), modelOne.getSex());
         setJindu(5);
+
+    }
+
+    private void updateMsztOrderInfo(GetMsztOrderResponse getMsztOrderResponse) {
+        if (getMsztOrderResponse == null) {
+            return;
+        }
+        GetMsztOrderModel model = getMsztOrderResponse.getResult();
+        if (model == null) {
+            return;
+        }
+
 
     }
 
@@ -275,6 +291,8 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
         switch (requestCode) {
             case GET_USER_DETAIL_ONE:
                 return action.getUserDetailOne(userId);
+            case GET_MSZT_ORDER:
+                return action.postMsztGetOrder();
         }
         return null;
     }
@@ -292,6 +310,14 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
                         NToast.shortToast(mContext, "获取个人信息失败");
                     }
                     break;
+                case GET_MSZT_ORDER:
+                    GetMsztOrderResponse getMsztOrderResponse = (GetMsztOrderResponse) result;
+                    if (getMsztOrderResponse.getCode() == 200) {
+                        updateMsztOrderInfo(getMsztOrderResponse);
+                    } else {
+                        NToast.shortToast(mContext, "获取订单信息失败");
+                    }
+                    break;
             }
         }
     }
@@ -307,6 +333,9 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
         switch (requestCode) {
             case GET_USER_DETAIL_ONE:
                 NToast.shortToast(mContext, "获取个人信息失败");
+                break;
+            case GET_MSZT_ORDER:
+                NToast.shortToast(mContext, "获取订单信息失败");
                 break;
         }
     }

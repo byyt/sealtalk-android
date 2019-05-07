@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.amap.api.services.core.LatLonPoint;
 import com.itheima.roundedimageview.RoundedImageView;
 
@@ -313,6 +314,7 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
     private void startCreateOrder() {
         orderRequest.setReceiveUserId(userId);
         orderRequest.setStatus(SealConst.MSZT_ORDER_STATUS_YFYFK);
+        orderRequest.setYyxm(JSONObject.toJSONString(seletSkillModel));
         orderRequest.setYysj(yysjTs);
         orderRequest.setYysc(yysc);
         orderRequest.setLongitude(yyddPoint.getLongitude());

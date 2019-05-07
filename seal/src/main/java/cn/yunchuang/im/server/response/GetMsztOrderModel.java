@@ -1,13 +1,9 @@
-package cn.yunchuang.im.server.request;
+package cn.yunchuang.im.server.response;
 
-
-/**
- * Created by AMing on 15/12/24.
- * Company RongCloud
- */
-public class MsztCreateOrderRequest {
-
-    private String receiveUserId;
+public class GetMsztOrderModel {
+    private String MsztOrderId;
+    private String payUserIdStr;
+    private String receiveUserIdStr;
     private int status;
     private String yyxm;
     private long yysj;
@@ -18,20 +14,29 @@ public class MsztCreateOrderRequest {
     private double advancePayment;
     private double totalPayment;
     private int zffs;
-    private long yfkTs;
-    private long jsTs;
-    private long qrTs;
-    private long zzTs;
-    private long wjstkTs;
-    private long wfqktkTs;
-    private long jftkTs;
 
-    public String getReceiveUserId() {
-        return receiveUserId;
+    public String getMsztOrderId() {
+        return MsztOrderId;
     }
 
-    public void setReceiveUserId(String receiveUserId) {
-        this.receiveUserId = receiveUserId;
+    public void setMsztOrderId(String msztOrderId) {
+        MsztOrderId = msztOrderId;
+    }
+
+    public String getPayUserIdStr() {
+        return payUserIdStr;
+    }
+
+    public void setPayUserIdStr(String payUserIdStr) {
+        this.payUserIdStr = payUserIdStr;
+    }
+
+    public String getReceiveUserIdStr() {
+        return receiveUserIdStr;
+    }
+
+    public void setReceiveUserIdStr(String receiveUserIdStr) {
+        this.receiveUserIdStr = receiveUserIdStr;
     }
 
     public int getStatus() {
@@ -113,61 +118,4 @@ public class MsztCreateOrderRequest {
     public void setZffs(int zffs) {
         this.zffs = zffs;
     }
-
-    public long getYfkTs() {
-        return yfkTs;
-    }
-
-    public void setYfkTs(long yfkTs) {
-        this.yfkTs = yfkTs;
-    }
-
-    public long getJsTs() {
-        return jsTs;
-    }
-
-    public void setJsTs(long jsTs) {
-        this.jsTs = jsTs;
-    }
-
-    public long getQrTs() {
-        return qrTs;
-    }
-
-    public void setQrTs(long qrTs) {
-        this.qrTs = qrTs;
-    }
-
-    public long getZzTs() {
-        return zzTs;
-    }
-
-    public void setZzTs(long zzTs) {
-        this.zzTs = zzTs;
-    }
-
-    public long getWjstkTs() {
-        return wjstkTs;
-    }
-
-    public void setWjstkTs(long wjstkTs) {
-        this.wjstkTs = wjstkTs;
-    }
-
-    public long getWfqktkTs() {
-        return wfqktkTs;
-    }
-
-    public void setWfqktkTs(long wfqktkTs) {
-        this.wfqktkTs = wfqktkTs;
-    }
-
-    public long getJftkTs() {
-        return jftkTs;
-    }
-
-    public void setJftkTs(long jftkTs) {
-        this.jftkTs = jftkTs;
-    }
-
 }

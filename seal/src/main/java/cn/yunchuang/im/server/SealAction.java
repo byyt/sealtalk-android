@@ -60,6 +60,7 @@ import cn.yunchuang.im.server.response.GetFriendInfoByIDResponse;
 import cn.yunchuang.im.server.response.GetGroupInfoResponse;
 import cn.yunchuang.im.server.response.GetGroupMemberResponse;
 import cn.yunchuang.im.server.response.GetGroupResponse;
+import cn.yunchuang.im.server.response.GetMsztOrderResponse;
 import cn.yunchuang.im.server.response.GetTokenResponse;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
 import cn.yunchuang.im.server.response.GetUserDetailTwoResponse;
@@ -650,6 +651,33 @@ public class SealAction extends BaseAction {
         if (!TextUtils.isEmpty(result)) {
             NLog.e("BaseResponse", result);
             response = JsonMananger.jsonToBean(result, BaseResponse.class);
+        }
+        return response;
+    }
+
+    /**
+     * 获取马上租Ta订单，自己是租方或者被租方都会获取到，客户端这边获取到之后再通过uid对比判断自己是租方还是被租方，做相应的处理
+     *
+     * @return
+     * @throws HttpException
+     */
+    public GetMsztOrderResponse postMsztGetOrder()
+            throws HttpException {
+
+        String url = getURL("user/mszt_get_order");
+        String json = JsonMananger.beanToJson(new Object());
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(json, ENCODING);
+            entity.setContentType(CONTENT_TYPE);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String result = httpManager.post(mContext, url, entity, CONTENT_TYPE);
+        GetMsztOrderResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            NLog.e("GetMsztOrderResponse", result);
+            response = JsonMananger.jsonToBean(result, GetMsztOrderResponse.class);
         }
         return response;
     }
