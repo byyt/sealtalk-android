@@ -25,6 +25,7 @@ import cn.yunchuang.im.server.request.FriendInvitationRequest;
 import cn.yunchuang.im.server.request.JoinGroupRequest;
 import cn.yunchuang.im.server.request.LoginRequest;
 import cn.yunchuang.im.server.request.MsztCreateOrderRequest;
+import cn.yunchuang.im.server.request.MsztGetOrderDetailRequest;
 import cn.yunchuang.im.server.request.MsztPayRequest;
 import cn.yunchuang.im.server.request.PayImgRequest;
 import cn.yunchuang.im.server.request.PayWeChatRequest;
@@ -634,7 +635,7 @@ public class SealAction extends BaseAction {
      * @return
      * @throws HttpException
      */
-    public BaseResponse postMsztCreateOrder(MsztCreateOrderRequest orderRequest)
+    public GetMsztOrderResponse postMsztCreateOrder(MsztCreateOrderRequest orderRequest)
             throws HttpException {
 
         String url = getURL("user/mszt_create_order");
@@ -647,21 +648,49 @@ public class SealAction extends BaseAction {
             e.printStackTrace();
         }
         String result = httpManager.post(mContext, url, entity, CONTENT_TYPE);
-        BaseResponse response = null;
+        GetMsztOrderResponse response = null;
         if (!TextUtils.isEmpty(result)) {
-            NLog.e("BaseResponse", result);
-            response = JsonMananger.jsonToBean(result, BaseResponse.class);
+            NLog.e("GetMsztOrderResponse", result);
+            response = JsonMananger.jsonToBean(result, GetMsztOrderResponse.class);
         }
         return response;
     }
 
     /**
-     * 获取马上租Ta订单，自己是租方或者被租方都会获取到，客户端这边获取到之后再通过uid对比判断自己是租方还是被租方，做相应的处理
+     * 获取马上租Ta订单详情，下单成功后，服务端会生成一个订单，并返回一个订单号
      *
      * @return
      * @throws HttpException
      */
-    public GetMsztOrderResponse postMsztGetOrder()
+    public GetMsztOrderResponse postMsztGetOrderDetail(String MsztOrderId)
+            throws HttpException {
+
+        String url = getURL("user/mszt_get_order_detail");
+//        String json = JsonMananger.beanToJson(new MsztGetOrderDetailRequest(MsztOrderId));
+        String json = JsonMananger.beanToJson(new MsztPayRequest(4564646));
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(json, ENCODING);
+            entity.setContentType(CONTENT_TYPE);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String result = httpManager.post(mContext, url, entity, CONTENT_TYPE);
+        GetMsztOrderResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            NLog.e("GetMsztOrderResponse", result);
+            response = JsonMananger.jsonToBean(result, GetMsztOrderResponse.class);
+        }
+        return response;
+    }
+
+    /**
+     * 获取马上租Ta用户所有订单，自己是租方或者被租方都会获取到，客户端这边获取到之后再通过uid对比判断自己是租方还是被租方，做相应的处理
+     *
+     * @return
+     * @throws HttpException
+     */
+    public GetMsztOrderResponse postMsztGetOrders()
             throws HttpException {
 
         String url = getURL("user/mszt_get_order");

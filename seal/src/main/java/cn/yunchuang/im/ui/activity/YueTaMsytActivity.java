@@ -36,6 +36,7 @@ import cn.yunchuang.im.location.PoiKeywordSearchActivity;
 import cn.yunchuang.im.server.network.http.HttpException;
 import cn.yunchuang.im.server.request.MsztCreateOrderRequest;
 import cn.yunchuang.im.server.response.BaseResponse;
+import cn.yunchuang.im.server.response.GetMsztOrderResponse;
 import cn.yunchuang.im.server.response.GetUserDetailModelOne;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
 import cn.yunchuang.im.server.response.SkillModel;
@@ -615,13 +616,15 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
                     }
                     break;
                 case MSZT_CREATE_ORDER:
-                    BaseResponse baseResponse2 = (BaseResponse) result;
-                    if (baseResponse2.getCode() == 200) {
+                    GetMsztOrderResponse msztOrderResponse = (GetMsztOrderResponse) result;
+                    if (msztOrderResponse.getCode() == 200 && msztOrderResponse.getResult() != null
+                            && !TextUtils.isEmpty(msztOrderResponse.getResult().getMsztOrderId())) {
                         NToast.shortToast(mContext, "下单成功");
                         Intent intent = new Intent(mContext, WodeXuqiuXqActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putString("userId", userId);
                         bundle.putSerializable("skillModel", seletSkillModel);
+                        bundle.putString("msztOrderId", msztOrderResponse.getResult().getMsztOrderId());
                         intent.putExtras(bundle);
                         startActivity(intent);
                     } else {

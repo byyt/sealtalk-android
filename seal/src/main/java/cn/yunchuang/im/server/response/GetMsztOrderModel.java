@@ -1,7 +1,7 @@
 package cn.yunchuang.im.server.response;
 
 public class GetMsztOrderModel {
-    private String MsztOrderId;
+    private String msztOrderId;
     private String payUserIdStr;
     private String receiveUserIdStr;
     private int status;
@@ -14,13 +14,20 @@ public class GetMsztOrderModel {
     private double advancePayment;
     private double totalPayment;
     private int zffs;
+    private long yfkTs;
+    private long jsTs;
+    private long qrTs;
+    private long zzTs;
+    private long wjstkTs;
+    private long wfqktkTs;
+    private long jftkTs;
 
     public String getMsztOrderId() {
-        return MsztOrderId;
+        return msztOrderId;
     }
 
     public void setMsztOrderId(String msztOrderId) {
-        MsztOrderId = msztOrderId;
+        this.msztOrderId = msztOrderId;
     }
 
     public String getPayUserIdStr() {
@@ -117,5 +124,61 @@ public class GetMsztOrderModel {
 
     public void setZffs(int zffs) {
         this.zffs = zffs;
+    }
+
+    public long getYfkTs() {
+        return yfkTs;
+    }
+
+    public void setYfkTs(long yfkTs) {
+        this.yfkTs = yfkTs;
+    }
+
+    public long getJsTs() {
+        return jsTs;
+    }
+
+    public void setJsTs(long jsTs) {
+        this.jsTs = jsTs;
+    }
+
+    public long getQrTs() {
+        return qrTs;
+    }
+
+    public void setQrTs(long qrTs) {
+        this.qrTs = qrTs;
+    }
+
+    public long getZzTs() {
+        return zzTs;
+    }
+
+    public void setZzTs(long zzTs) {
+        this.zzTs = zzTs;
+    }
+
+    public long getWjstkTs() {
+        return wjstkTs;
+    }
+
+    public void setWjstkTs(long wjstkTs) {
+        this.wjstkTs = wjstkTs;
+    }
+
+    public long getWfqktkTs() {
+        return wfqktkTs;
+    }
+
+    public void setWfqktkTs(long wfqktkTs) {
+        this.wfqktkTs = wfqktkTs;
+    }
+
+    public long getJftkTs() {
+        return jftkTs;
+    }
+
+    public void setJftkTs(long jftkTs) {
+        this.jftkTs = jftkTs;
     }
 }

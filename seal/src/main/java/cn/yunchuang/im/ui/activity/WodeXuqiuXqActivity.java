@@ -67,9 +67,10 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
     private static final int GET_MSZT_ORDER = 1602;
 
     private PromptDialog loadingDialog;
-    private String userId = "";
 
+    private String userId = "";
     private SkillModel seletSkillModel;
+    private String msztOrderId;
 
     private int screenWidth;
 
@@ -86,6 +87,7 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
         if (getIntent() != null && getIntent().getExtras() != null) {
             userId = getIntent().getExtras().getString("userId");
             seletSkillModel = (SkillModel) getIntent().getExtras().getSerializable("skillModel");
+            msztOrderId = getIntent().getExtras().getString("msztOrderId");
         }
 
         titleLayout = (FrameLayout) findViewById(R.id.activity_xmxz_title_layout);
@@ -292,7 +294,7 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
             case GET_USER_DETAIL_ONE:
                 return action.getUserDetailOne(userId);
             case GET_MSZT_ORDER:
-                return action.postMsztGetOrder();
+                return action.postMsztGetOrderDetail("asdfasdfasdfasdf");
         }
         return null;
     }
