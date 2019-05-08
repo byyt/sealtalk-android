@@ -7,17 +7,17 @@ package cn.yunchuang.im.server.request;
  */
 public class MsztGetOrderDetailRequest {
 
-    private String msztOrderId;
+    private String msztOrderNum; //这里传的是订单号，如果命名为msztOrderId，带了Id字样后段会进行解密，我也不知道为什么，所以这个字段取这个名字
 
-    public MsztGetOrderDetailRequest(String msztOrderId) {
-        this.msztOrderId = msztOrderId;
+    public MsztGetOrderDetailRequest(String msztOrderNum) {
+        this.msztOrderNum = msztOrderNum;
     }
 
-    public String getMsztOrderId() {
-        return msztOrderId;
+    public String getMsztOrderNum() {
+        return msztOrderNum;
     }
 
-    public void setMsztOrderId(String msztOrderId) {
-        this.msztOrderId = msztOrderId;
+    public void setMsztOrderNum(String msztOrderNum) {
+        this.msztOrderNum = msztOrderNum;
     }
 }

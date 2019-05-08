@@ -4,11 +4,14 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSONObject;
+
 import org.apache.http.entity.StringEntity;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import cn.yunchuang.im.SealConst;
 import cn.yunchuang.im.model.ShaixuanModel;
 import cn.yunchuang.im.server.network.http.HttpException;
 import cn.yunchuang.im.server.request.AddGroupMemberRequest;
@@ -666,8 +669,7 @@ public class SealAction extends BaseAction {
             throws HttpException {
 
         String url = getURL("user/mszt_get_order_detail");
-//        String json = JsonMananger.beanToJson(new MsztGetOrderDetailRequest(MsztOrderId));
-        String json = JsonMananger.beanToJson(new MsztPayRequest(4564646));
+        String json = JsonMananger.beanToJson(new MsztGetOrderDetailRequest(MsztOrderId));
         StringEntity entity = null;
         try {
             entity = new StringEntity(json, ENCODING);

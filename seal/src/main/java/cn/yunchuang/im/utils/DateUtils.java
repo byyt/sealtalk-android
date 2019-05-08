@@ -50,8 +50,8 @@ public class DateUtils {
                 .format(new Date(timestamp * 1000)));
     }
 
-    public static String getBirthDay(long timestamp) {
-        return String.valueOf(new SimpleDateFormat("HH:mm:ss", Locale.CHINA)
+    public static String getYMDHM(long timestamp) {
+        return String.valueOf(new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA)
                 .format(new Date(timestamp * 1000)));
     }
 

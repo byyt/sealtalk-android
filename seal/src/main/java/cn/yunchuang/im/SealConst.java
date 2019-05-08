@@ -48,4 +48,27 @@ public class SealConst {
     public static final int MSZT_ORDER_STATUS_WFQKTK = 6; // 已退钱回给租方（被租方接受了，租方未付全款，扣除一定费用后退回给租方）
     public static final int MSZT_ORDER_STATUS_JFTK = 7; // 已退钱回给租方（点击确认后，租方和被租方后期发生纠纷，根据情况退钱回给被租方或被租方）
 
+    //马上租Ta，订单各种状态下的文字
+    public static final String MSZT_ORDER_STRING_DFYFK = "待付预付款";
+    public static final String MSZT_ORDER_STRING_YFYFK = "已付预付款";
+    public static final String MSZT_ORDER_STRING_WFYFK = "未付预付款";
+    public static final String MSZT_ORDER_STRING_DJS = "待接受";
+    public static final String MSZT_ORDER_STRING_YJS = "已接受";
+    public static final String MSZT_ORDER_STRING_WJS = "未接受";
+    public static final String MSZT_ORDER_STRING_DFQK = "待付全款";
+    public static final String MSZT_ORDER_STRING_YFQK = "已付全款";
+    public static final String MSZT_ORDER_STRING_WFQK = "未付全款";
+    public static final String MSZT_ORDER_STRING_DQR = "待确认";
+    public static final String MSZT_ORDER_STRING_YQR = "已确认";
+    public static final String MSZT_ORDER_STRING_WQR = "未确认";
+    public static final String MSZT_ORDER_STRING_DPJ = "待评价";
+    public static final String MSZT_ORDER_STRING_YPJ = "已评价";
+    public static final String MSZT_ORDER_STRING_WPJ = "未评价";
+    public static final String MSZT_ORDER_STRING_WC = "完成";
+    //按钮文字
+    public static final String MSZT_ORDER_STRING_QFYFK = "去付预付款";
+    public static final String MSZT_ORDER_STRING_JS = "接受";
+    public static final String MSZT_ORDER_STRING_QFQK = "去付全款";
+    public static final String MSZT_ORDER_STRING_QR = "确认";
+    public static final String MSZT_ORDER_STRING_QPJ = "去评价";
 }
