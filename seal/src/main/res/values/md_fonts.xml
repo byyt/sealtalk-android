@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- MD 标准字体style -->
+    <style name="TextView.Regular.24" parent="TextAppearance.AppCompat.Headline" />
+
+    <style name="TextView.Bold.48" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">48sp</item>
+    </style>
+
+    <style name="TextView.Bold.36" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
+    <style name="TextView.Bold.32" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">32sp</item>
+    </style>
+
+    <style name="TextView.Bold.24" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextView.Bold.25" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">25sp</item>
+    </style>
+
+    <style name="TextView.Bold.22" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="TextView.Bold.20" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TextView.Bold.18" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextView.Bold.17" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="TextView.Bold.16" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextView.Bold.15" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="TextView.Bold.14" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextView.Bold.12" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="TextView.Bold.8" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">8sp</item>
+    </style>
+
+    <style name="TextView.Bold.10" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="TextView.Medium.20" parent="TextAppearance.AppCompat.Title" />
+
+    <style name="TextView.Regular.22" parent="TextAppearance.AppCompat.Subhead">
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="TextView.Regular.16" parent="TextAppearance.AppCompat.Body1" />
+
+    <style name="TextView.Regular.15" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="TextView.Medium.15" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="TextView.Medium.16" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextView.Medium.24" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="TextView.Medium.18" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextView.Medium.17" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="TextView.Medium.14" parent="TextAppearance.AppCompat.Body2" />
+
+    <style name="TextView.Medium.12" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="TextView.Medium.11" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <style name="TextView.Medium.10" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="TextView.Medium.9" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="TextView.Regular.20" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TextView.Regular.18" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextView.Regular.14" parent="TextAppearance.AppCompat.Body1" />
+
+    <style name="TextView.Regular.12" parent="TextAppearance.AppCompat.Caption" />
+
+    <style name="TextView.Regular.11" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <style name="TextView.Regular.10" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="TextView.Regular.9" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">9sp</item>
+    </style>
+
+    <style name="TextView.Medium.30" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="TextView.Medium.34" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textSize">34sp</item>
+    </style>
+
+    <style name="TextView.Medium.36" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textSize">36sp</item>
+    </style>
+
+    <style name="TextView.Condensed.8" parent="TextView.Medium.12">
+        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-condensed</item>
+        <item name="android:textSize">8sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextView.Condensed.9" parent="TextView.Medium.12">
+        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-condensed</item>
+        <item name="android:textSize">9sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
+    <style name="TextView.Condensed.24" parent="TextView.Medium.12">
+        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-condensed</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextView.Condensed.16" parent="TextView.Medium.12">
+        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-condensed</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextView.Condensed.14" parent="TextView.Medium.12">
+        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-condensed</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
+    <!--<style name="TextView.MEDIUM.14" parent="TextAppearance.AppCompat.Button">-->
+    <!--<item name="android:includeFontPadding">false</item>-->
+    <!--</style>-->
+
+    <!--android:cursorVisible设定光标为显示/隐藏，默认显示。-->
+    <!--android:drawableTop/drawableBottom/drawableLeft/drawableRight在text的上下左右方输出一个drawable-->
+    <!--android:drawablePadding设置text与drawable(图片)的间隔，与drawableLeft、 drawableRight、drawableTop、drawableBottom一起使用，可设置为负数，单独使用没有效果。-->
+    <!--android:editable设置是否可编辑。-->
+    <!--android:editorExtras设置文本的额外的输入数据。-->
+    <!--android:ellipsize设置当文字过长时,该控件该如何显示。-->
+    <!--android:freezesText设置保存文本的内容以及光标的位置。-->
+    <!--android:includeFontPadding设置文本是否包含顶部和底部额外空白，默认为true。-->
+    <!--android:linksClickable设置链接是否点击连接，即设置了autoLink。-->
+    <!--android:marqueeRepeatLimit在ellipsize指定marquee的情况下，设置重复滚动的次数，当设置为 marquee_forever时表示无限次。-->
+    <!--android:lineSpacingExtra设置行间距。-->
+    <!--android:lineSpacingMultiplier设置行间距的倍数。如”1.2”-->
+    <!--android:textStyle设置字形[bold(粗体) 0, italic(斜体) 1, bolditalic(又粗又斜) 2] 可以设置一个或多个，用“|”隔开-->
+    <!--android:typeface设置文本字体，必须是以下常量值之一：normal 0, sans 1, serif 2, monospace(等宽字体) 3]-->
+    <!-- MD 标准字体style -->
+
+</resources>

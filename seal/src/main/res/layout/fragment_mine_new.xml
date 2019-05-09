@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/fragment_mine_new_root_scrollview"
@@ -73,9 +73,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/text_px30"
                             android:layout_marginStart="@dimen/text_px30"
-                            tools:text="小明同学"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_px30" />
+                            android:textSize="@dimen/text_px30"
+                            tools:text="小明同学" />
 
                         <TextView
                             android:id="@+id/fragment_mine_num_tv"
@@ -146,6 +146,7 @@
                 android:id="@+id/fragment_mine_xuqiu_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/px110"
+                android:background="@drawable/bg_common_while_press_e4e4e4"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingEnd="@dimen/px30"

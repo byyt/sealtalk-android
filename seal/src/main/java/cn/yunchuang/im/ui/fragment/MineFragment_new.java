@@ -31,6 +31,7 @@ import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.ui.activity.MyBaseInfoActivity_new;
 import cn.yunchuang.im.ui.activity.UserDetailActivity_New;
+import cn.yunchuang.im.ui.activity.WodeYuehuiLbActivity;
 import cn.yunchuang.im.utils.GlideUtils;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
 import cn.yunchuang.im.zmico.utils.DeviceUtils;
@@ -210,6 +211,13 @@ public class MineFragment_new extends BaseFragment implements View.OnClickListen
             case R.id.fragment_mine_avatar_name_layout:
                 if (getActivity() != null) {
                     Intent intentUD = new Intent(getActivity(), UserDetailActivity_New.class);
+                    intentUD.putExtra("userId", MeService.getUid());
+                    getActivity().startActivity(intentUD);
+                }
+                break;
+            case R.id.fragment_mine_xuqiu_layout:
+                if (getActivity() != null) {
+                    Intent intentUD = new Intent(getActivity(), WodeYuehuiLbActivity.class);
                     intentUD.putExtra("userId", MeService.getUid());
                     getActivity().startActivity(intentUD);
                 }

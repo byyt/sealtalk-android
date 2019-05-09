@@ -183,6 +183,11 @@
             android:name="cn.yunchuang.im.ui.activity.WodeXuqiuXqActivity"
             android:screenOrientation="portrait" />
 
+        <!-- 我的约会，列表 -->
+        <activity
+            android:name="cn.yunchuang.im.ui.activity.WodeYuehuiLbActivity"
+            android:screenOrientation="portrait" />
+
         <!--新消息提醒-->
         <activity
             android:name="cn.yunchuang.im.ui.activity.NewMessageRemindActivity"

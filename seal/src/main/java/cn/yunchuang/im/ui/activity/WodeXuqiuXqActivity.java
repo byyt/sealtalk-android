@@ -106,10 +106,10 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
             msztOrderId = getIntent().getExtras().getString("msztOrderId");
         }
 
-        titleLayout = (FrameLayout) findViewById(R.id.activity_xmxz_title_layout);
-        backImg = (ImageView) findViewById(R.id.activity_xmxz_back);
+        titleLayout = (FrameLayout) findViewById(R.id.activity_wdxq_xq_title_layout);
+        backImg = (ImageView) findViewById(R.id.activity_wdxq_xq_back);
         backImg.setOnClickListener(this);
-        kefuTv = (TextView) findViewById(R.id.activity_xmxz_next);
+        kefuTv = (TextView) findViewById(R.id.activity_wdxq_xq_kefu);
         kefuTv.setOnClickListener(this);
 
         zhuangtaiTv = (TextView) findViewById(R.id.activity_wdxq_xq_zhuangtai_tv);
@@ -190,10 +190,10 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
             return;
         }
         switch (v.getId()) {
-            case R.id.activity_xmxz_back:
+            case R.id.activity_wdxq_xq_back:
                 finish();
                 break;
-            case R.id.activity_xmxz_next:
+            case R.id.activity_wdxq_xq_kefu:
                 Intent intent = new Intent(mContext, YueTaMsytActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("userId", userId);
