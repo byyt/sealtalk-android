@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_F4F4F4"
+    android:background="@color/color_F6F5F4"
     android:orientation="vertical">
 
     <!-- 高度动态计算，状态栏高度+48dp -->
@@ -35,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="想约的项目"
+                android:text="我的约会"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_px36" />
 
@@ -50,9 +50,10 @@
                 android:paddingRight="@dimen/px30"
                 android:paddingStart="@dimen/px30"
                 android:paddingTop="@dimen/px15"
-                android:text="下一步"
+                android:text="筛选"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_px32" />
+                android:textSize="@dimen/text_px32"
+                android:visibility="gone" />
 
         </FrameLayout>
 
@@ -70,7 +71,7 @@
         app:micoTabIndicatorStyleRounded="true"
         app:micoTabIndicatorWidth="@dimen/px104"
         app:micoTabSelectedTextColor="@color/color_FF6261"
-        app:micoTabTextAppearance="@style/TextView.Bold.16"
+        app:micoTabTextAppearance="@style/TextView.Medium.16"
         app:micoTabTextColor="@color/color_3C3B3B" />
 
     <android.support.v4.view.ViewPager

@@ -38,6 +38,11 @@ public class SealConst {
     public static final int ZFFS_QB = 0;  //钱包
     public static final int ZFFS_WX = 1;  //微信
 
+    //我的约会，订单类型
+    public static final int WDYH_ORDER_TYPE_MSZT = 0;//马上租Ta
+    public static final int WDYH_ORDER_TYPE_FBBM = 0;//发布报名
+
+
     //马上租Ta，订单当前所处的状态
     public static final int MSZT_ORDER_STATUS_WFYFK = 0; // 未付预付款
     public static final int MSZT_ORDER_STATUS_YFYFK = 1; // 已付预付款待被租方接受
@@ -65,6 +70,7 @@ public class SealConst {
     public static final String MSZT_ORDER_STRING_YPJ = "已评价";
     public static final String MSZT_ORDER_STRING_WPJ = "未评价";
     public static final String MSZT_ORDER_STRING_WC = "完成";
+    public static final String MSZT_ORDER_STRING_YiJieShu = "已结束";
     //按钮文字
     public static final String MSZT_ORDER_STRING_QFYFK = "去付预付款";
     public static final String MSZT_ORDER_STRING_JS = "接受";

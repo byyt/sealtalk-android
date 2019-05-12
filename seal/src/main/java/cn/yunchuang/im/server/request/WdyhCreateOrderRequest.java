@@ -5,8 +5,9 @@ package cn.yunchuang.im.server.request;
  * Created by AMing on 15/12/24.
  * Company RongCloud
  */
-public class MsztCreateOrderRequest {
+public class WdyhCreateOrderRequest {
 
+    private int orderType;
     private String receiveUserId;
     private int status;
     private String yyxm;
@@ -25,6 +26,14 @@ public class MsztCreateOrderRequest {
     private long wjstkTs;
     private long wfqktkTs;
     private long jftkTs;
+
+    public int getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(int orderType) {
+        this.orderType = orderType;
+    }
 
     public String getReceiveUserId() {
         return receiveUserId;

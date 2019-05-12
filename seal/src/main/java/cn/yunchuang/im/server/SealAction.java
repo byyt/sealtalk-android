@@ -4,15 +4,13 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.alibaba.fastjson.JSONObject;
-
 import org.apache.http.entity.StringEntity;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import cn.yunchuang.im.SealConst;
 import cn.yunchuang.im.model.ShaixuanModel;
+import cn.yunchuang.im.model.ShaixuanOrderModel;
 import cn.yunchuang.im.server.network.http.HttpException;
 import cn.yunchuang.im.server.request.AddGroupMemberRequest;
 import cn.yunchuang.im.server.request.AddToBlackListRequest;
@@ -27,8 +25,9 @@ import cn.yunchuang.im.server.request.DismissGroupRequest;
 import cn.yunchuang.im.server.request.FriendInvitationRequest;
 import cn.yunchuang.im.server.request.JoinGroupRequest;
 import cn.yunchuang.im.server.request.LoginRequest;
-import cn.yunchuang.im.server.request.MsztCreateOrderRequest;
-import cn.yunchuang.im.server.request.MsztGetOrderDetailRequest;
+import cn.yunchuang.im.server.request.WdyhCreateOrderRequest;
+import cn.yunchuang.im.server.request.WdyhGetOrderDetailRequest;
+import cn.yunchuang.im.server.request.WdyhGetOrderLbRequest;
 import cn.yunchuang.im.server.request.MsztPayRequest;
 import cn.yunchuang.im.server.request.PayImgRequest;
 import cn.yunchuang.im.server.request.PayWeChatRequest;
@@ -64,7 +63,8 @@ import cn.yunchuang.im.server.response.GetFriendInfoByIDResponse;
 import cn.yunchuang.im.server.response.GetGroupInfoResponse;
 import cn.yunchuang.im.server.response.GetGroupMemberResponse;
 import cn.yunchuang.im.server.response.GetGroupResponse;
-import cn.yunchuang.im.server.response.GetMsztOrderResponse;
+import cn.yunchuang.im.server.response.GetWdyhOrderDetailResponse;
+import cn.yunchuang.im.server.response.GetWdyhOrderLbResponse;
 import cn.yunchuang.im.server.response.GetTokenResponse;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
 import cn.yunchuang.im.server.response.GetUserDetailTwoResponse;
@@ -605,15 +605,15 @@ public class SealAction extends BaseAction {
      * 马上租Ta，付费接口（应该是微信支付成功后再调用这个接口），这个接口调用成功后，再调用马上租Ta，下单接口
      * 很可能是先下单，成功后返回个订单号再付费，后期再改吧
      *
-     * @param msztOrderId
+     * @param wdyhOrderId
      * @return
      * @throws HttpException
      */
-    public BaseResponse postMsztPay(long msztOrderId)
+    public BaseResponse postMsztPay(long wdyhOrderId)
             throws HttpException {
 
-        String url = getURL("user/mszt_pay");
-        String json = JsonMananger.beanToJson(new MsztPayRequest(msztOrderId));
+        String url = getURL("user/wdyh_pay");
+        String json = JsonMananger.beanToJson(new MsztPayRequest(wdyhOrderId));
         StringEntity entity = null;
         try {
             entity = new StringEntity(json, ENCODING);
@@ -638,10 +638,10 @@ public class SealAction extends BaseAction {
      * @return
      * @throws HttpException
      */
-    public GetMsztOrderResponse postMsztCreateOrder(MsztCreateOrderRequest orderRequest)
+    public GetWdyhOrderDetailResponse postWdyhCreateOrder(WdyhCreateOrderRequest orderRequest)
             throws HttpException {
 
-        String url = getURL("user/mszt_create_order");
+        String url = getURL("user/wdyh_create_order");
         String json = JsonMananger.beanToJson(orderRequest);
         StringEntity entity = null;
         try {
@@ -651,10 +651,10 @@ public class SealAction extends BaseAction {
             e.printStackTrace();
         }
         String result = httpManager.post(mContext, url, entity, CONTENT_TYPE);
-        GetMsztOrderResponse response = null;
+        GetWdyhOrderDetailResponse response = null;
         if (!TextUtils.isEmpty(result)) {
-            NLog.e("GetMsztOrderResponse", result);
-            response = JsonMananger.jsonToBean(result, GetMsztOrderResponse.class);
+            NLog.e("GetWdyhOrderDetailResponse", result);
+            response = JsonMananger.jsonToBean(result, GetWdyhOrderDetailResponse.class);
         }
         return response;
     }
@@ -665,11 +665,11 @@ public class SealAction extends BaseAction {
      * @return
      * @throws HttpException
      */
-    public GetMsztOrderResponse postMsztGetOrderDetail(String MsztOrderId)
+    public GetWdyhOrderDetailResponse postWdyhGetOrderDetail(String wdyhOrderId)
             throws HttpException {
 
-        String url = getURL("user/mszt_get_order_detail");
-        String json = JsonMananger.beanToJson(new MsztGetOrderDetailRequest(MsztOrderId));
+        String url = getURL("user/wdyh_get_order_detail");
+        String json = JsonMananger.beanToJson(new WdyhGetOrderDetailRequest(wdyhOrderId));
         StringEntity entity = null;
         try {
             entity = new StringEntity(json, ENCODING);
@@ -678,10 +678,10 @@ public class SealAction extends BaseAction {
             e.printStackTrace();
         }
         String result = httpManager.post(mContext, url, entity, CONTENT_TYPE);
-        GetMsztOrderResponse response = null;
+        GetWdyhOrderDetailResponse response = null;
         if (!TextUtils.isEmpty(result)) {
-            NLog.e("GetMsztOrderResponse", result);
-            response = JsonMananger.jsonToBean(result, GetMsztOrderResponse.class);
+            NLog.e("GetWdyhOrderDetailResponse", result);
+            response = JsonMananger.jsonToBean(result, GetWdyhOrderDetailResponse.class);
         }
         return response;
     }
@@ -692,10 +692,10 @@ public class SealAction extends BaseAction {
      * @return
      * @throws HttpException
      */
-    public GetMsztOrderResponse postMsztGetOrders()
+    public GetWdyhOrderDetailResponse postMsztGetOrders()
             throws HttpException {
 
-        String url = getURL("user/mszt_get_order");
+        String url = getURL("user/wdyh_get_order");
         String json = JsonMananger.beanToJson(new Object());
         StringEntity entity = null;
         try {
@@ -705,12 +705,65 @@ public class SealAction extends BaseAction {
             e.printStackTrace();
         }
         String result = httpManager.post(mContext, url, entity, CONTENT_TYPE);
-        GetMsztOrderResponse response = null;
+        GetWdyhOrderDetailResponse response = null;
         if (!TextUtils.isEmpty(result)) {
-            NLog.e("GetMsztOrderResponse", result);
-            response = JsonMananger.jsonToBean(result, GetMsztOrderResponse.class);
+            NLog.e("GetWdyhOrderDetailResponse", result);
+            response = JsonMananger.jsonToBean(result, GetWdyhOrderDetailResponse.class);
         }
         return response;
+    }
+
+    /**
+     * 我的约会--订单列表，分页拉取数据
+     * 获取马上租Ta用户所有订单，自己是租方或者被租方都会获取到，客户端这边获取到之后再通过uid对比判断自己是租方还是被租方，做相应的处理
+     * <p>
+     * 正确的是获取到所有订单，包括我约Ta，Ta约我，我发布的，我报名的，当然需要考虑
+     *
+     * @throws HttpException
+     */
+    public GetWdyhOrderLbResponse postWdyhLbList(int startIndex, int pageSize, ShaixuanOrderModel model) throws HttpException {
+//        String url = getURL("user/wdyh_msfb_get_orders");
+//        String newUrl = url + "startIndex=" + startIndex + "&pageSize=" + pageSize;
+//        if (model != null) {
+//            //设置过了性别筛选
+//            if (model.getXbSelected() != 2) {
+//                newUrl += "&xbSelected=" + model.getXbSelected();
+//            }
+//            //设置过了年龄筛选
+//            if (model.getFromAge() != 18 || model.getToAge() != 50) {
+//                newUrl += "&fromAge=" + model.getFromAge() + "&toAge=" + model.getToAge();
+//            }
+//            //设置过了身高
+//            if (model.getFromHeight() != 140 || model.getToHeight() != 200) {
+//                newUrl += "&fromHeight=" + model.getFromHeight() + "&toHeight=" + model.getToHeight();
+//            }
+//        }
+//        String result = httpManager.get(mContext, newUrl);
+//        String result = httpManager.get(mContext, url);
+//        GetWdyhOrderLbResponse response = null;
+//        if (!TextUtils.isEmpty(result)) {
+//            response = jsonToBean(result, GetWdyhOrderLbResponse.class);
+//        }
+//        return response;
+
+
+        String url = getURL("user/wdyh_get_orders");
+        String json = JsonMananger.beanToJson(new WdyhGetOrderLbRequest(startIndex, pageSize));
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(json, ENCODING);
+            entity.setContentType(CONTENT_TYPE);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String result = httpManager.post(mContext, url, entity, CONTENT_TYPE);
+        GetWdyhOrderLbResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            NLog.e("GetWdyhOrderLbResponse", result);
+            response = JsonMananger.jsonToBean(result, GetWdyhOrderLbResponse.class);
+        }
+        return response;
+
     }
 
     /**

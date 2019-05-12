@@ -34,11 +34,11 @@ import cn.yunchuang.im.SealConst;
 import cn.yunchuang.im.event.SaveDdxzEvent;
 import cn.yunchuang.im.location.PoiKeywordSearchActivity;
 import cn.yunchuang.im.server.network.http.HttpException;
-import cn.yunchuang.im.server.request.MsztCreateOrderRequest;
+import cn.yunchuang.im.server.request.WdyhCreateOrderRequest;
 import cn.yunchuang.im.server.response.BaseResponse;
-import cn.yunchuang.im.server.response.GetMsztOrderResponse;
 import cn.yunchuang.im.server.response.GetUserDetailModelOne;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
+import cn.yunchuang.im.server.response.GetWdyhOrderDetailResponse;
 import cn.yunchuang.im.server.response.SkillModel;
 import cn.yunchuang.im.server.utils.CommonUtils;
 import cn.yunchuang.im.server.utils.NToast;
@@ -119,7 +119,7 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
 
     private int currentZffs = ZFFS_QB;//当前支付方式
 
-    private MsztCreateOrderRequest orderRequest = new MsztCreateOrderRequest();
+    private WdyhCreateOrderRequest orderRequest = new WdyhCreateOrderRequest();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -313,6 +313,7 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void startCreateOrder() {
+        orderRequest.setOrderType(SealConst.WDYH_ORDER_TYPE_MSZT);
         orderRequest.setReceiveUserId(userId);
         orderRequest.setStatus(SealConst.MSZT_ORDER_STATUS_YFYFK);
         orderRequest.setYyxm(JSONObject.toJSONString(seletSkillModel));
@@ -589,7 +590,7 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
             case MSZT_PAY:
                 return action.postMsztPay(123);//订单id先随便填一个，后期再看是先支付再下单还是先下单得到订单号再支付
             case MSZT_CREATE_ORDER:
-                return action.postMsztCreateOrder(orderRequest);//下单
+                return action.postWdyhCreateOrder(orderRequest);//下单
         }
         return null;
     }
@@ -616,15 +617,15 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
                     }
                     break;
                 case MSZT_CREATE_ORDER:
-                    GetMsztOrderResponse msztOrderResponse = (GetMsztOrderResponse) result;
+                    GetWdyhOrderDetailResponse msztOrderResponse = (GetWdyhOrderDetailResponse) result;
                     if (msztOrderResponse.getCode() == 200 && msztOrderResponse.getResult() != null
-                            && !TextUtils.isEmpty(msztOrderResponse.getResult().getMsztOrderId())) {
+                            && !TextUtils.isEmpty(msztOrderResponse.getResult().getWdyhOrderId())) {
                         NToast.shortToast(mContext, "下单成功");
-                        Intent intent = new Intent(mContext, WodeXuqiuXqActivity.class);
+                        Intent intent = new Intent(mContext, WdyhXqActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putString("userId", userId);
                         bundle.putSerializable("skillModel", seletSkillModel);
-                        bundle.putString("msztOrderId", msztOrderResponse.getResult().getMsztOrderId());
+                        bundle.putString("msztOrderId", msztOrderResponse.getResult().getWdyhOrderId());
                         intent.putExtras(bundle);
                         startActivity(intent);
                     } else {

@@ -20,10 +20,10 @@ import cn.yunchuang.im.MeService;
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.SealConst;
 import cn.yunchuang.im.server.network.http.HttpException;
-import cn.yunchuang.im.server.response.GetMsztOrderModel;
-import cn.yunchuang.im.server.response.GetMsztOrderResponse;
 import cn.yunchuang.im.server.response.GetUserDetailModelOne;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
+import cn.yunchuang.im.server.response.GetWdyhOrderDetailModel;
+import cn.yunchuang.im.server.response.GetWdyhOrderDetailResponse;
 import cn.yunchuang.im.server.response.SkillModel;
 import cn.yunchuang.im.server.utils.CommonUtils;
 import cn.yunchuang.im.server.utils.NToast;
@@ -40,7 +40,7 @@ import cn.yunchuang.im.zmico.utils.Utils;
 import me.leefeng.promptlibrary.PromptDialog;
 
 
-public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickListener {
+public class WdyhXqActivity extends BaseActivity implements View.OnClickListener {
 
     private FrameLayout titleLayout;
     private ImageView backImg;
@@ -72,21 +72,21 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
     private TextView ztTv;
     private TextView zjTv;
     private TextView yfkTv;
+    private TextView yylxTv;
     private TextView yysjTv;
     private TextView yyscTv;
     private TextView yyddTv;
 
 
     private static final int GET_USER_DETAIL_ONE = 1601;
-    private static final int GET_MSZT_ORDER = 1602;
+    private static final int GET_MSZT_ORDER_DETAIL = 1602;
 
     private PromptDialog loadingDialog;
 
     private String userId = "";
-    private SkillModel seletSkillModel;
     private String msztOrderId;
 
-    private GetMsztOrderModel msztOrderModel = new GetMsztOrderModel();
+    private GetWdyhOrderDetailModel msztOrderModel = new GetWdyhOrderDetailModel();
 
     private int screenWidth;
 
@@ -102,7 +102,6 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
     private void initView() {
         if (getIntent() != null && getIntent().getExtras() != null) {
             userId = getIntent().getExtras().getString("userId");
-            seletSkillModel = (SkillModel) getIntent().getExtras().getSerializable("skillModel");
             msztOrderId = getIntent().getExtras().getString("msztOrderId");
         }
 
@@ -121,6 +120,7 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
         ztTv = (TextView) findViewById(R.id.activity_wdxq_xq_zt_tv);
         zjTv = (TextView) findViewById(R.id.activity_wdxq_xq_zj_tv);
         yfkTv = (TextView) findViewById(R.id.activity_wdxq_xq_yfk_tv);
+        yylxTv = (TextView) findViewById(R.id.activity_wdxq_xq_yylx_tv);
         yysjTv = (TextView) findViewById(R.id.activity_wdxq_xq_yysj_tv);
         yyscTv = (TextView) findViewById(R.id.activity_wdxq_xq_yysc_tv);
         yyddTv = (TextView) findViewById(R.id.activity_wdxq_xq_yydd_tv);
@@ -173,8 +173,8 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
 
     private void getData() {
         DialogUtils.showLoading(loadingDialog);
-        request(GET_USER_DETAIL_ONE);
-        request(GET_MSZT_ORDER);
+//        request(GET_USER_DETAIL_ONE);//个人信息从查询订单详情表时，通过连表查询返回来了，这个请求用不到来
+        request(GET_MSZT_ORDER_DETAIL);
     }
 
 
@@ -197,7 +197,6 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
                 Intent intent = new Intent(mContext, YueTaMsytActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("userId", userId);
-                bundle.putSerializable("skillModel", seletSkillModel);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 break;
@@ -205,6 +204,7 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
     }
 
 
+    //个人信息直接从查询订单表时，通过外键连表查询，返回来了，这个函数用不到来
     private void updateDataOne(GetUserDetailOneResponse getUserDetailOneResponse) {
         if (getUserDetailOneResponse == null) {
             return;
@@ -219,18 +219,35 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
         nameTv.setText(modelOne.getNickname());
         ageSexView.setVisibility(View.VISIBLE);
         ageSexView.setAgeAndSex(modelOne.getAge(), modelOne.getSex());
-        setJindu(5);
 
     }
 
-    private void updateMsztOrderDetail(GetMsztOrderResponse getMsztOrderResponse) {
-        if (getMsztOrderResponse == null) {
+    private void updateMsztOrderDetail(GetWdyhOrderDetailResponse getWdyhOrderDetailResponse) {
+        if (getWdyhOrderDetailResponse == null) {
             return;
         }
-        GetMsztOrderModel model = getMsztOrderResponse.getResult();
+        GetWdyhOrderDetailModel model = getWdyhOrderDetailResponse.getResult();
         if (model == null) {
             return;
         }
+
+        final boolean isPayUser = MeService.getUid().equals(model.getPayUserIdStr());
+        boolean isReceiveUser = MeService.getUid().equals(model.getReceiveUserIdStr());
+        //正常情况下，后端会做判断，不能同时是付款方和收款方，如果同时都是真的，当成只是付款方来处理
+        //如果两者都不是，说明这个订单请求出错，弹个窗出来，不能再进行任何操作，必须退出
+        //也就是，同时都是两者是有问题的，同时都不是两者也是有问题的，应该都弹个窗出来，不能进行任何操作，但用户此时已经付款，只能让他找客服了
+        if (isPayUser && isReceiveUser) {
+            //弹窗报错，退出，让用户找客服
+            NToast.shortToast(this, "付款方和收款方相同，出错");
+            return;
+        } else if (!isPayUser && !isReceiveUser) {
+            //弹窗报错，退出，让用户找客服
+            NToast.shortToast(this, "既不是付款方也不是收款方，出错");
+            return;
+        }
+
+        setUserDetail(model, isPayUser, isReceiveUser);
+
         msztOrderModel = model;
         SkillModel skillModel = null;
         try {
@@ -243,23 +260,31 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
         }
         zjTv.setText("总价¥" + model.getTotalPayment() + "元");
         yfkTv.setText("预付款¥" + model.getAdvancePayment() + "元");
+        yylxTv.setText("预约类型：" + getOrderType(model.getOrderType(), isPayUser, isReceiveUser));
         yysjTv.setText("预约时间：" + DateUtils.getYMDHM(model.getYysj()));
         yyscTv.setText("预约时长：" + model.getYysc() + "小时");
         yyddTv.setText("预约地点：" + model.getYydd());
 
-        boolean isPayUser = MeService.getUid().equals(model.getPayUserIdStr());
-        boolean isReceiveUser = MeService.getUid().equals(model.getReceiveUserIdStr());
-        //正常情况下，后端会做判断，不能同时是付款方和收款方，如果同时都是真的，当成只是付款方来处理
-        //如果两者都不是，说明这个订单请求出错，弹个窗出来，不能再进行任何操作，必须退出
-        //也就是，同时都是两者是有问题的，同时都不是两者也是有问题的，应该都弹个窗出来，不能进行任何操作，但用户此时已经付款，只能让他找客服了
-        if (isPayUser && isReceiveUser) {
-            //弹窗报错，退出，让用户找客服
-        } else if (!isPayUser && !isReceiveUser) {
-            //弹窗报错，退出，让用户找客服
-        } else {
-            statusToJindu(model.getStatus(), isPayUser, isReceiveUser);
-        }
+        statusToJindu(model.getStatus(), isPayUser, isReceiveUser);
 
+
+    }
+
+    //订单显示对方的姓名、性别、年龄、头像
+    //根据自己是付款方，还是收款方来显示
+    private void setUserDetail(GetWdyhOrderDetailModel model, boolean isPayUser, boolean isReceiveUser) {
+        if (isPayUser) {
+            GlideUtils.load(this, model.getReceiveUser().getPortraitUri(), portraitIv);
+            nameTv.setText(model.getReceiveUser().getNickname());
+            ageSexView.setVisibility(View.VISIBLE);
+            ageSexView.setAgeAndSex(model.getReceiveUser().getAge(), model.getReceiveUser().getSex());
+        }
+        if (isReceiveUser) {
+            GlideUtils.load(this, model.getPayUser().getPortraitUri(), portraitIv);
+            nameTv.setText(model.getPayUser().getNickname());
+            ageSexView.setVisibility(View.VISIBLE);
+            ageSexView.setAgeAndSex(model.getPayUser().getAge(), model.getPayUser().getSex());
+        }
     }
 
     //服务器返回的状态，转成相对应的进度
@@ -466,14 +491,30 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
 
     }
 
+    //订单类型
+    private String getOrderType(int orderType, boolean isPayUser, boolean isReceiveUser) {
+        if (orderType == SealConst.WDYH_ORDER_TYPE_MSZT) {//0是马上租Ta类型
+            if (isPayUser) {
+                return "我约Ta";
+            } else {
+                return "Ta约我";
+            }
+        } else {//1是发布报名类型
+            if (isPayUser) {
+                return "我的发布";
+            } else {
+                return "我的报名";
+            }
+        }
+    }
 
     @Override
     public Object doInBackground(int requestCode, String id) throws HttpException {
         switch (requestCode) {
             case GET_USER_DETAIL_ONE:
                 return action.getUserDetailOne(userId);
-            case GET_MSZT_ORDER:
-                return action.postMsztGetOrderDetail(msztOrderId);
+            case GET_MSZT_ORDER_DETAIL:
+                return action.postWdyhGetOrderDetail(msztOrderId);
         }
         return null;
     }
@@ -491,10 +532,10 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
                         NToast.shortToast(mContext, "获取个人信息失败");
                     }
                     break;
-                case GET_MSZT_ORDER:
-                    GetMsztOrderResponse getMsztOrderResponse = (GetMsztOrderResponse) result;
-                    if (getMsztOrderResponse.getCode() == 200) {
-                        updateMsztOrderDetail(getMsztOrderResponse);
+                case GET_MSZT_ORDER_DETAIL:
+                    GetWdyhOrderDetailResponse getWdyhOrderDetailResponse = (GetWdyhOrderDetailResponse) result;
+                    if (getWdyhOrderDetailResponse.getCode() == 200) {
+                        updateMsztOrderDetail(getWdyhOrderDetailResponse);
                     } else {
                         NToast.shortToast(mContext, "获取订单信息失败");
                     }
@@ -515,7 +556,7 @@ public class WodeXuqiuXqActivity extends BaseActivity implements View.OnClickLis
             case GET_USER_DETAIL_ONE:
                 NToast.shortToast(mContext, "获取个人信息失败");
                 break;
-            case GET_MSZT_ORDER:
+            case GET_MSZT_ORDER_DETAIL:
                 NToast.shortToast(mContext, "获取订单信息失败");
                 break;
         }

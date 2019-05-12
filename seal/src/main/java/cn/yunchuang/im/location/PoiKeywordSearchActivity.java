@@ -265,6 +265,12 @@ public class PoiKeywordSearchActivity extends FragmentActivity implements
             rootLayout.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    if (item.getPoint() == null) {
+                        NToast.shortToast(PoiKeywordSearchActivity.this, "请选择一个确切的地点");
+                        return;
+                    }
+
                     selectedPoint = item.getPoint();
                     selectedName = item.getName().trim();
 
@@ -272,7 +278,6 @@ public class PoiKeywordSearchActivity extends FragmentActivity implements
                     searchText.setSelection(selectedName.length());
 
                     recyclerView.setVisibility(View.GONE);
-
 
                     LatLng latLng = new LatLng(item.getPoint().getLatitude(), item.getPoint().getLongitude());
                     //移动到该点

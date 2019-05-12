@@ -20,28 +20,25 @@ import cn.yunchuang.im.server.response.SkillModel;
 import cn.yunchuang.im.server.utils.CommonUtils;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.server.widget.LoadDialog;
-import cn.yunchuang.im.ui.adapter.WodeYuehuiLbPagerAdapter;
-import cn.yunchuang.im.utils.DialogUtils;
+import cn.yunchuang.im.ui.adapter.WdyhLbPagerAdapter;
 import cn.yunchuang.im.zmico.MicoTabLayout;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
 import cn.yunchuang.im.zmico.utils.DeviceUtils;
 import cn.yunchuang.im.zmico.utils.Utils;
-import me.leefeng.promptlibrary.PromptDialog;
 
 
-public class WodeYuehuiLbActivity extends BaseActivity implements View.OnClickListener {
+public class WdyhLbActivity extends BaseActivity implements View.OnClickListener {
 
     private FrameLayout titleLayout;
     private ImageView backImg;
     private TextView nextTv;
 
     private ViewPager viewPager;
-    private WodeYuehuiLbPagerAdapter pagerAdapter;
+    private WdyhLbPagerAdapter pagerAdapter;
     private MicoTabLayout tabLayout;
 
-    private static final int GET_USER_DETAIL_ONE = 1601;
+    private static final int GET_USER_DETAIL_ONE = 1602;
 
-    private PromptDialog loadingDialog;
     private String userId = "";
 
     private SkillModel seletSkillModel;
@@ -67,15 +64,14 @@ public class WodeYuehuiLbActivity extends BaseActivity implements View.OnClickLi
 
         tabLayout = (MicoTabLayout) findViewById(R.id.activity_wdyh_lb_tab_layout);
         viewPager = (ViewPager) findViewById(R.id.activity_wdyh_lb_view_pager);
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(3);
 
-        pagerAdapter = new WodeYuehuiLbPagerAdapter(getSupportFragmentManager());
+        pagerAdapter = new WdyhLbPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setCurrentItem(1);
 
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(MicoTabLayout.MODE_FIXED);
-
-        loadingDialog = DialogUtils.getLoadingDialog(this);
 
         initTitleLayout();
         getData();
@@ -89,7 +85,6 @@ public class WodeYuehuiLbActivity extends BaseActivity implements View.OnClickLi
 
 
     private void getData() {
-        DialogUtils.showLoading(loadingDialog);
         request(GET_USER_DETAIL_ONE);
     }
 
@@ -148,7 +143,6 @@ public class WodeYuehuiLbActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onSuccess(int requestCode, Object result) {
-        DialogUtils.dimiss(loadingDialog);
         if (result != null) {
             switch (requestCode) {
                 case GET_USER_DETAIL_ONE:
@@ -165,7 +159,6 @@ public class WodeYuehuiLbActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onFailure(int requestCode, int state, Object result) {
-        DialogUtils.dimiss(loadingDialog);
         if (!CommonUtils.isNetworkConnected(mContext)) {
             LoadDialog.dismiss(mContext);
             NToast.shortToast(mContext, getString(R.string.network_not_available));

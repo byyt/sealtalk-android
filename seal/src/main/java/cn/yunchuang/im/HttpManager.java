@@ -7,8 +7,10 @@ import android.os.Handler;
 import android.os.Looper;
 
 import cn.yunchuang.im.model.ShaixuanModel;
+import cn.yunchuang.im.model.ShaixuanOrderModel;
 import cn.yunchuang.im.server.SealAction;
 import cn.yunchuang.im.server.response.BaseResponse;
+import cn.yunchuang.im.server.response.GetWdyhOrderLbResponse;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
 import cn.yunchuang.im.server.response.HomepageResponse;
 import cn.yunchuang.im.server.utils.NLog;
@@ -286,6 +288,41 @@ public class HttpManager {
                         }
                         if (callback != null) {
                             callback.onCallback(getUserDetailOneResponse);
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 我的约会列表，分页加载
+     *
+     * @param startIndex         起始页
+     * @param pageSize           页面大小
+     * @param shaixuanOrderModel 筛选条件
+     * @param callback           获取首页推荐用户的回调
+     * @return
+     */
+    public Disposable getWdyhLb(final int startIndex, final int pageSize, final ShaixuanOrderModel shaixuanOrderModel,
+                                final ResultCallback<GetWdyhOrderLbResponse> callback) {
+        return Observable.just(0)
+                .observeOn(Schedulers.io())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object object) throws Exception {
+                        GetWdyhOrderLbResponse getWdyhOrderLbResponse = null;
+                        if (!isNetworkConnected()) {
+                            onCallBackFail(callback, "网络未连接");
+                            return;
+                        }
+                        try {
+                            getWdyhOrderLbResponse = action.postWdyhLbList(startIndex, pageSize, shaixuanOrderModel);
+                        } catch (Exception e) {
+                            onCallBackFail(callback);
+                            NLog.e(TAG, "getRecommendUsers occurs Exception e=" + e.toString());
+                            return;
+                        }
+                        if (callback != null) {
+                            callback.onCallback(getWdyhOrderLbResponse);
                         }
                     }
                 });

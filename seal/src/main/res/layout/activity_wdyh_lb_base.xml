@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view_operation_card_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/activity_wdyh_lb_base_refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srlAccentColor="@android:color/white"
+        app:srlEnableAutoLoadMore="true"
+        app:srlEnableLoadMore="true"
+        app:srlHeaderMaxDragRate="2.5"
+        app:srlPrimaryColor="@android:color/darker_gray">
+
+        <!--srlHeaderMaxDragRate=2.5时候WaterDropHeader的下拉效果最好-->
+        <com.scwang.smartrefresh.header.WaterDropHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/activity_wdyh_lb_base_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            tools:listitem="@android:layout/simple_list_item_2" />
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
+</LinearLayout>

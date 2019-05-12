@@ -482,6 +482,20 @@
                     android:background="@color/color_E4E4E4" />
 
                 <TextView
+                    android:id="@+id/activity_wdxq_xq_yylx_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px100"
+                    android:gravity="start|center_vertical"
+                    android:textColor="@color/color_3C3B3B"
+                    android:textSize="@dimen/text_px30"
+                    tools:text="预约类型：我约Ta" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px1"
+                    android:background="@color/color_E4E4E4" />
+
+                <TextView
                     android:id="@+id/activity_wdxq_xq_yysj_tv"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/px100"

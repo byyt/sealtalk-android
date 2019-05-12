@@ -25,13 +25,12 @@ import cn.yunchuang.im.HttpManager;
 import cn.yunchuang.im.MeService;
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.event.RefreshMineInfoEvent;
-import cn.yunchuang.im.server.BaseAction;
 import cn.yunchuang.im.server.response.GetUserDetailModelOne;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.ui.activity.MyBaseInfoActivity_new;
 import cn.yunchuang.im.ui.activity.UserDetailActivity_New;
-import cn.yunchuang.im.ui.activity.WodeYuehuiLbActivity;
+import cn.yunchuang.im.ui.activity.WdyhLbActivity;
 import cn.yunchuang.im.utils.GlideUtils;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
 import cn.yunchuang.im.zmico.utils.DeviceUtils;
@@ -217,7 +216,7 @@ public class MineFragment_new extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.fragment_mine_xuqiu_layout:
                 if (getActivity() != null) {
-                    Intent intentUD = new Intent(getActivity(), WodeYuehuiLbActivity.class);
+                    Intent intentUD = new Intent(getActivity(), WdyhLbActivity.class);
                     intentUD.putExtra("userId", MeService.getUid());
                     getActivity().startActivity(intentUD);
                 }

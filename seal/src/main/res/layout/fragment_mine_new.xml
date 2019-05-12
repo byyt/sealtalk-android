@@ -160,7 +160,7 @@
                     android:drawableLeft="@drawable/mine_fragment_xuqiu"
                     android:drawablePadding="@dimen/px30"
                     android:drawableStart="@drawable/mine_fragment_xuqiu"
-                    android:text="我的需求"
+                    android:text="我的约会"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_px32" />
 
@@ -188,7 +188,8 @@
                 android:paddingEnd="@dimen/px30"
                 android:paddingLeft="@dimen/px30"
                 android:paddingRight="@dimen/px30"
-                android:paddingStart="@dimen/px30">
+                android:paddingStart="@dimen/px30"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"

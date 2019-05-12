@@ -5,11 +5,11 @@ package cn.yunchuang.im.server.response;
  * Created by AMing on 15/12/24.
  * Company RongCloud
  */
-public class GetMsztOrderResponse {
+public class GetWdyhOrderDetailResponse {
 
     private int code;
 
-    private GetMsztOrderModel result;
+    private GetWdyhOrderDetailModel result;
 
     public int getCode() {
         return code;
@@ -19,11 +19,11 @@ public class GetMsztOrderResponse {
         this.code = code;
     }
 
-    public GetMsztOrderModel getResult() {
+    public GetWdyhOrderDetailModel getResult() {
         return result;
     }
 
-    public void setResult(GetMsztOrderModel result) {
+    public void setResult(GetWdyhOrderDetailModel result) {
         this.result = result;
     }
 }

@@ -1,7 +1,8 @@
 package cn.yunchuang.im.server.response;
 
-public class GetMsztOrderModel {
-    private String msztOrderId;
+public class GetWdyhOrderDetailModel {
+    private String wdyhOrderId;
+    private int orderType;
     private String payUserIdStr;
     private String receiveUserIdStr;
     private int status;
@@ -22,12 +23,23 @@ public class GetMsztOrderModel {
     private long wfqktkTs;
     private long jftkTs;
 
-    public String getMsztOrderId() {
-        return msztOrderId;
+    private GetUserDetailModelOne PayUser;
+    private GetUserDetailModelOne receiveUser;
+
+    public String getWdyhOrderId() {
+        return wdyhOrderId;
     }
 
-    public void setMsztOrderId(String msztOrderId) {
-        this.msztOrderId = msztOrderId;
+    public void setWdyhOrderId(String wdyhOrderId) {
+        this.wdyhOrderId = wdyhOrderId;
+    }
+
+    public int getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(int orderType) {
+        this.orderType = orderType;
     }
 
     public String getPayUserIdStr() {
@@ -180,5 +192,21 @@ public class GetMsztOrderModel {
 
     public void setJftkTs(long jftkTs) {
         this.jftkTs = jftkTs;
+    }
+
+    public GetUserDetailModelOne getPayUser() {
+        return PayUser;
+    }
+
+    public void setPayUser(GetUserDetailModelOne payUser) {
+        PayUser = payUser;
+    }
+
+    public GetUserDetailModelOne getReceiveUser() {
+        return receiveUser;
+    }
+
+    public void setReceiveUser(GetUserDetailModelOne receiveUser) {
+        this.receiveUser = receiveUser;
     }
 }

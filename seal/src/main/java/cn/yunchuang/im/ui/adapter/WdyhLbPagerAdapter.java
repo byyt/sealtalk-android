@@ -7,26 +7,24 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.yunchuang.im.ui.fragment.HomepageFragment_new;
-import cn.yunchuang.im.ui.fragment.HomepageLikeFragment;
-import cn.yunchuang.im.ui.fragment.HomepageNearByFragment;
-import cn.yunchuang.im.ui.fragment.HomepageRateFragment;
+import cn.yunchuang.im.ui.fragment.WdyhLbBaseFragment;
 
 /**
  * 直播列表类别 fragment 分页适配器
  * <p>
  * Created by mg on 2019/1/21
  */
-public class WodeYuehuiLbPagerAdapter extends FragmentPagerAdapter {
+public class WdyhLbPagerAdapter extends FragmentPagerAdapter {
 
     private List<Fragment> fragmentList = new ArrayList<>();
 
-    public WodeYuehuiLbPagerAdapter(FragmentManager fm) {
+    public WdyhLbPagerAdapter(FragmentManager fm) {
         super(fm);
 
-        fragmentList.add(new HomepageNearByFragment());
-        fragmentList.add(new HomepageLikeFragment());
-        fragmentList.add(new HomepageRateFragment());
+        fragmentList.add(new WdyhLbBaseFragment());
+        fragmentList.add(new WdyhLbBaseFragment());
+        fragmentList.add(new WdyhLbBaseFragment());
+        fragmentList.add(new WdyhLbBaseFragment());
     }
 
     @Override
@@ -41,7 +39,15 @@ public class WodeYuehuiLbPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return "全部";
+        if (position == 0) {
+            return "全部";
+        } else if (position == 1) {
+            return "进行中";
+        } else if (position == 2) {
+            return "待评价";
+        } else {
+            return "已结束";
+        }
     }
 
 }
