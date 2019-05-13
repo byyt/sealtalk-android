@@ -30,14 +30,14 @@ public class GetWdyhOrderLbResponse {
     }
 
     public static class ResultEntity {
-        private List<GetWdyhOrderLbModel> data;
+        private List<GetWdyhOrderDetailModel> data;
         private int nextIndex;
 
-        public List<GetWdyhOrderLbModel> getData() {
+        public List<GetWdyhOrderDetailModel> getData() {
             return data;
         }
 
-        public void setData(List<GetWdyhOrderLbModel> data) {
+        public void setData(List<GetWdyhOrderDetailModel> data) {
             this.data = data;
         }
 

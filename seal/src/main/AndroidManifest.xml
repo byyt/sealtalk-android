@@ -180,7 +180,7 @@
 
         <!-- 我的需求，详情 -->
         <activity
-            android:name="cn.yunchuang.im.ui.activity.WdyhXqActivity"
+            android:name="cn.yunchuang.im.ui.activity.WdyhDetailActivity"
             android:screenOrientation="portrait" />
 
         <!-- 我的约会，列表 -->

@@ -25,9 +25,6 @@ import cn.yunchuang.im.server.request.DismissGroupRequest;
 import cn.yunchuang.im.server.request.FriendInvitationRequest;
 import cn.yunchuang.im.server.request.JoinGroupRequest;
 import cn.yunchuang.im.server.request.LoginRequest;
-import cn.yunchuang.im.server.request.WdyhCreateOrderRequest;
-import cn.yunchuang.im.server.request.WdyhGetOrderDetailRequest;
-import cn.yunchuang.im.server.request.WdyhGetOrderLbRequest;
 import cn.yunchuang.im.server.request.MsztPayRequest;
 import cn.yunchuang.im.server.request.PayImgRequest;
 import cn.yunchuang.im.server.request.PayWeChatRequest;
@@ -46,6 +43,10 @@ import cn.yunchuang.im.server.request.SetPortraitRequest;
 import cn.yunchuang.im.server.request.UpdateBaseUserInfoRequest;
 import cn.yunchuang.im.server.request.UpdateUserLocationRequest;
 import cn.yunchuang.im.server.request.VerifyCodeRequest;
+import cn.yunchuang.im.server.request.WdyhCreateOrderRequest;
+import cn.yunchuang.im.server.request.WdyhGetOrderDetailRequest;
+import cn.yunchuang.im.server.request.WdyhGetOrderLbRequest;
+import cn.yunchuang.im.server.request.WdyhUpdateOrderStatusRequest;
 import cn.yunchuang.im.server.response.AddGroupMemberResponse;
 import cn.yunchuang.im.server.response.AddToBlackListResponse;
 import cn.yunchuang.im.server.response.AgreeFriendsResponse;
@@ -63,14 +64,14 @@ import cn.yunchuang.im.server.response.GetFriendInfoByIDResponse;
 import cn.yunchuang.im.server.response.GetGroupInfoResponse;
 import cn.yunchuang.im.server.response.GetGroupMemberResponse;
 import cn.yunchuang.im.server.response.GetGroupResponse;
-import cn.yunchuang.im.server.response.GetWdyhOrderDetailResponse;
-import cn.yunchuang.im.server.response.GetWdyhOrderLbResponse;
 import cn.yunchuang.im.server.response.GetTokenResponse;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
 import cn.yunchuang.im.server.response.GetUserDetailTwoResponse;
 import cn.yunchuang.im.server.response.GetUserInfoByIdResponse;
 import cn.yunchuang.im.server.response.GetUserInfoByPhoneResponse;
 import cn.yunchuang.im.server.response.GetUserInfosResponse;
+import cn.yunchuang.im.server.response.GetWdyhOrderDetailResponse;
+import cn.yunchuang.im.server.response.GetWdyhOrderLbResponse;
 import cn.yunchuang.im.server.response.HomepageResponse;
 import cn.yunchuang.im.server.response.JoinGroupResponse;
 import cn.yunchuang.im.server.response.LoginResponse;
@@ -687,33 +688,6 @@ public class SealAction extends BaseAction {
     }
 
     /**
-     * 获取马上租Ta用户所有订单，自己是租方或者被租方都会获取到，客户端这边获取到之后再通过uid对比判断自己是租方还是被租方，做相应的处理
-     *
-     * @return
-     * @throws HttpException
-     */
-    public GetWdyhOrderDetailResponse postMsztGetOrders()
-            throws HttpException {
-
-        String url = getURL("user/wdyh_get_order");
-        String json = JsonMananger.beanToJson(new Object());
-        StringEntity entity = null;
-        try {
-            entity = new StringEntity(json, ENCODING);
-            entity.setContentType(CONTENT_TYPE);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        String result = httpManager.post(mContext, url, entity, CONTENT_TYPE);
-        GetWdyhOrderDetailResponse response = null;
-        if (!TextUtils.isEmpty(result)) {
-            NLog.e("GetWdyhOrderDetailResponse", result);
-            response = JsonMananger.jsonToBean(result, GetWdyhOrderDetailResponse.class);
-        }
-        return response;
-    }
-
-    /**
      * 我的约会--订单列表，分页拉取数据
      * 获取马上租Ta用户所有订单，自己是租方或者被租方都会获取到，客户端这边获取到之后再通过uid对比判断自己是租方还是被租方，做相应的处理
      * <p>
@@ -761,6 +735,38 @@ public class SealAction extends BaseAction {
         if (!TextUtils.isEmpty(result)) {
             NLog.e("GetWdyhOrderLbResponse", result);
             response = JsonMananger.jsonToBean(result, GetWdyhOrderLbResponse.class);
+        }
+        return response;
+
+    }
+
+    /**
+     * 我的约会--更新订单状态，还有时间戳
+     * <p>
+     * 马上租Ta：收款方接受、付款方去付全款、付款方确认、付款方评价、成交结束
+     * <p>
+     * 发布报名：
+     *
+     * @throws HttpException
+     */
+    public BaseResponse postWdyhUpdateOrderStatus(WdyhUpdateOrderStatusRequest wdyhUpdateOrderStatusRequest)
+            throws HttpException {
+
+
+        String url = getURL("user/wdyh_update_order_status");
+        String json = JsonMananger.beanToJson(wdyhUpdateOrderStatusRequest);
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(json, ENCODING);
+            entity.setContentType(CONTENT_TYPE);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String result = httpManager.post(mContext, url, entity, CONTENT_TYPE);
+        BaseResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            NLog.e("GetWdyhOrderDetailResponse", result);
+            response = JsonMananger.jsonToBean(result, BaseResponse.class);
         }
         return response;
 

@@ -315,7 +315,7 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
     private void startCreateOrder() {
         orderRequest.setOrderType(SealConst.WDYH_ORDER_TYPE_MSZT);
         orderRequest.setReceiveUserId(userId);
-        orderRequest.setStatus(SealConst.MSZT_ORDER_STATUS_YFYFK);
+        orderRequest.setStatus(SealConst.MSZT_ORDER_STATUS_DJS);
         orderRequest.setYyxm(JSONObject.toJSONString(seletSkillModel));
         orderRequest.setYysj(yysjTs);
         orderRequest.setYysc(yysc);
@@ -621,7 +621,7 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
                     if (msztOrderResponse.getCode() == 200 && msztOrderResponse.getResult() != null
                             && !TextUtils.isEmpty(msztOrderResponse.getResult().getWdyhOrderId())) {
                         NToast.shortToast(mContext, "下单成功");
-                        Intent intent = new Intent(mContext, WdyhXqActivity.class);
+                        Intent intent = new Intent(mContext, WdyhDetailActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putString("userId", userId);
                         bundle.putSerializable("skillModel", seletSkillModel);

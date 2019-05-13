@@ -2,7 +2,7 @@ package cn.yunchuang.im.server.response;
 
 public class GetWdyhOrderDetailModel {
     private String wdyhOrderId;
-    private int orderType;
+    private int orderType; //订单类的区分，1：马上租Ta类型订单，2：马上发布类型订单
     private String payUserIdStr;
     private String receiveUserIdStr;
     private int status;
@@ -17,7 +17,10 @@ public class GetWdyhOrderDetailModel {
     private int zffs;
     private long yfkTs;
     private long jsTs;
+    private long fqkTs;
     private long qrTs;
+    private long pjTs;
+    private long wcTs;
     private long zzTs;
     private long wjstkTs;
     private long wfqktkTs;
@@ -208,5 +211,29 @@ public class GetWdyhOrderDetailModel {
 
     public void setReceiveUser(GetUserDetailModelOne receiveUser) {
         this.receiveUser = receiveUser;
+    }
+
+    public long getFqkTs() {
+        return fqkTs;
+    }
+
+    public void setFqkTs(long fqkTs) {
+        this.fqkTs = fqkTs;
+    }
+
+    public long getPjTs() {
+        return pjTs;
+    }
+
+    public void setPjTs(long pjTs) {
+        this.pjTs = pjTs;
+    }
+
+    public long getWcTs() {
+        return wcTs;
+    }
+
+    public void setWcTs(long wcTs) {
+        this.wcTs = wcTs;
     }
 }

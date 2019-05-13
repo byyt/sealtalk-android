@@ -27,7 +27,7 @@ import cn.yunchuang.im.HttpManager;
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.event.SaveShaixuanEvent;
 import cn.yunchuang.im.model.ShaixuanOrderModel;
-import cn.yunchuang.im.server.response.GetWdyhOrderLbModel;
+import cn.yunchuang.im.server.response.GetWdyhOrderDetailModel;
 import cn.yunchuang.im.server.response.GetWdyhOrderLbResponse;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.ui.activity.MainActivity;
@@ -117,7 +117,7 @@ public class WdyhLbBaseFragment extends LazyFragment implements View.OnClickList
                     @Override
                     public void onSuccess(GetWdyhOrderLbResponse getMsztOrderLbResponse) {
                         if (getMsztOrderLbResponse != null) {
-                            List<GetWdyhOrderLbModel> list = getMsztOrderLbResponse.getResult().getData();
+                            List<GetWdyhOrderDetailModel> list = getMsztOrderLbResponse.getResult().getData();
                             if (startIndex == 0) {
                                 updateLiveList(list, true);
                             } else {
@@ -147,7 +147,7 @@ public class WdyhLbBaseFragment extends LazyFragment implements View.OnClickList
         compositeDisposable.add(disposable);
     }
 
-    private void updateLiveList(List<GetWdyhOrderLbModel> list, boolean isRefresh) {
+    private void updateLiveList(List<GetWdyhOrderDetailModel> list, boolean isRefresh) {
         if (list == null) {
             if (isRefresh) {
                 refreshLayout.finishRefresh();
@@ -166,18 +166,18 @@ public class WdyhLbBaseFragment extends LazyFragment implements View.OnClickList
         }
 
         // 通过本地已有直播间列表构建 map{key: roomId, value: roomInfo}
-        List<GetWdyhOrderLbModel> localList = new ArrayList<>(wdyhLbAdapter.getData());
-        Map<String, GetWdyhOrderLbModel> liveMap = new HashMap<>(); // upgrade to SparseLongArray when using API >= 18
-        for (GetWdyhOrderLbModel model : localList) {
+        List<GetWdyhOrderDetailModel> localList = new ArrayList<>(wdyhLbAdapter.getData());
+        Map<String, GetWdyhOrderDetailModel> liveMap = new HashMap<>(); // upgrade to SparseLongArray when using API >= 18
+        for (GetWdyhOrderDetailModel model : localList) {
             if (model.getWdyhOrderId() != null) {
                 liveMap.put(model.getWdyhOrderId(), model);
             }
         }
 
-        List<GetWdyhOrderLbModel> newList = new ArrayList<>();
+        List<GetWdyhOrderDetailModel> newList = new ArrayList<>();
         boolean hasDuplicateRoom = false;
         // 请求返回的直播间列表, 通过上面本地直播间 map 进行合并
-        for (GetWdyhOrderLbModel model : list) {
+        for (GetWdyhOrderDetailModel model : list) {
             if (model.getWdyhOrderId() == null) {
                 continue;
             }

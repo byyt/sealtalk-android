@@ -22,6 +22,8 @@ public class WdyhCreateOrderRequest {
     private long yfkTs;
     private long jsTs;
     private long qrTs;
+    private long pjTs;
+    private long wcTs;
     private long zzTs;
     private long wjstkTs;
     private long wfqktkTs;
@@ -145,6 +147,22 @@ public class WdyhCreateOrderRequest {
 
     public void setQrTs(long qrTs) {
         this.qrTs = qrTs;
+    }
+
+    public long getPjTs() {
+        return pjTs;
+    }
+
+    public void setPjTs(long pjTs) {
+        this.pjTs = pjTs;
+    }
+
+    public long getWcTs() {
+        return wcTs;
+    }
+
+    public void setWcTs(long wcTs) {
+        this.wcTs = wcTs;
     }
 
     public long getZzTs() {

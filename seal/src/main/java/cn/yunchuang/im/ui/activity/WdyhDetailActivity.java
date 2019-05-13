@@ -20,6 +20,8 @@ import cn.yunchuang.im.MeService;
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.SealConst;
 import cn.yunchuang.im.server.network.http.HttpException;
+import cn.yunchuang.im.server.request.WdyhUpdateOrderStatusRequest;
+import cn.yunchuang.im.server.response.BaseResponse;
 import cn.yunchuang.im.server.response.GetUserDetailModelOne;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
 import cn.yunchuang.im.server.response.GetWdyhOrderDetailModel;
@@ -40,7 +42,7 @@ import cn.yunchuang.im.zmico.utils.Utils;
 import me.leefeng.promptlibrary.PromptDialog;
 
 
-public class WdyhXqActivity extends BaseActivity implements View.OnClickListener {
+public class WdyhDetailActivity extends BaseActivity implements View.OnClickListener {
 
     private FrameLayout titleLayout;
     private ImageView backImg;
@@ -80,6 +82,7 @@ public class WdyhXqActivity extends BaseActivity implements View.OnClickListener
 
     private static final int GET_USER_DETAIL_ONE = 1601;
     private static final int GET_MSZT_ORDER_DETAIL = 1602;
+    private static final int UPDATE_MSZT_ORDER_DETAIL = 1603;
 
     private PromptDialog loadingDialog;
 
@@ -87,6 +90,8 @@ public class WdyhXqActivity extends BaseActivity implements View.OnClickListener
     private String msztOrderId;
 
     private GetWdyhOrderDetailModel msztOrderModel = new GetWdyhOrderDetailModel();
+
+    private WdyhUpdateOrderStatusRequest wdyhUpdateOrderStatusRequest = new WdyhUpdateOrderStatusRequest();
 
     private int screenWidth;
 
@@ -326,6 +331,11 @@ public class WdyhXqActivity extends BaseActivity implements View.OnClickListener
                     @Override
                     public void onClick(View v) {
                         //接受
+                        wdyhUpdateOrderStatusRequest = new WdyhUpdateOrderStatusRequest();
+                        wdyhUpdateOrderStatusRequest.setWdyhOrderNum(msztOrderModel.getWdyhOrderId());
+                        wdyhUpdateOrderStatusRequest.setStatus(SealConst.MSZT_ORDER_STATUS_DFQK);
+                        wdyhUpdateOrderStatusRequest.setJsTs(System.currentTimeMillis() / 1000);
+                        request(UPDATE_MSZT_ORDER_DETAIL);
                     }
                 });
             }
@@ -343,6 +353,11 @@ public class WdyhXqActivity extends BaseActivity implements View.OnClickListener
                     @Override
                     public void onClick(View v) {
                         //去付全款
+                        wdyhUpdateOrderStatusRequest = new WdyhUpdateOrderStatusRequest();
+                        wdyhUpdateOrderStatusRequest.setWdyhOrderNum(msztOrderModel.getWdyhOrderId());
+                        wdyhUpdateOrderStatusRequest.setStatus(SealConst.MSZT_ORDER_STATUS_DQR);
+                        wdyhUpdateOrderStatusRequest.setJsTs(System.currentTimeMillis() / 1000);
+                        request(UPDATE_MSZT_ORDER_DETAIL);
                     }
                 });
             }
@@ -365,6 +380,11 @@ public class WdyhXqActivity extends BaseActivity implements View.OnClickListener
                     @Override
                     public void onClick(View v) {
                         //确认
+                        wdyhUpdateOrderStatusRequest = new WdyhUpdateOrderStatusRequest();
+                        wdyhUpdateOrderStatusRequest.setWdyhOrderNum(msztOrderModel.getWdyhOrderId());
+                        wdyhUpdateOrderStatusRequest.setStatus(SealConst.MSZT_ORDER_STATUS_DPJ);
+                        wdyhUpdateOrderStatusRequest.setJsTs(System.currentTimeMillis() / 1000);
+                        request(UPDATE_MSZT_ORDER_DETAIL);
                     }
                 });
             }
@@ -388,6 +408,11 @@ public class WdyhXqActivity extends BaseActivity implements View.OnClickListener
                     @Override
                     public void onClick(View v) {
                         //去评价
+                        wdyhUpdateOrderStatusRequest = new WdyhUpdateOrderStatusRequest();
+                        wdyhUpdateOrderStatusRequest.setWdyhOrderNum(msztOrderModel.getWdyhOrderId());
+                        wdyhUpdateOrderStatusRequest.setStatus(SealConst.MSZT_ORDER_STATUS_WC);
+                        wdyhUpdateOrderStatusRequest.setJsTs(System.currentTimeMillis() / 1000);
+                        request(UPDATE_MSZT_ORDER_DETAIL);
                     }
                 });
             }
@@ -515,6 +540,8 @@ public class WdyhXqActivity extends BaseActivity implements View.OnClickListener
                 return action.getUserDetailOne(userId);
             case GET_MSZT_ORDER_DETAIL:
                 return action.postWdyhGetOrderDetail(msztOrderId);
+            case UPDATE_MSZT_ORDER_DETAIL:
+                return action.postWdyhUpdateOrderStatus(wdyhUpdateOrderStatusRequest);
         }
         return null;
     }
@@ -533,11 +560,19 @@ public class WdyhXqActivity extends BaseActivity implements View.OnClickListener
                     }
                     break;
                 case GET_MSZT_ORDER_DETAIL:
-                    GetWdyhOrderDetailResponse getWdyhOrderDetailResponse = (GetWdyhOrderDetailResponse) result;
-                    if (getWdyhOrderDetailResponse.getCode() == 200) {
-                        updateMsztOrderDetail(getWdyhOrderDetailResponse);
+                    GetWdyhOrderDetailResponse getWdyhOrderDetailResponse1 = (GetWdyhOrderDetailResponse) result;
+                    if (getWdyhOrderDetailResponse1.getCode() == 200) {
+                        updateMsztOrderDetail(getWdyhOrderDetailResponse1);
                     } else {
                         NToast.shortToast(mContext, "获取订单信息失败");
+                    }
+                    break;
+                case UPDATE_MSZT_ORDER_DETAIL:
+                    BaseResponse baseResponse = (BaseResponse) result;
+                    if (baseResponse.getCode() == 200) {
+                        request(GET_MSZT_ORDER_DETAIL);
+                    } else {
+                        NToast.shortToast(mContext, "更新订单信息失败");
                     }
                     break;
             }
@@ -558,6 +593,9 @@ public class WdyhXqActivity extends BaseActivity implements View.OnClickListener
                 break;
             case GET_MSZT_ORDER_DETAIL:
                 NToast.shortToast(mContext, "获取订单信息失败");
+                break;
+            case UPDATE_MSZT_ORDER_DETAIL:
+                NToast.shortToast(mContext, "更新订单信息失败");
                 break;
         }
     }
