@@ -104,6 +104,12 @@ public class WdyhDetailActivity extends BaseActivity implements View.OnClickList
         initView();
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        initView();
+    }
+
     private void initView() {
         if (getIntent() != null && getIntent().getExtras() != null) {
             userId = getIntent().getExtras().getString("userId");

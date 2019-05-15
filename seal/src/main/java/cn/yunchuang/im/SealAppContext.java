@@ -21,6 +21,7 @@ import cn.yunchuang.im.db.Friend;
 import cn.yunchuang.im.db.GroupMember;
 import cn.yunchuang.im.db.Groups;
 import cn.yunchuang.im.message.module.SealExtensionModule;
+import cn.yunchuang.im.notify.ExmapleNotifyManager;
 import cn.yunchuang.im.server.broadcast.BroadcastManager;
 import cn.yunchuang.im.server.network.http.HttpException;
 import cn.yunchuang.im.server.pinyin.CharacterParser;
@@ -49,6 +50,7 @@ import io.rong.imlib.model.UserInfo;
 import io.rong.message.ContactNotificationMessage;
 import io.rong.message.GroupNotificationMessage;
 import io.rong.message.ImageMessage;
+import io.rong.message.TextMessage;
 
 /**
  * 融云相关监听 事件集合类
@@ -342,6 +344,11 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
             return true;
         } else if (messageContent instanceof ImageMessage) {
             //ImageMessage imageMessage = (ImageMessage) messageContent;
+        } else if (messageContent instanceof TextMessage) {
+            String content = ((TextMessage) messageContent).getContent();
+            String extra = ((TextMessage) messageContent).getExtra();
+
+            ExmapleNotifyManager.getInstance().notify(App.getAppContext(), content, extra);
         }
         return false;
     }
