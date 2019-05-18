@@ -65,7 +65,8 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
         RongIM.LocationProvider,
         RongIMClient.ConnectionStatusListener,
         RongIM.ConversationBehaviorListener,
-        RongIM.IGroupMembersProvider {
+        RongIM.IGroupMembersProvider,
+        RongIM.MessageInterceptor{
 
     private static final int CLICK_CONVERSATION_USER_PORTRAIT = 1;
 
@@ -159,6 +160,7 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
 
     private void setInputProvider() {
         RongIM.setOnReceiveMessageListener(this);
+        RongIM.getInstance().setMessageInterceptor(this);
 
         List<IExtensionModule> moduleList = RongExtensionManager.getInstance().getExtensionModules();
         IExtensionModule defaultModule = null;
@@ -349,6 +351,7 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
             String extra = ((TextMessage) messageContent).getExtra();
 
             ExmapleNotifyManager.getInstance().notify(App.getAppContext(), content, extra);
+            return true;
         }
         return false;
     }
@@ -633,5 +636,11 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
         if (session != null) {
             RongCallClient.getInstance().hangUpCall(session.getCallId());
         }
+    }
+
+    //拦截消息，可以让消息当推送用，即收到消息，但不显示在消息列表，然后根据自己的需要加进行处理
+    @Override
+    public boolean intercept(Message message) {
+        return true;
     }
 }
