@@ -9,7 +9,6 @@ import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 
 import cn.yunchuang.im.R;
-import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.ui.widget.switchbutton.SwitchButton;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
@@ -23,7 +22,9 @@ public class NewMessageRemindActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_message_remind);
-        setTitle(R.string.new_message_notice);
+        setHeadRightButtonVisibility(View.GONE);
+        mHeadRightText.setVisibility(View.GONE);
+        setTitle(R.string.new_message_show);
         SharedPreferences sp = getSharedPreferences("config", MODE_PRIVATE);
         editor = sp.edit();
         boolean isOpenDisturb = sp.getBoolean("isOpenDisturb", true);

@@ -1,7 +1,6 @@
 package cn.yunchuang.im.server.pinyin;
 
 import android.graphics.Color;
-import android.net.Uri;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -9,6 +8,8 @@ import android.text.style.ForegroundColorSpan;
 
 import java.util.List;
 
+import cn.yunchuang.im.App;
+import cn.yunchuang.im.R;
 import cn.yunchuang.im.db.Friend;
 import cn.yunchuang.im.db.GroupMember;
 import io.rong.imlib.model.MessageContent;
@@ -296,7 +297,7 @@ public class CharacterParser {
             String messageTitle = richContentMessage.getTitle();
             messageText = getOmitColored(filterStr, messageTitle, 1);
             if (messageText.length() == 0) {
-                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder("[链接] ");
+                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(App.getAppResources().getString(R.string.msg_reference_link));
                 spannableStringBuilder.append(messageTitle);
                 messageText = spannableStringBuilder;
             }
@@ -317,9 +318,9 @@ public class CharacterParser {
             SpannableStringBuilder finalBuilder = new SpannableStringBuilder();
             if (type == 0) {
             } else if (type == 1) {
-                finalBuilder.append("[链接] ");
+                finalBuilder.append(App.getAppResources().getString(R.string.msg_reference_link));
             } else if (type == 2) {
-                finalBuilder.append("[文件] ");
+                finalBuilder.append(App.getAppResources().getString(R.string.msg_reference_file));
             }
             int length = content.length();
             int firstIndex = lowerCaseText.indexOf(lowerCaseFilterStr);
@@ -354,9 +355,20 @@ public class CharacterParser {
                     builder.append(spannableStringBuilder);
                     return finalBuilder.append(builder);
                 } else {
-                    String smallerString = content.substring(firstIndex - 5, firstIndex + 7);
-                    String smallerStringLowerCase = lowerCaseText.substring(firstIndex - 5, firstIndex + 7);
-                    int index = smallerStringLowerCase.indexOf(lowerCaseFilterStr);
+                    String smallerString;
+                    String smallerStringLowerCase;
+                    int index = 0;
+                    if (firstIndex >= 5) {
+                        smallerString = content.substring(firstIndex - 5, firstIndex + 7);
+                        smallerStringLowerCase = lowerCaseText.substring(firstIndex - 5, firstIndex + 7);
+                        index = smallerStringLowerCase.indexOf(lowerCaseFilterStr);
+                    } else {
+                        smallerString = content.substring(firstIndex, firstIndex + 12);
+                        smallerStringLowerCase = lowerCaseText.substring(firstIndex, firstIndex + 12);
+                        if (smallerStringLowerCase.length() < lowerCaseFilterStr.length()) {
+                            index = 0;
+                        }
+                    }
                     SpannableStringBuilder builder = new SpannableStringBuilder("...");
                     SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(smallerString);
                     spannableStringBuilder.setSpan(new ForegroundColorSpan(Color.parseColor("#0099ff")), index, getSmallerLength(smallerString.length(), index + filterStr.length()), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);

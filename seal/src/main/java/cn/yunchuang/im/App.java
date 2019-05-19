@@ -4,9 +4,14 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
+import android.os.LocaleList;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
@@ -14,18 +19,46 @@ import com.facebook.stetho.Stetho;
 import com.facebook.stetho.dumpapp.DumperPlugin;
 import com.facebook.stetho.inspector.database.DefaultDatabaseConnectionProvider;
 import com.facebook.stetho.inspector.protocol.ChromeDevtoolsDomain;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import cn.yunchuang.im.db.Friend;
+import cn.yunchuang.im.message.TestMessage;
+import cn.yunchuang.im.message.provider.ContactNotificationMessageProvider;
+import cn.yunchuang.im.message.provider.TestMessageProvider;
+import cn.yunchuang.im.server.pinyin.CharacterParser;
+import cn.yunchuang.im.server.utils.NLog;
+import cn.yunchuang.im.server.utils.RongGenerate;
+import cn.yunchuang.im.stetho.RongDatabaseDriver;
+import cn.yunchuang.im.stetho.RongDatabaseFilesProvider;
+import cn.yunchuang.im.stetho.RongDbFilesDumperPlugin;
+import cn.yunchuang.im.ui.activity.UserDetailActivity;
+import cn.yunchuang.im.utils.SharedPreferencesContext;
+import io.rong.contactcard.ContactCardExtensionModule;
+import io.rong.contactcard.IContactCardClickListener;
+import io.rong.contactcard.IContactCardInfoProvider;
+import io.rong.contactcard.message.ContactMessage;
+import io.rong.imageloader.core.DisplayImageOptions;
+import io.rong.imageloader.core.display.FadeInBitmapDisplayer;
+import io.rong.imkit.RongConfigurationManager;
+import io.rong.imkit.RongExtensionManager;
+import io.rong.imkit.RongIM;
+import io.rong.imkit.widget.provider.RealTimeLocationMessageProvider;
+import io.rong.imlib.RongIMClient;
+import io.rong.imlib.ipc.RongExceptionHandler;
+import io.rong.imlib.model.UserInfo;
+import io.rong.push.RongPushClient;
+import io.rong.push.pushconfig.PushConfig;
+import io.rong.recognizer.RecognizeExtensionModule;
+import io.rong.sight.SightExtensionModule;
+
+
 import com.hjq.toast.ToastUtils;
 import com.mylhyl.circledialog.scale.ScaleLayoutConfig;
 import com.previewlibrary.ZoomMediaLoader;
 import com.zhouyou.http.EasyHttp;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import cn.yunchuang.contactcard.ContactCardExtensionModule;
-import cn.yunchuang.contactcard.IContactCardClickListener;
-import cn.yunchuang.contactcard.IContactCardInfoProvider;
-import cn.yunchuang.contactcard.message.ContactMessage;
 import cn.yunchuang.im.db.Friend;
 import cn.yunchuang.im.message.TestMessage;
 import cn.yunchuang.im.message.provider.ContactNotificationMessageProvider;
@@ -39,17 +72,6 @@ import cn.yunchuang.im.stetho.RongDbFilesDumperPlugin;
 import cn.yunchuang.im.ui.activity.UserDetailActivity;
 import cn.yunchuang.im.utils.SharedPreferencesContext;
 import cn.yunchuang.im.widget.ZoomImageLoader;
-import io.rong.imageloader.core.DisplayImageOptions;
-import io.rong.imageloader.core.display.FadeInBitmapDisplayer;
-import io.rong.imkit.RongExtensionManager;
-import io.rong.imkit.RongIM;
-import io.rong.imkit.widget.provider.RealTimeLocationMessageProvider;
-import io.rong.imlib.RongIMClient;
-import io.rong.imlib.ipc.RongExceptionHandler;
-import io.rong.imlib.model.UserInfo;
-import io.rong.push.RongPushClient;
-import io.rong.push.common.RongException;
-import io.rong.recognizer.RecognizeExtensionModule;
 
 
 public class App extends MultiDexApplication {
@@ -89,15 +111,15 @@ public class App extends MultiDexApplication {
         if (getApplicationInfo().packageName.equals(getCurProcessName(getApplicationContext()))) {
 
 //            LeakCanary.install(this);//内存泄露检测
-            RongPushClient.registerHWPush(this);
-            RongPushClient.registerMiPush(this, "2882303761517473625", "5451747338625");
-            RongPushClient.registerMZPush(this, "112988", "2fa951a802ac4bd5843d694517307896");
-            try {
-                RongPushClient.registerFCM(this);
-            } catch (RongException e) {
-                e.printStackTrace();
-            }
-
+            PushConfig config = new PushConfig
+                    .Builder()
+                    .enableHWPush(true)
+                    .enableMiPush("2882303761517473625", "5451747338625")
+                    .enableMeiZuPush("112988", "2fa951a802ac4bd5843d694517307896")
+                    .enableVivoPush(true)
+                    .enableFCM(true)
+                    .build();
+            RongPushClient.setPushConfig(config);
             /**
              * 注意：
              *
@@ -198,6 +220,8 @@ public class App extends MultiDexApplication {
                 }
             }));
             RongExtensionManager.getInstance().registerExtensionModule(new RecognizeExtensionModule());
+            //小视频
+            RongExtensionManager.getInstance().registerExtensionModule(new SightExtensionModule());
 
             //网络框架，主要用来上传下载
             EasyHttp.init(this);//默认初始化
@@ -244,6 +268,32 @@ public class App extends MultiDexApplication {
             }
         }
         return null;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        Context context = RongConfigurationManager.getInstance().getConfigurationContext(base);
+        super.attachBaseContext(context);
+    }
+
+    public static Resources getAppResources() {
+        return instance.getResources();
+    }
+
+    public static void updateApplicationLanguage() {
+        if (instance == null) return;
+
+        Resources resources = instance.getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        Configuration config = resources.getConfiguration();
+        Locale locale = RongConfigurationManager.getInstance().getAppLocale(instance).toLocale();
+        config.locale = locale;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            LocaleList localeList = new LocaleList(locale);
+            LocaleList.setDefault(localeList);
+            config.setLocales(localeList);
+        }
+        resources.updateConfiguration(config, dm);
     }
 
 }

@@ -12,13 +12,14 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import cn.yunchuang.im.App;
+import cn.yunchuang.im.R;
 import cn.yunchuang.im.server.network.http.AsyncHttpClient;
 import cn.yunchuang.im.server.network.http.AsyncHttpResponseHandler;
 import cn.yunchuang.im.server.network.http.BreakpointHttpResponseHandler;
@@ -200,7 +201,7 @@ public class DownloadManager extends Thread {
     public void addHandler(String url) {
         if (getTotalhandlerCount() >= MAX_HANDLER_COUNT) {
             if (mDownLoadCallback != null) {
-                mDownLoadCallback.sendFailureMessage(url, "任务列表已满");
+                mDownLoadCallback.sendFailureMessage(url, App.getAppResources().getString(R.string.task_list_is_full));
             }
             return;
         }

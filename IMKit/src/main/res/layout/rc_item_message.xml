@@ -133,6 +133,16 @@
                 android:visibility="gone" />
 
             <TextView
+                android:id="@+id/countdown_time_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="4dp"
+                android:layout_gravity="bottom"
+                android:textColor="#A4A4A4"
+                android:textSize="12sp"/>
+
+            <TextView
                 android:id="@id/rc_read_receipt_request"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -163,6 +173,16 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@android:color/transparent" />
+
+            <TextView
+                android:id="@+id/countdown_time_receive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="4dp"
+                android:layout_gravity="bottom"
+                android:textColor="#A4A4A4"
+                android:textSize="12sp"/>
 
         </LinearLayout>
 

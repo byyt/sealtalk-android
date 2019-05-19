@@ -1,6 +1,5 @@
 package io.rong.callkit;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import io.rong.callkit.util.CallKitUtils;
 import io.rong.calllib.RongCallClient;
 import io.rong.calllib.RongCallCommon;
 import io.rong.calllib.RongCallSession;
@@ -54,7 +54,7 @@ public class VideoPlugin implements IPluginModule, IPluginRequestPermissionResul
         conversationType = extension.getConversationType();
         targetId = extension.getTargetId();
 
-        String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
+        String[] permissions = CallKitUtils.getCallpermissions();
         if (PermissionCheckUtil.checkPermissions(currentFragment.getActivity(), permissions)) {
             startVideoActivity(extension);
         } else {
@@ -65,7 +65,7 @@ public class VideoPlugin implements IPluginModule, IPluginRequestPermissionResul
     private void startVideoActivity(final RongExtension extension) {
 
         RongCallSession profile = RongCallClient.getInstance().getCallSession();
-        if (profile != null && profile.getActiveTime() > 0) {
+        if (profile != null && profile.getStartTime() > 0) {
             Toast.makeText(context,
                     profile.getMediaType() == RongCallCommon.CallMediaType.AUDIO ?
                             context.getString(R.string.rc_voip_call_audio_start_fail) :

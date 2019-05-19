@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -412,7 +413,12 @@ public class LoginActivity_Code_PassWord extends BaseActivity implements View.On
                                 public void onTokenIncorrect() {
                                     Log.e(TAG, "reToken Incorrect");
                                     LoadDialog.dismiss(mContext);
-                                    NToast.shortToast(mContext, "登录失败，请稍后重试");
+                                    new Handler(getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            NToast.shortToast(mContext, "登录失败，请稍后重试");
+                                        }
+                                    });
                                 }
 
                                 @Override

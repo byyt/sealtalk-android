@@ -1,2 +1,4 @@
-include ':seal', ':recognizer', ':sticker', ':IMLib', ':IMKit', ':CallLib', ':CallKit', ':RedPacket', ':contactcard'
+include ':seal', ':recognizer', ':contactcard',":IMKit",":IMLib",":CallLib",":CallKit",":RedPacket"
+include ':RCSticker'
+include ':Sight'
 include ':imageupload_lib',':banner',':ImagePreview'

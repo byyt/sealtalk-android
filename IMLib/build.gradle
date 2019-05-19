@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.android.minSdkVersion
         targetSdkVersion rootProject.ext.android.targetSdkVersion
-        versionCode 2018070910
-        versionName "2.9.2 Dev"
+        versionCode 2019041211
+        versionName "2.9.14 Stable"
     }
 
     sourceSets {
@@ -21,8 +21,9 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-compat:26.0.0'
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    api 'com.android.support:support-compat:28.0.0'
+    api 'com.google.code.gson:gson:2.8.1'
 }
 
 repositories {

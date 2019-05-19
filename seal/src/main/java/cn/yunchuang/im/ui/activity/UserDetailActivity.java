@@ -38,15 +38,11 @@ import cn.yunchuang.im.server.utils.RongGenerate;
 import cn.yunchuang.im.server.widget.DialogWithYesOrNoUtils;
 import cn.yunchuang.im.server.widget.LoadDialog;
 import cn.yunchuang.im.ui.widget.SinglePopWindow;
-
-//CallKit start 1
 import io.rong.callkit.RongCallAction;
 import io.rong.callkit.RongVoIPIntent;
 import io.rong.calllib.RongCallClient;
 import io.rong.calllib.RongCallCommon;
 import io.rong.calllib.RongCallSession;
-//CallKit end 1
-
 import io.rong.imageloader.core.ImageLoader;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.IRongCallback;
@@ -54,6 +50,9 @@ import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.UserInfo;
 import io.rong.imlib.model.UserOnlineStatusInfo;
+
+//CallKit start 1
+//CallKit end 1
 
 /**
  * Created by tiankui on 16/11/2.
@@ -108,6 +107,7 @@ public class UserDetailActivity extends BaseActivity implements View.OnClickList
 
         mAddFriendButton.setOnClickListener(this);
         mUserPhone.setOnClickListener(this);
+
     }
 
     private void initData() {
@@ -166,8 +166,9 @@ public class UserDetailActivity extends BaseActivity implements View.OnClickList
         if (!TextUtils.isEmpty(mFriend.getUserId())) {
             String mySelf = getSharedPreferences("config", MODE_PRIVATE).getString(SealConst.SEALTALK_LOGIN_ID, "");
             if (mySelf.equals(mFriend.getUserId())) {
-                mChatButtonGroupLinearLayout.setVisibility(View.VISIBLE);
+                mChatButtonGroupLinearLayout.setVisibility(View.GONE);
                 mAddFriendButton.setVisibility(View.GONE);
+                mNoteNameLinearLayout.setVisibility(View.GONE);
                 return;
             }
             if (mIsFriendsRelationship) {
@@ -306,9 +307,9 @@ public class UserDetailActivity extends BaseActivity implements View.OnClickList
                     public void executeEditEvent(String editText) {
                         if (TextUtils.isEmpty(editText)) {
                             if (mGroupName != null && !TextUtils.isEmpty(mGroupName)) {
-                                addMessage = "我是" + mGroupName + "群的" + getSharedPreferences("config", MODE_PRIVATE).getString(SealConst.SEALTALK_LOGIN_NAME, "");
+                                addMessage = getString(R.string.invite_friend_descprtion_has_group_format, mGroupName, getSharedPreferences("config", MODE_PRIVATE).getString(SealConst.SEALTALK_LOGIN_NAME, ""));
                             } else {
-                                addMessage = "我是" + getSharedPreferences("config", MODE_PRIVATE).getString(SealConst.SEALTALK_LOGIN_NAME, "");
+                                addMessage = getString(R.string.inivte_firend_descprtion_format, getSharedPreferences("config", MODE_PRIVATE).getString(SealConst.SEALTALK_LOGIN_NAME, ""));
                             }
                         } else {
                             addMessage = editText;
@@ -405,7 +406,7 @@ public class UserDetailActivity extends BaseActivity implements View.OnClickList
                     if (friendInfoByIDResponse.getCode() == 200) {
                         mUserPhone.setVisibility(View.VISIBLE);
                         mPhoneString = friendInfoByIDResponse.getResult().getUser().getPhone();
-                        mUserPhone.setText("手机号:" + friendInfoByIDResponse.getResult().getUser().getPhone());
+                        mUserPhone.setText(getString(R.string.phone_number) + ":" + friendInfoByIDResponse.getResult().getUser().getPhone());
                         GetFriendInfoByIDResponse.ResultEntity resultEntity = friendInfoByIDResponse.getResult();
                         GetFriendInfoByIDResponse.ResultEntity.UserEntity userEntity = resultEntity.getUser();
                         if (mFriend.getUserId().equals(userEntity.getId())) {

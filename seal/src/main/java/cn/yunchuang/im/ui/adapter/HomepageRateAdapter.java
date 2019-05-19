@@ -25,6 +25,7 @@ import cn.yunchuang.im.ui.activity.UserDetailActivity_New;
 import cn.yunchuang.im.ui.activity.YueTaXmxzActivity;
 import cn.yunchuang.im.ui.widget.AgeSexView;
 import cn.yunchuang.im.zmico.utils.Utils;
+import io.rong.imkit.RongIM;
 
 /**
  * 放松入口
@@ -84,7 +85,7 @@ public class HomepageRateAdapter extends BaseQuickAdapter<HomepageModel, BaseVie
                 if (Utils.isFastClick()) {
                     return;
                 }
-
+                RongIM.getInstance().startPrivateChat(mContext, item.getId(), item.getNickname());
             }
         });
         dashangta.setOnClickListener(new View.OnClickListener() {

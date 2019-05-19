@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -38,9 +39,12 @@ import io.rong.imkit.DefaultExtensionModule;
 import io.rong.imkit.IExtensionModule;
 import io.rong.imkit.RongExtensionManager;
 import io.rong.imkit.RongIM;
+import io.rong.imkit.RongMessageItemLongClickActionManager;
 import io.rong.imkit.model.GroupNotificationMessageData;
 import io.rong.imkit.model.GroupUserInfo;
 import io.rong.imkit.model.UIConversation;
+import io.rong.imkit.model.UIMessage;
+import io.rong.imkit.widget.provider.MessageItemLongClickAction;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.Group;
@@ -66,7 +70,7 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
         RongIMClient.ConnectionStatusListener,
         RongIM.ConversationBehaviorListener,
         RongIM.IGroupMembersProvider,
-        RongIM.MessageInterceptor{
+        RongIM.MessageInterceptor {
 
     private static final int CLICK_CONVERSATION_USER_PORTRAIT = 1;
 
@@ -128,6 +132,7 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
      * init 后就能设置的监听
      */
     private void initListener() {
+        RongIM.getInstance().setSamplingRate(RongIM.SamplingRate.RC_SAMPLE_RATE_16000);
         RongIM.setConversationBehaviorListener(this);//设置会话界面操作的监听器。
         RongIM.setConversationListBehaviorListener(this);
         RongIM.setConnectionStatusListener(this);
@@ -147,6 +152,26 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
                 quit(false);
             }
         });
+        setMessageItemLongClickAction(mContext);
+    }
+
+    private static void setMessageItemLongClickAction(Context context) {
+        MessageItemLongClickAction action = new MessageItemLongClickAction.Builder()
+                .titleResId(R.string.rc_dialog_item_message_delete)
+                .actionListener(new MessageItemLongClickAction.MessageItemLongClickListener() {
+                    @Override
+                    public boolean onMessageItemLongClick(Context context, UIMessage message) {
+                        Message[] messages = new Message[1];
+                        messages[0] = message.getMessage();
+                        if (message.getConversationType().equals(Conversation.ConversationType.PRIVATE)) {
+                            RongIM.getInstance().deleteRemoteMessages(message.getConversationType(), message.getTargetId(), messages, null);
+                        } else {
+                            RongIM.getInstance().deleteMessages(new int[]{message.getMessageId()}, null);
+                        }
+                        return false;
+                    }
+                }).build();
+        RongMessageItemLongClickActionManager.getInstance().addMessageItemLongClickAction(action, 1);
     }
 
     private void setReadReceiptConversationType() {
@@ -173,7 +198,7 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
             }
             if (defaultModule != null) {
                 RongExtensionManager.getInstance().unregisterExtensionModule(defaultModule);
-                RongExtensionManager.getInstance().registerExtensionModule(new SealExtensionModule());
+                RongExtensionManager.getInstance().registerExtensionModule(new SealExtensionModule(mContext));
             }
         }
     }
@@ -486,6 +511,14 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
         NLog.d(TAG, "ConnectionStatus onChanged = " + connectionStatus.getMessage());
         if (connectionStatus.equals(ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT)) {
             quit(true);
+        } else if (connectionStatus == ConnectionStatus.TOKEN_INCORRECT) {
+            SharedPreferences sp = mContext.getSharedPreferences("config", Context.MODE_PRIVATE);
+            final String cacheToken = sp.getString("loginToken", "");
+            if (!TextUtils.isEmpty(cacheToken)) {
+                RongIM.connect(cacheToken, SealAppContext.getInstance().getConnectCallback());
+            } else {
+                Log.e("seal", "token is empty, can not reconnect");
+            }
         }
     }
 

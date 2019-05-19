@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.umeng.analytics.MobclickAgent;
 
 import cn.yunchuang.im.R;
@@ -24,6 +23,7 @@ import cn.yunchuang.im.server.network.async.AsyncTaskManager;
 import cn.yunchuang.im.server.network.async.OnDataListener;
 import cn.yunchuang.im.server.network.http.HttpException;
 import cn.yunchuang.im.server.utils.NToast;
+import io.rong.imkit.RongConfigurationManager;
 
 public abstract class BaseActivity extends FragmentActivity implements OnDataListener {
 
@@ -55,7 +55,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnDataLis
         mTitle = (TextView) super.findViewById(R.id.tv_title);
         mBtnBackDrawable = getResources().getDrawable(R.drawable.ac_back_icon);
         mBtnBackDrawable.setBounds(0, 0, mBtnBackDrawable.getMinimumWidth(),
-                mBtnBackDrawable.getMinimumHeight());
+                                   mBtnBackDrawable.getMinimumHeight());
 
 
         mAsyncTaskManager = AsyncTaskManager.getInstance(getApplicationContext());
@@ -64,11 +64,17 @@ public abstract class BaseActivity extends FragmentActivity implements OnDataLis
 
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        Context context = RongConfigurationManager.getInstance().getConfigurationContext(newBase);
+        super.attachBaseContext(context);
+    }
+
 
     @Override
     public void setContentView(View view) {
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1);
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1);
         mContentView.addView(view, lp);
     }
 
@@ -78,11 +84,6 @@ public abstract class BaseActivity extends FragmentActivity implements OnDataLis
         setContentView(view);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        ImmersionBar.with(this).destroy(); //不调用该方法，如果界面bar发生改变，在不关闭app的情况下，退出此界面再进入将记忆最后一次bar改变的状态
-    }
 
     /**
      * 设置头部是否可见
@@ -209,10 +210,10 @@ public abstract class BaseActivity extends FragmentActivity implements OnDataLis
     /**
      * 发送请求（需要检查网络）
      *
-     * @param id          请求数据的用户ID或者groupID
+     * @param id 请求数据的用户ID或者groupID
      * @param requestCode 请求码
      */
-    public void request(String id, int requestCode) {
+    public void request(String id , int requestCode) {
         if (mAsyncTaskManager != null) {
             mAsyncTaskManager.request(id, requestCode, this);
         }
@@ -254,12 +255,12 @@ public abstract class BaseActivity extends FragmentActivity implements OnDataLis
         switch (state) {
             // 网络不可用给出提示
             case AsyncTaskManager.HTTP_NULL_CODE:
-                NToast.shortToast(mContext, "当前网络不可用");
+                NToast.shortToast(mContext, mContext.getString(R.string.network_unavailable));
                 break;
 
             // 网络有问题给出提示
             case AsyncTaskManager.HTTP_ERROR_CODE:
-                NToast.shortToast(mContext, "网络问题请稍后重试");
+                NToast.shortToast(mContext, mContext.getString(R.string.network_error_and_retry_after));
                 break;
 
             // 请求有问题给出提示
@@ -281,5 +282,13 @@ public abstract class BaseActivity extends FragmentActivity implements OnDataLis
             return mInputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
         }
         return super.onTouchEvent(event);
+    }
+
+    public void hideInputKeyboard(){
+        View currentFocus = getCurrentFocus();
+        if(currentFocus != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+        }
     }
 }

@@ -7,7 +7,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
         // just for GCM.
-        classpath 'com.google.gms:google-services:2.0.0-alpha3'
+        classpath 'com.google.gms:google-services:4.2.0'
         //banner
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
     }
@@ -23,6 +23,7 @@ allprojects {
         }
         maven {url 'http://developer.huawei.com/repo/'}
         maven { url "https://jitpack.io" }
+        google()
     }
 }
 

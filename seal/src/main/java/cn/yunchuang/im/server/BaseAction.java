@@ -15,8 +15,8 @@ import cn.yunchuang.im.server.utils.json.JsonMananger;
 public class BaseAction {
 
     //    private static final String DOMAIN = "http://api.sealtalk.im";
-    public static final String DOMAIN = "http://192.168.43.184:8585";
-    public static final String DOMAIN_PIC = "http://192.168.43.184:8081";
+    public static final String DOMAIN = "http://192.168.0.101:8585";
+    public static final String DOMAIN_PIC = "http://192.168.0.101:8081";
     //保存个人资料时上传的图片会保存到upload路径下，服务器端保存的路径就是"upload/abcd.jpg"
     //然后加载的时候就是BaseAction.DOMAIN_PIC+"/"+服务端的路径
     //如果是本地路径，则需要DOMAIN_PIC + DOMAIN_PIC_UPLOAD + 本地路径

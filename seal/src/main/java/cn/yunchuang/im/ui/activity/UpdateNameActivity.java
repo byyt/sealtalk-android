@@ -38,7 +38,7 @@ public class UpdateNameActivity extends BaseActivity implements View.OnClickList
         Button rightButton = getHeadRightButton();
         rightButton.setVisibility(View.GONE);
         mHeadRightText.setVisibility(View.VISIBLE);
-        mHeadRightText.setText(getString(R.string.confirm));
+        mHeadRightText.setText(getString(R.string.save_update));
         mHeadRightText.setOnClickListener(this);
         mNameEditText = (ClearWriteEditText) findViewById(R.id.update_name);
         sp = getSharedPreferences("config", MODE_PRIVATE);
@@ -67,7 +67,7 @@ public class UpdateNameActivity extends BaseActivity implements View.OnClickList
             RongIM.getInstance().setCurrentUserInfo(new UserInfo(sp.getString(SealConst.SEALTALK_LOGIN_ID, ""), newName, Uri.parse(sp.getString(SealConst.SEALTALK_LOGING_PORTRAIT, ""))));
 
             LoadDialog.dismiss(mContext);
-            NToast.shortToast(mContext, "昵称更改成功");
+            NToast.shortToast(mContext, mContext.getString(R.string.nick_name_change_success));
             finish();
         }
     }
@@ -79,7 +79,7 @@ public class UpdateNameActivity extends BaseActivity implements View.OnClickList
             LoadDialog.show(mContext);
             request(UPDATE_NAME, true);
         } else {
-            NToast.shortToast(mContext, "昵称不能为空");
+            NToast.shortToast(mContext, mContext.getString(R.string.nick_name_can_not_empty));
             mNameEditText.setShakeAnimation();
         }
     }
