@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import cn.yunchuang.im.db.Friend;
@@ -33,6 +34,8 @@ import cn.yunchuang.im.ui.activity.LoginActivity;
 import cn.yunchuang.im.ui.activity.MainActivity;
 import cn.yunchuang.im.ui.activity.NewFriendListActivity;
 import cn.yunchuang.im.ui.activity.UserDetailActivity;
+import cn.yunchuang.im.ui.activity.YueTaMsytActivity;
+import cn.yunchuang.im.ui.activity.YueTaXmxzActivity;
 import io.rong.calllib.RongCallClient;
 import io.rong.calllib.RongCallSession;
 import io.rong.imkit.DefaultExtensionModule;
@@ -530,6 +533,27 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
         if (mActivities.contains(activity)) {
             activity.finish();
             mActivities.remove(activity);
+        }
+    }
+
+    public void popActivity(String className) {
+        Iterator<Activity> iterator = mActivities.iterator();
+        while (iterator.hasNext()) {
+            Activity activity = iterator.next();
+            switch (className) {
+                case "YueTaMsytActivity":
+                    if (activity instanceof YueTaMsytActivity) {
+                        activity.finish();
+                        iterator.remove();
+                    }
+                    break;
+                case "YueTaXmxzActivity":
+                    if (activity instanceof YueTaXmxzActivity) {
+                        activity.finish();
+                        iterator.remove();
+                    }
+                    break;
+            }
         }
     }
 

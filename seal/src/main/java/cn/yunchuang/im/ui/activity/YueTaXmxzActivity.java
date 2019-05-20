@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSONArray;
 import java.util.List;
 
 import cn.yunchuang.im.R;
+import cn.yunchuang.im.SealAppContext;
 import cn.yunchuang.im.server.network.http.HttpException;
 import cn.yunchuang.im.server.response.GetUserDetailModelOne;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
@@ -60,6 +61,13 @@ public class YueTaXmxzActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.activity_yue_ta_xmxz);
         setHeadVisibility(View.GONE);
         initView();
+        SealAppContext.getInstance().pushActivity(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        SealAppContext.getInstance().popActivity(this);
+        super.onDestroy();
     }
 
     private void initView() {

@@ -30,6 +30,7 @@ import cn.qqtheme.framework.picker.WheelPicker;
 import cn.qqtheme.framework.util.ConvertUtils;
 import cn.qqtheme.framework.widget.WheelView;
 import cn.yunchuang.im.R;
+import cn.yunchuang.im.SealAppContext;
 import cn.yunchuang.im.SealConst;
 import cn.yunchuang.im.event.SaveDdxzEvent;
 import cn.yunchuang.im.location.PoiKeywordSearchActivity;
@@ -129,12 +130,14 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.activity_yue_ta_msyt);
         setHeadVisibility(View.GONE);
         initView();
+        SealAppContext.getInstance().pushActivity(this);
     }
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         EventBus.getDefault().unregister(this);
+        SealAppContext.getInstance().popActivity(this);
+        super.onDestroy();
     }
 
     private void initView() {
@@ -628,6 +631,8 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
                         bundle.putString("msztOrderId", msztOrderResponse.getResult().getWdyhOrderId());
                         intent.putExtras(bundle);
                         startActivity(intent);
+                        SealAppContext.getInstance().popActivity("YueTaXmxzActivity");
+                        SealAppContext.getInstance().popActivity("YueTaMsytActivity");
                     } else {
                         NToast.shortToast(mContext, "下单失败");
                     }
