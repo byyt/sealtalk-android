@@ -189,7 +189,14 @@
         <!-- 我的需求，详情 -->
         <activity
             android:name="cn.yunchuang.im.ui.activity.WdyhDetailActivity"
-            android:screenOrientation="portrait" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+            <!-- 隐式启动，从系统消息里或者推送通知栏里点击跳转，采用隐式启动 -->
+            <intent-filter>
+                <action android:name="cn.yunchuang.im.ui.activity.WdyhDetailActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <!-- 我的约会，列表 -->
         <activity
@@ -562,8 +569,7 @@
             android:name="com.huawei.hms.update.provider.UpdateProvider"
             android:authorities="cn.yunchuang.im.hms.update.provider"
             android:exported="false"
-            android:grantUriPermissions="true">
-        </provider>
+            android:grantUriPermissions="true"></provider>
         <!-- 第三方相关 :接收Push消息（注册、Push消息、Push连接状态）广播 -->
         <receiver android:name="io.rong.push.platform.hms.HMSReceiver">
             <intent-filter>

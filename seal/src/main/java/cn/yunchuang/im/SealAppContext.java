@@ -22,6 +22,7 @@ import java.util.List;
 import cn.yunchuang.im.db.Friend;
 import cn.yunchuang.im.db.GroupMember;
 import cn.yunchuang.im.db.Groups;
+import cn.yunchuang.im.message.YhmsMessage;
 import cn.yunchuang.im.message.module.SealExtensionModule;
 import cn.yunchuang.im.notify.ExmapleNotifyManager;
 import cn.yunchuang.im.server.broadcast.BroadcastManager;
@@ -57,7 +58,6 @@ import io.rong.imlib.model.UserInfo;
 import io.rong.message.ContactNotificationMessage;
 import io.rong.message.GroupNotificationMessage;
 import io.rong.message.ImageMessage;
-import io.rong.message.TextMessage;
 
 /**
  * 融云相关监听 事件集合类
@@ -374,12 +374,12 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
             return true;
         } else if (messageContent instanceof ImageMessage) {
             //ImageMessage imageMessage = (ImageMessage) messageContent;
-        } else if (messageContent instanceof TextMessage) {
-            String content = ((TextMessage) messageContent).getContent();
-            String extra = ((TextMessage) messageContent).getExtra();
+        } else if (messageContent instanceof YhmsMessage) {
+            String content = ((YhmsMessage) messageContent).getContent();
+            String extra = ((YhmsMessage) messageContent).getExtra();
 
             ExmapleNotifyManager.getInstance().notify(App.getAppContext(), content, extra);
-            return true;
+            return false;
         }
         return false;
     }
@@ -698,6 +698,19 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
     //拦截消息，可以让消息当推送用，即收到消息，但不显示在消息列表，然后根据自己的需要加进行处理
     @Override
     public boolean intercept(Message message) {
-        return true;
+//        int[] a = new int[1];
+//        a[0] = message.getMessageId();
+//        RongIM.getInstance().deleteMessages(a, new RongIMClient.ResultCallback<Boolean>() {
+//            @Override
+//            public void onSuccess(Boolean aBoolean) {
+//                Log.d("xxxxxx", "onSuccess");
+//            }
+//
+//            @Override
+//            public void onError(RongIMClient.ErrorCode errorCode) {
+//                Log.d("xxxxxx", "onError");
+//            }
+//        });
+        return false;
     }
 }

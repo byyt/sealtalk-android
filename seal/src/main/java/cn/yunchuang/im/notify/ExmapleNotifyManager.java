@@ -33,7 +33,7 @@ public class ExmapleNotifyManager extends NotifyManager {
 
     public void notify(Context context,String content,String msztOrderId) {
         Intent intent = new Intent(context, WdyhDetailActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
 
         Bundle bundle = new Bundle();

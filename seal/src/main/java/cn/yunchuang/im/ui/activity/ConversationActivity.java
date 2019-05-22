@@ -32,10 +32,12 @@ import cn.yunchuang.im.db.GroupMember;
 import cn.yunchuang.im.server.utils.NLog;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.ui.fragment.ConversationFragmentEx;
+import cn.yunchuang.im.ui.fragment.ConversationFragmentSystem;
 import cn.yunchuang.im.ui.widget.LoadingDialog;
 import io.rong.callkit.RongCallKit;
 import io.rong.imkit.RongIM;
 import io.rong.imkit.RongKitIntent;
+import io.rong.imkit.fragment.ConversationFragment;
 import io.rong.imkit.fragment.UriFragment;
 import io.rong.imkit.userInfoCache.RongUserInfoManager;
 import io.rong.imlib.MessageTag;
@@ -218,8 +220,8 @@ public class ConversationActivity extends BaseActivity implements View.OnClickLi
      * 设置通告栏的监听
      */
     private void setAnnounceListener() {
-        if (fragment != null) {
-            fragment.setOnShowAnnounceBarListener(new ConversationFragmentEx.OnShowAnnounceListener() {
+        if (fragment != null && fragment instanceof ConversationFragmentEx) {
+            ((ConversationFragmentEx) fragment).setOnShowAnnounceBarListener(new ConversationFragmentEx.OnShowAnnounceListener() {
                 @Override
                 public void onShowAnnounceView(String announceMsg, final String announceUrl) {
                     layout_announce.setVisibility(View.VISIBLE);
@@ -367,7 +369,7 @@ public class ConversationActivity extends BaseActivity implements View.OnClickLi
 
     }
 
-    private ConversationFragmentEx fragment;
+    private ConversationFragment fragment;
 
     /**
      * 加载会话页面 ConversationFragmentEx 继承自 ConversationFragment
@@ -377,18 +379,36 @@ public class ConversationActivity extends BaseActivity implements View.OnClickLi
      */
     private void enterFragment(Conversation.ConversationType mConversationType, String mTargetId) {
 
-        fragment = new ConversationFragmentEx();
+        if (mConversationType.equals(Conversation.ConversationType.SYSTEM)) {
 
-        Uri uri = Uri.parse("rong://" + getApplicationInfo().packageName).buildUpon()
-                .appendPath("conversation").appendPath(mConversationType.getName().toLowerCase())
-                .appendQueryParameter("targetId", mTargetId).build();
+            fragment = new ConversationFragmentSystem();
 
-        fragment.setUri(uri);
+            Uri uri = Uri.parse("rong://" + getApplicationInfo().packageName).buildUpon()
+                    .appendPath("conversation").appendPath(mConversationType.getName().toLowerCase())
+                    .appendQueryParameter("targetId", mTargetId).build();
 
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        //xxx 为你要加载的 id
-        transaction.add(R.id.rong_content, fragment);
-        transaction.commitAllowingStateLoss();
+            fragment.setUri(uri);
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            //xxx 为你要加载的 id
+            transaction.add(R.id.rong_content, fragment);
+            transaction.commitAllowingStateLoss();
+
+        } else {
+
+            fragment = new ConversationFragmentEx();
+
+            Uri uri = Uri.parse("rong://" + getApplicationInfo().packageName).buildUpon()
+                    .appendPath("conversation").appendPath(mConversationType.getName().toLowerCase())
+                    .appendQueryParameter("targetId", mTargetId).build();
+
+            fragment.setUri(uri);
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            //xxx 为你要加载的 id
+            transaction.add(R.id.rong_content, fragment);
+            transaction.commitAllowingStateLoss();
+        }
     }
 
     /**

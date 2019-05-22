@@ -19,15 +19,19 @@ import com.facebook.stetho.Stetho;
 import com.facebook.stetho.dumpapp.DumperPlugin;
 import com.facebook.stetho.inspector.database.DefaultDatabaseConnectionProvider;
 import com.facebook.stetho.inspector.protocol.ChromeDevtoolsDomain;
+import com.hjq.toast.ToastUtils;
+import com.mylhyl.circledialog.scale.ScaleLayoutConfig;
+import com.previewlibrary.ZoomMediaLoader;
+import com.zhouyou.http.EasyHttp;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import cn.yunchuang.im.db.Friend;
-import cn.yunchuang.im.message.TestMessage;
+import cn.yunchuang.im.message.YhmsMessage;
 import cn.yunchuang.im.message.provider.ContactNotificationMessageProvider;
-import cn.yunchuang.im.message.provider.TestMessageProvider;
+import cn.yunchuang.im.message.provider.YhmsMessageProvider;
 import cn.yunchuang.im.server.pinyin.CharacterParser;
 import cn.yunchuang.im.server.utils.NLog;
 import cn.yunchuang.im.server.utils.RongGenerate;
@@ -36,6 +40,7 @@ import cn.yunchuang.im.stetho.RongDatabaseFilesProvider;
 import cn.yunchuang.im.stetho.RongDbFilesDumperPlugin;
 import cn.yunchuang.im.ui.activity.UserDetailActivity;
 import cn.yunchuang.im.utils.SharedPreferencesContext;
+import cn.yunchuang.im.widget.ZoomImageLoader;
 import io.rong.contactcard.ContactCardExtensionModule;
 import io.rong.contactcard.IContactCardClickListener;
 import io.rong.contactcard.IContactCardInfoProvider;
@@ -53,25 +58,6 @@ import io.rong.push.RongPushClient;
 import io.rong.push.pushconfig.PushConfig;
 import io.rong.recognizer.RecognizeExtensionModule;
 import io.rong.sight.SightExtensionModule;
-
-
-import com.hjq.toast.ToastUtils;
-import com.mylhyl.circledialog.scale.ScaleLayoutConfig;
-import com.previewlibrary.ZoomMediaLoader;
-import com.zhouyou.http.EasyHttp;
-import cn.yunchuang.im.db.Friend;
-import cn.yunchuang.im.message.TestMessage;
-import cn.yunchuang.im.message.provider.ContactNotificationMessageProvider;
-import cn.yunchuang.im.message.provider.TestMessageProvider;
-import cn.yunchuang.im.server.pinyin.CharacterParser;
-import cn.yunchuang.im.server.utils.NLog;
-import cn.yunchuang.im.server.utils.RongGenerate;
-import cn.yunchuang.im.stetho.RongDatabaseDriver;
-import cn.yunchuang.im.stetho.RongDatabaseFilesProvider;
-import cn.yunchuang.im.stetho.RongDbFilesDumperPlugin;
-import cn.yunchuang.im.ui.activity.UserDetailActivity;
-import cn.yunchuang.im.utils.SharedPreferencesContext;
-import cn.yunchuang.im.widget.ZoomImageLoader;
 
 
 public class App extends MultiDexApplication {
@@ -139,8 +125,10 @@ public class App extends MultiDexApplication {
             try {
                 RongIM.registerMessageTemplate(new ContactNotificationMessageProvider());
                 RongIM.registerMessageTemplate(new RealTimeLocationMessageProvider());
-                RongIM.registerMessageType(TestMessage.class);
-                RongIM.registerMessageTemplate(new TestMessageProvider());
+//                RongIM.registerMessageType(TestMessage.class);
+//                RongIM.registerMessageTemplate(new TestMessageProvider());
+                RongIM.registerMessageType(YhmsMessage.class);
+                RongIM.registerMessageTemplate(new YhmsMessageProvider());
 
 
             } catch (Exception e) {
