@@ -116,7 +116,7 @@ public class WdyhLbAdapter extends BaseQuickAdapter<GetWdyhOrderDetailModel, Bas
                 Bundle bundle = new Bundle();
 
                 bundle.putString("userId", model.getReceiveUserIdStr());
-                bundle.putString("msztOrderId", model.getWdyhOrderId());
+                bundle.putString("wdyhOrderId", model.getWdyhOrderId());
                 intent.putExtras(bundle);
                 mContext.startActivity(intent);
             }

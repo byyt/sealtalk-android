@@ -626,9 +626,7 @@ public class YueTaMsytActivity extends BaseActivity implements View.OnClickListe
                         NToast.shortToast(mContext, "下单成功");
                         Intent intent = new Intent(mContext, WdyhDetailActivity.class);
                         Bundle bundle = new Bundle();
-                        bundle.putString("userId", userId);
-                        bundle.putSerializable("skillModel", seletSkillModel);
-                        bundle.putString("msztOrderId", msztOrderResponse.getResult().getWdyhOrderId());
+                        bundle.putString("wdyhOrderId", msztOrderResponse.getResult().getWdyhOrderId());
                         intent.putExtras(bundle);
                         startActivity(intent);
                         SealAppContext.getInstance().popActivity("YueTaXmxzActivity");

@@ -13,12 +13,17 @@ import android.widget.TextView;
 
 import com.itheima.roundedimageview.RoundedImageView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.yunchuang.im.MeService;
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.SealConst;
+import cn.yunchuang.im.event.RefreshWdyhDetailEvent;
 import cn.yunchuang.im.server.network.http.HttpException;
 import cn.yunchuang.im.server.request.WdyhUpdateOrderStatusRequest;
 import cn.yunchuang.im.server.response.BaseResponse;
@@ -80,14 +85,12 @@ public class WdyhDetailActivity extends BaseActivity implements View.OnClickList
     private TextView yyddTv;
 
 
-    private static final int GET_USER_DETAIL_ONE = 1601;
     private static final int GET_MSZT_ORDER_DETAIL = 1602;
     private static final int UPDATE_MSZT_ORDER_DETAIL = 1603;
 
     private PromptDialog loadingDialog;
 
-    private String userId = "";
-    private String msztOrderId;
+    private String wdyhOrderId;
 
     private GetWdyhOrderDetailModel msztOrderModel = new GetWdyhOrderDetailModel();
 
@@ -98,10 +101,17 @@ public class WdyhDetailActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         BaseBaseUtils.setTranslucentStatus(this);//状态栏透明
         setContentView(R.layout.activity_wdxq_xq);
         setHeadVisibility(View.GONE);
         initView();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -112,8 +122,7 @@ public class WdyhDetailActivity extends BaseActivity implements View.OnClickList
 
     private void initView() {
         if (getIntent() != null && getIntent().getExtras() != null) {
-            userId = getIntent().getExtras().getString("userId");
-            msztOrderId = getIntent().getExtras().getString("msztOrderId");
+            wdyhOrderId = getIntent().getExtras().getString("wdyhOrderId");
         }
 
         titleLayout = (FrameLayout) findViewById(R.id.activity_wdxq_xq_title_layout);
@@ -205,11 +214,7 @@ public class WdyhDetailActivity extends BaseActivity implements View.OnClickList
                 finish();
                 break;
             case R.id.activity_wdxq_xq_kefu:
-                Intent intent = new Intent(mContext, YueTaMsytActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("userId", userId);
-                intent.putExtras(bundle);
-                startActivity(intent);
+
                 break;
         }
     }
@@ -542,10 +547,8 @@ public class WdyhDetailActivity extends BaseActivity implements View.OnClickList
     @Override
     public Object doInBackground(int requestCode, String id) throws HttpException {
         switch (requestCode) {
-            case GET_USER_DETAIL_ONE:
-                return action.getUserDetailOne(userId);
             case GET_MSZT_ORDER_DETAIL:
-                return action.postWdyhGetOrderDetail(msztOrderId);
+                return action.postWdyhGetOrderDetail(wdyhOrderId);
             case UPDATE_MSZT_ORDER_DETAIL:
                 return action.postWdyhUpdateOrderStatus(wdyhUpdateOrderStatusRequest);
         }
@@ -557,14 +560,6 @@ public class WdyhDetailActivity extends BaseActivity implements View.OnClickList
         DialogUtils.dimiss(loadingDialog);
         if (result != null) {
             switch (requestCode) {
-                case GET_USER_DETAIL_ONE:
-                    GetUserDetailOneResponse getUserDetailOneResponse = (GetUserDetailOneResponse) result;
-                    if (getUserDetailOneResponse.getCode() == 200) {
-                        updateDataOne(getUserDetailOneResponse);
-                    } else {
-                        NToast.shortToast(mContext, "获取个人信息失败");
-                    }
-                    break;
                 case GET_MSZT_ORDER_DETAIL:
                     GetWdyhOrderDetailResponse getWdyhOrderDetailResponse1 = (GetWdyhOrderDetailResponse) result;
                     if (getWdyhOrderDetailResponse1.getCode() == 200) {
@@ -594,15 +589,20 @@ public class WdyhDetailActivity extends BaseActivity implements View.OnClickList
             return;
         }
         switch (requestCode) {
-            case GET_USER_DETAIL_ONE:
-                NToast.shortToast(mContext, "获取个人信息失败");
-                break;
             case GET_MSZT_ORDER_DETAIL:
                 NToast.shortToast(mContext, "获取订单信息失败");
                 break;
             case UPDATE_MSZT_ORDER_DETAIL:
                 NToast.shortToast(mContext, "更新订单信息失败");
                 break;
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRefreshWdyhDetailEvent(RefreshWdyhDetailEvent event) {
+        if (Utils.isNotNull(event)) {
+            this.wdyhOrderId = event.getWdyhOrderId();
+            getData();
         }
     }
 }

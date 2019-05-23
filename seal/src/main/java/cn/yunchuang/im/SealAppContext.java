@@ -375,10 +375,9 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
         } else if (messageContent instanceof ImageMessage) {
             //ImageMessage imageMessage = (ImageMessage) messageContent;
         } else if (messageContent instanceof YhmsMessage) {
-            String content = ((YhmsMessage) messageContent).getContent();
-            String extra = ((YhmsMessage) messageContent).getExtra();
+            YhmsMessage yhmsMessage = (YhmsMessage) messageContent;
 
-            ExmapleNotifyManager.getInstance().notify(App.getAppContext(), content, extra);
+            ExmapleNotifyManager.getInstance().notify(App.getAppContext(), yhmsMessage);
             return false;
         }
         return false;

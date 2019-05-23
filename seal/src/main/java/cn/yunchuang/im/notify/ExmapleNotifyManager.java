@@ -4,10 +4,9 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 
-import cn.yunchuang.im.ui.activity.MyBaseInfoActivity_new;
-import cn.yunchuang.im.ui.activity.WdyhDetailActivity;
+import cn.yunchuang.im.message.YhmsMessage;
+import cn.yunchuang.im.utils.PushRecieveUtils;
 
 public class ExmapleNotifyManager extends NotifyManager {
 
@@ -31,14 +30,19 @@ public class ExmapleNotifyManager extends NotifyManager {
     }
 
 
-    public void notify(Context context,String content,String msztOrderId) {
-        Intent intent = new Intent(context, WdyhDetailActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    public void notify(Context context, YhmsMessage yhmsMessage) {
+//        Intent intent = new Intent(context, WdyhDetailActivity.class);
+////        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//
+//
+//        Bundle bundle = new Bundle();
+//        bundle.putString("msztOrderId", msztOrderId);
+//        intent.putExtras(bundle);
 
+        String content = yhmsMessage.getContent();
+        String extra = yhmsMessage.getExtra();
 
-        Bundle bundle = new Bundle();
-        bundle.putString("msztOrderId", msztOrderId);
-        intent.putExtras(bundle);
+        Intent intent = PushRecieveUtils.getIntent(yhmsMessage);
 
         String notifyTitle = "您有一条新的消息";
 
