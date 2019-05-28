@@ -21,6 +21,8 @@ public class BasePref {
     public static final String KEY_LONGITUDE = "KEY_LONGITUDE"; //
     public static final String KEY_LATITUDE = "KEY_LATITUDE";
     public static final String KEY_CITY = "KEY_CITY";
+    public static final String KEY_MY_BALANCE = "KEY_MY_BALANCE";
+    public static final String KEY_MY_COINS = "KEY_MY_COINS";
 
     private static SharedPreferences getPreference() {
         return App.getAppContext().getSharedPreferences(YUNCHUANG_ACCOUNT_PREFERENCE, Context.MODE_PRIVATE);

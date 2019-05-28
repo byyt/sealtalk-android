@@ -1,6 +1,7 @@
 package cn.yunchuang.im.utils;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.widget.AdapterView;
 
@@ -16,6 +17,7 @@ import com.mylhyl.circledialog.scale.ScaleLayoutConfig;
 import java.util.List;
 
 import cn.yunchuang.im.R;
+import cn.yunchuang.im.ui.activity.WdqbActivity;
 import cn.yunchuang.im.widget.dialog.ConfirmDialog;
 import cn.yunchuang.im.widget.dialog.ShuruDialog;
 import cn.yunchuang.im.widget.dialog.ShuruDuohangDialog;
@@ -83,8 +85,6 @@ public class DialogUtils {
                 dialog.dismiss();
             }
         });
-
-
     }
 
     /**
@@ -146,6 +146,31 @@ public class DialogUtils {
             }
         });
     }
+
+    /**
+     * 余额不足或金币不足弹出的窗，提示去充值
+     * @param activity
+     */
+    public static void showBalanceNotEnoughDialog(final Activity activity) {
+        final ConfirmDialog dialog = new ConfirmDialog(activity);
+        dialog.show();//必须先show，在设置下面的值，否则显示不出来？
+        dialog.setTitle("余额不足，是否前往充值？").setContent("").setLeftText("取消").setRightText("马上充值");
+        dialog.setDialogListener(new ConfirmDialog.SimpleDialog() {
+            @Override
+            public void rightButtonEvent() {
+                //前往钱包页面
+                Intent intent = new Intent(activity, WdqbActivity.class);
+                activity.startActivity(intent);
+                dialog.dismiss();
+            }
+
+            @Override
+            public void leftButtonEvent() {
+                dialog.dismiss();
+            }
+        });
+    }
+
 
     public static PromptDialog getPicDialog(Activity activity) {
         PromptDialog promptDialog = new PromptDialog(activity);

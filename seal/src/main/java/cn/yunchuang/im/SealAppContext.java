@@ -30,13 +30,15 @@ import cn.yunchuang.im.server.network.http.HttpException;
 import cn.yunchuang.im.server.pinyin.CharacterParser;
 import cn.yunchuang.im.server.response.ContactNotificationMessageData;
 import cn.yunchuang.im.server.utils.NLog;
+import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.server.utils.json.JsonMananger;
 import cn.yunchuang.im.ui.activity.LoginActivity;
 import cn.yunchuang.im.ui.activity.MainActivity;
 import cn.yunchuang.im.ui.activity.NewFriendListActivity;
-import cn.yunchuang.im.ui.activity.UserDetailActivity;
+import cn.yunchuang.im.ui.activity.UserDetailActivity_New;
 import cn.yunchuang.im.ui.activity.YueTaMsytActivity;
 import cn.yunchuang.im.ui.activity.YueTaXmxzActivity;
+import cn.yunchuang.im.zmico.utils.Utils;
 import io.rong.calllib.RongCallClient;
 import io.rong.calllib.RongCallSession;
 import io.rong.imkit.DefaultExtensionModule;
@@ -71,8 +73,9 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
         RongIM.GroupUserInfoProvider,
         RongIM.LocationProvider,
         RongIMClient.ConnectionStatusListener,
-        RongIM.ConversationBehaviorListener,
+        RongIM.ConversationClickListener,
         RongIM.IGroupMembersProvider,
+//        RongIM.OnSendMessageListener,//发送消息监听移到了ConversationActivity，因为涉及到弹窗
         RongIM.MessageInterceptor {
 
     private static final int CLICK_CONVERSATION_USER_PORTRAIT = 1;
@@ -136,7 +139,12 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
      */
     private void initListener() {
         RongIM.getInstance().setSamplingRate(RongIM.SamplingRate.RC_SAMPLE_RATE_16000);
-        RongIM.setConversationBehaviorListener(this);//设置会话界面操作的监听器。
+        //设置会话界面操作的监听器。主要用到了里面点击头像跳转到详情页
+        RongIM.setConversationClickListener(this);
+        //发送消息的监听，主要用到发送消息前，判断余额是否充足，充足则允许发送，不充足则弹窗诱导充值
+        //发送消息成功后，再调用扣费的请求，扣费有可能出现失败的情况，发送消息进行本地打日志，同时通过融云后台的消息记录与自己后台的数据库记录进行对比，解决纠纷
+        //发送消息监听移到了ConversationActivity，因为涉及到弹窗
+//        RongIM.getInstance().setSendMessageListener(this);
         RongIM.setConversationListBehaviorListener(this);
         RongIM.setConnectionStatusListener(this);
         RongIM.setUserInfoProvider(this, true);
@@ -444,24 +452,22 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
     }
 
     @Override
-    public boolean onUserPortraitClick(Context context, Conversation.ConversationType conversationType, UserInfo userInfo) {
+    public boolean onUserPortraitClick(Context context, Conversation.ConversationType conversationType, UserInfo userInfo, String s) {
         if (conversationType == Conversation.ConversationType.CUSTOMER_SERVICE || conversationType == Conversation.ConversationType.PUBLIC_SERVICE || conversationType == Conversation.ConversationType.APP_PUBLIC_SERVICE) {
             return false;
         }
-        //开发测试时,发送系统消息的userInfo只有id不为空
-        if (userInfo != null && userInfo.getName() != null && userInfo.getPortraitUri() != null) {
-            Intent intent = new Intent(context, UserDetailActivity.class);
-            intent.putExtra("conversationType", conversationType.getValue());
-            Friend friend = CharacterParser.getInstance().generateFriendFromUserInfo(userInfo);
-            intent.putExtra("friend", friend);
-            intent.putExtra("type", CLICK_CONVERSATION_USER_PORTRAIT);
-            context.startActivity(intent);
+        //下面是修改后的代码，跳转到我写的UserDetailActivity_New
+        if (Utils.isFastClick()) {
+            return false;
         }
+        Intent intent = new Intent(mContext, UserDetailActivity_New.class);
+        intent.putExtra("userId", userInfo.getUserId());
+        mContext.startActivity(intent);
         return true;
     }
 
     @Override
-    public boolean onUserPortraitLongClick(Context context, Conversation.ConversationType conversationType, UserInfo userInfo) {
+    public boolean onUserPortraitLongClick(Context context, Conversation.ConversationType conversationType, UserInfo userInfo, String s) {
         return false;
     }
 
@@ -480,6 +486,10 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
         return false;
     }
 
+    @Override
+    public boolean onMessageLinkClick(Context context, String s, Message message) {
+        return false;
+    }
 
     private void startRealTimeLocation(Context context, Conversation.ConversationType conversationType, String targetId) {
 
@@ -487,11 +497,6 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener,
 
     private void joinRealTimeLocation(Context context, Conversation.ConversationType conversationType, String targetId) {
 
-    }
-
-    @Override
-    public boolean onMessageLinkClick(Context context, String s) {
-        return false;
     }
 
     @Override

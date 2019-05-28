@@ -30,6 +30,7 @@ import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.ui.activity.MyBaseInfoActivity_new;
 import cn.yunchuang.im.ui.activity.UserDetailActivity_New;
+import cn.yunchuang.im.ui.activity.WdqbActivity;
 import cn.yunchuang.im.ui.activity.WdyhLbActivity;
 import cn.yunchuang.im.utils.GlideUtils;
 import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
@@ -209,18 +210,25 @@ public class MineFragment_new extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.fragment_mine_avatar_name_layout:
                 if (getActivity() != null) {
-                    Intent intentUD = new Intent(getActivity(), UserDetailActivity_New.class);
-                    intentUD.putExtra("userId", MeService.getUid());
-                    getActivity().startActivity(intentUD);
+                    Intent intent = new Intent(getActivity(), UserDetailActivity_New.class);
+                    intent.putExtra("userId", MeService.getUid());
+                    getActivity().startActivity(intent);
+                }
+                break;
+            case R.id.fragment_mine_qianbao_layout:
+                if (getActivity() != null) {
+                    Intent intent = new Intent(getActivity(), WdqbActivity.class);
+                    getActivity().startActivity(intent);
                 }
                 break;
             case R.id.fragment_mine_xuqiu_layout:
                 if (getActivity() != null) {
-                    Intent intentUD = new Intent(getActivity(), WdyhLbActivity.class);
-                    intentUD.putExtra("userId", MeService.getUid());
-                    getActivity().startActivity(intentUD);
+                    Intent intent = new Intent(getActivity(), WdyhLbActivity.class);
+                    intent.putExtra("userId", MeService.getUid());
+                    getActivity().startActivity(intent);
                 }
                 break;
+
         }
     }
 

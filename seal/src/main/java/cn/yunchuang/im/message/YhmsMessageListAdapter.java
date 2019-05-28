@@ -1,4 +1,4 @@
-package cn.yunchuang.im.ui.adapter;
+package cn.yunchuang.im.message;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.utils.DateUtils;
+import cn.yunchuang.im.zmico.utils.DeviceUtils;
 import io.rong.imkit.model.UIMessage;
 import io.rong.imkit.widget.AsyncImageView;
 import io.rong.imkit.widget.ProviderContainerView;
@@ -22,12 +23,12 @@ import io.rong.imkit.widget.adapter.MessageListAdapter;
  * Created by zhou_yuntao on 2019/5/22.
  */
 
-public class MessageListAdapterSystem extends MessageListAdapter {
+public class YhmsMessageListAdapter extends MessageListAdapter {
 
     private LayoutInflater inflater;
     private Context context;
 
-    public MessageListAdapterSystem(Context context) {
+    public YhmsMessageListAdapter(Context context) {
         super(context);
         this.context = context;
         inflater = LayoutInflater.from(context);
@@ -45,6 +46,13 @@ public class MessageListAdapterSystem extends MessageListAdapter {
         holderNew.time.setVisibility(View.VISIBLE);
         String time = DateUtils.getYMDHM(data.getSentTime() / 1000);
         holderNew.time.setText(time);
+
+        //最后一条设置底部边距
+        if (position == getCount() - 1) {
+            holderNew.contentView.setPadding(0, 0, 0, DeviceUtils.dpToPx(15));
+        } else {
+            holderNew.contentView.setPadding(0, 0, 0, 0);
+        }
 
     }
 

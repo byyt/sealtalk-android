@@ -13,9 +13,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,15 +28,28 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import cn.yunchuang.im.HttpManager;
+import cn.yunchuang.im.MeService;
 import cn.yunchuang.im.R;
 import cn.yunchuang.im.SealAppContext;
 import cn.yunchuang.im.SealUserInfoManager;
 import cn.yunchuang.im.db.GroupMember;
+import cn.yunchuang.im.event.RefreshBalanceCoinsEvent;
+import cn.yunchuang.im.server.response.BalanceCoinsModel;
+import cn.yunchuang.im.server.response.BalanceCoinsResponse;
+import cn.yunchuang.im.server.response.GetUserDetailModelOne;
+import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
 import cn.yunchuang.im.server.utils.NLog;
 import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.ui.fragment.ConversationFragmentEx;
 import cn.yunchuang.im.ui.fragment.ConversationFragmentSystem;
 import cn.yunchuang.im.ui.widget.LoadingDialog;
+import cn.yunchuang.im.utils.AndroidBug5497Workaround;
+import cn.yunchuang.im.utils.DialogUtils;
+import cn.yunchuang.im.zmico.utils.BaseBaseUtils;
+import cn.yunchuang.im.zmico.utils.DeviceUtils;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.rong.callkit.RongCallKit;
 import io.rong.imkit.RongIM;
 import io.rong.imkit.RongKitIntent;
@@ -50,6 +66,12 @@ import io.rong.imlib.typingmessage.TypingStatus;
 import io.rong.message.TextMessage;
 import io.rong.message.VoiceMessage;
 
+import static cn.yunchuang.im.SealConst.ADD_BALANCE_ONE_CHAT_MESSAGE;
+import static cn.yunchuang.im.SealConst.BALANCE_COINS_NOT_ENOUGH_BALANCE;
+import static cn.yunchuang.im.SealConst.BALANCE_COINS_TYPE_CHAT_MESSAGE;
+import static cn.yunchuang.im.SealConst.IDENTITY_TYPE_DAREN;
+import static cn.yunchuang.im.SealConst.MINUS_BALANCE_ONE_CHAT_MESSAGE;
+
 //CallKit start 1
 //CallKit end 1
 
@@ -59,7 +81,7 @@ import io.rong.message.VoiceMessage;
  * 2，加载会话页面
  * 3，push 和 通知 判断
  */
-public class ConversationActivity extends BaseActivity implements View.OnClickListener {
+public class ConversationActivity extends BaseActivity implements View.OnClickListener, RongIM.OnSendMessageListener {
 
     private String TAG = ConversationActivity.class.getSimpleName();
     /**
@@ -97,11 +119,35 @@ public class ConversationActivity extends BaseActivity implements View.OnClickLi
     private TextView tv_announce;
     private ImageView iv_arrow;
 
+    private FrameLayout titleLayout;
+    private ImageView backImg;
+    private TextView titleTv;
+    private TextView meIsDarenTv;
+    private TextView heIsDarenTv;
+    private TextView errorTv;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
     @Override
     @TargetApi(23)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        BaseBaseUtils.setTranslucentStatus(this);//状态栏透明，
         setContentView(R.layout.conversation);
+        //设置状态栏透明BaseBaseUtils.setTranslucentStatus(this)会和windowSoftInputMode="stateHidden|adjustResize"冲突，导致键盘弹起时无法把聊天区域往上推
+        //这个类是用来解决这个问题的，解决网址：https://blog.csdn.net/plq690816/article/details/51374883
+        AndroidBug5497Workaround.assistActivity(this);
+
+        setHeadVisibility(View.GONE);
+
+        //额外加的沉浸式标题栏
+        titleLayout = (FrameLayout) findViewById(R.id.activity_conversation_title_layout);
+        backImg = (ImageView) findViewById(R.id.activity_conversation_back);
+        backImg.setOnClickListener(this);
+        titleTv = (TextView) findViewById(R.id.activity_conversation_title_tv);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                DeviceUtils.dpToPx(48) + DeviceUtils.getStatusBarHeightPixels(this));
+        titleLayout.setLayoutParams(layoutParams);
 
         TextTypingTitle = getString(R.string.the_other_side_is_typing);
         VoiceTypingTitle = getString(R.string.the_other_side_is__speaking);
@@ -214,6 +260,95 @@ public class ConversationActivity extends BaseActivity implements View.OnClickLi
 
 
         //CallKit end 2
+
+
+        //发送消息的监听，主要用到发送消息前，判断余额是否充足，充足则允许发送，不充足则弹窗诱导充值
+        //发送消息成功后，再调用扣费的请求，扣费有可能出现失败的情况，发送消息进行本地打日志，同时通过融云后台的消息记录与自己后台的数据库记录进行对比，解决纠纷
+        RongIM.getInstance().setSendMessageListener(this);
+
+        meIsDarenTv = (TextView) findViewById(R.id.activity_conversation_identity_you_are_daren);
+        heIsDarenTv = (TextView) findViewById(R.id.activity_conversation_identity_he_is_daren);
+        errorTv = (TextView) findViewById(R.id.activity_conversation_identity_error);
+
+        //只在私聊界面中展示
+        if (mConversationType == Conversation.ConversationType.PRIVATE) {
+            //请求自己信息，判断自己是否为达人，从而确定收到消息是否可以获得收益
+            Disposable disposable1 = HttpManager.getInstance().getUserDetailOne(MeService.getUid(), new HttpManager.ResultCallback<GetUserDetailOneResponse>() {
+                @Override
+                public void onSuccess(GetUserDetailOneResponse response) {
+                    if (ConversationActivity.this.isDestroyed() || ConversationActivity.this.isFinishing()) {
+                        return;
+                    }
+                    if (response != null) {
+                        GetUserDetailModelOne model = response.getResult();
+                        if (model != null) {
+                            if (model.getIdentity() == IDENTITY_TYPE_DAREN) {//身份是达人
+                                meIsDarenTv.setVisibility(View.VISIBLE);
+                                errorTv.setVisibility(View.GONE);
+                            } else {
+                                meIsDarenTv.setVisibility(View.GONE);
+                                errorTv.setVisibility(View.GONE);
+                            }
+                        }
+                    } else {
+//                    NToast.shortToast(ConversationActivity.this, "获取用户信息失败");
+                        errorTv.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                @Override
+                public void onError(String errString) {
+                    if (ConversationActivity.this.isDestroyed() || ConversationActivity.this.isFinishing()) {
+                        return;
+                    }
+                    if (!TextUtils.isEmpty(errString)) {
+//                    NToast.shortToast(ConversationActivity.this, errString);
+                    } else {
+//                    NToast.shortToast(ConversationActivity.this, "获取用户信息失败");
+                    }
+                    errorTv.setVisibility(View.VISIBLE);
+                }
+            });
+            //请求对方信息，判断对方是否为达人，从而确定发送消息是否需要赠送私信钥匙
+            Disposable disposable2 = HttpManager.getInstance().getUserDetailOne(mTargetId, new HttpManager.ResultCallback<GetUserDetailOneResponse>() {
+                @Override
+                public void onSuccess(GetUserDetailOneResponse response) {
+                    if (ConversationActivity.this.isDestroyed() || ConversationActivity.this.isFinishing()) {
+                        return;
+                    }
+                    if (response != null) {
+                        GetUserDetailModelOne model = response.getResult();
+                        if (model != null) {
+                            if (model.getIdentity() == IDENTITY_TYPE_DAREN) {//身份是达人
+                                heIsDarenTv.setVisibility(View.VISIBLE);
+                                errorTv.setVisibility(View.GONE);
+                            } else {
+                                heIsDarenTv.setVisibility(View.GONE);
+                                errorTv.setVisibility(View.GONE);
+                            }
+                        }
+                    } else {
+//                    NToast.shortToast(ConversationActivity.this, "获取用户信息失败");
+                        errorTv.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                @Override
+                public void onError(String errString) {
+                    if (ConversationActivity.this.isDestroyed() || ConversationActivity.this.isFinishing()) {
+                        return;
+                    }
+                    if (!TextUtils.isEmpty(errString)) {
+                        NToast.shortToast(ConversationActivity.this, errString);
+                    } else {
+//                    NToast.shortToast(ConversationActivity.this, "获取用户信息失败");
+                    }
+                    errorTv.setVisibility(View.VISIBLE);
+                }
+            });
+            compositeDisposable.add(disposable1);
+            compositeDisposable.add(disposable2);
+        }
     }
 
     /**
@@ -411,6 +546,12 @@ public class ConversationActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
+    @Override
+    public void setTitle(String titleId) {
+        super.setTitle(titleId);
+        titleTv.setText(titleId);
+    }
+
     /**
      * 设置会话页面 Title
      *
@@ -431,7 +572,7 @@ public class ConversationActivity extends BaseActivity implements View.OnClickLi
         } else if (conversationType.equals(Conversation.ConversationType.CHATROOM)) {
             setTitle(title);
         } else if (conversationType.equals(Conversation.ConversationType.SYSTEM)) {
-            setTitle(R.string.de_actionbar_system);
+            setTitle("约会秘书");//自己做的修改
         } else if (conversationType.equals(Conversation.ConversationType.APP_PUBLIC_SERVICE)) {
             setAppPublicServiceActionBar(targetId);
         } else if (conversationType.equals(Conversation.ConversationType.PUBLIC_SERVICE)) {
@@ -609,6 +750,7 @@ public class ConversationActivity extends BaseActivity implements View.OnClickLi
         RongIMClient.setTypingStatusListener(null);
         SealAppContext.getInstance().popActivity(this);
         super.onDestroy();
+        compositeDisposable.clear();
     }
 
     @Override
@@ -673,7 +815,27 @@ public class ConversationActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        enterSettingActivity();
+        if (v.getId() == R.id.activity_conversation_back) {
+            if (fragment != null && !fragment.onBackPressed()) {
+                if (fragment.isLocationSharing()) {
+                    fragment.showQuitLocationSharingDialog(this);
+                    return;
+                }
+                hintKbTwo();
+                if (isFromPush) {
+                    isFromPush = false;
+                    startActivity(new Intent(this, MainActivity.class));
+                }
+                if (mConversationType.equals(Conversation.ConversationType.CHATROOM)
+                        || mConversationType.equals(Conversation.ConversationType.CUSTOMER_SERVICE)) {
+                    SealAppContext.getInstance().popActivity(this);
+                } else {
+                    SealAppContext.getInstance().popAllActivity();
+                }
+            }
+        } else {
+            enterSettingActivity();
+        }
     }
 
     @Override
@@ -696,4 +858,76 @@ public class ConversationActivity extends BaseActivity implements View.OnClickLi
             }
         }
     }
+
+    //自己加的监听，消息发送前的处理，
+    //先判断当前余额是否充足，不充足则发送不成功，弹一个窗引导充值，（直接用sp保存的值来判断，而不是通过网络来判断，这样比较快）
+    //如果充足，则允许发送，然后再异步调用减钱的操作（减钱过程可能失败，这时候发送要写日志下来，或者到融云里查询这条消息发送记录，与后台数据库进行对比，解除纠纷）
+    @Override
+    public io.rong.imlib.model.Message onSend(io.rong.imlib.model.Message message) {
+
+        if (MeService.getMyBalance() >= MINUS_BALANCE_ONE_CHAT_MESSAGE) {
+            return message;
+        } else {
+            DialogUtils.showBalanceNotEnoughDialog(this);
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean onSent(io.rong.imlib.model.Message message, RongIM.SentMessageErrorCode sentMessageErrorCode) {
+        if (message.getSentStatus() == io.rong.imlib.model.Message.SentStatus.FAILED) {
+            if (sentMessageErrorCode == RongIM.SentMessageErrorCode.NOT_IN_CHATROOM) {
+                //不在聊天室
+            } else if (sentMessageErrorCode == RongIM.SentMessageErrorCode.NOT_IN_DISCUSSION) {
+                //不在讨论组
+            } else if (sentMessageErrorCode == RongIM.SentMessageErrorCode.NOT_IN_GROUP) {
+                //不在群组
+            } else if (sentMessageErrorCode == RongIM.SentMessageErrorCode.REJECTED_BY_BLACKLIST) {
+                //你在他的黑名单中
+                NToast.shortToast(ConversationActivity.this, "发送失败，您已被对方拉黑");
+            }
+        }
+
+        //发送成功后，进行减余额处理
+        if (message.getSentStatus() == io.rong.imlib.model.Message.SentStatus.SENT) {
+            //这个请求，不用再退出activity时注销，减余额操作可以在后台进行
+            HttpManager.getInstance().postBalanceCoinsOperationMulti(BALANCE_COINS_TYPE_CHAT_MESSAGE,
+                    MINUS_BALANCE_ONE_CHAT_MESSAGE, 0,
+                    message.getTargetId(), ADD_BALANCE_ONE_CHAT_MESSAGE, 0,
+                    new HttpManager.ResultCallback<BalanceCoinsResponse>() {
+                        @Override
+                        public void onSuccess(BalanceCoinsResponse balanceCoinsResponse) {
+                            if (balanceCoinsResponse == null) {
+                                return;
+                            }
+                            //不管余额是否充足，都更新服务端返回的余额和金币的最新值，并更新本地值
+                            BalanceCoinsModel model = balanceCoinsResponse.getResult();
+                            if (model == null) {
+                                return;
+                            }
+                            MeService.setMyBalance(model.getBalance());
+                            MeService.setMyCoin(model.getCoins());
+                            RefreshBalanceCoinsEvent.postEvent(model.getBalance(), model.getCoins());
+                            if (balanceCoinsResponse.getCode() == 200) {
+
+                            } else if (balanceCoinsResponse.getCode() == BALANCE_COINS_NOT_ENOUGH_BALANCE) {
+                                DialogUtils.showBalanceNotEnoughDialog(ConversationActivity.this);
+                            } else if (balanceCoinsResponse.getCode() == 500) {
+                                //这种情况，是服务端开启事务插数据库失败的情况，按理说这时候不允许再进行下一步操作
+                                //淡入如果是发消息，发成功之后才调用次接口，所以看下情况先
+                                //可以让他发成功一次，下次再发则先调用此接口，如果此接口还是失败，则不允许他发
+                            }
+                        }
+
+                        @Override
+                        public void onError(String errString) {
+//                        Ln.e("发消息，减余额失败，"+errString);
+                        }
+                    });
+        }
+
+        return false;
+    }
 }
+

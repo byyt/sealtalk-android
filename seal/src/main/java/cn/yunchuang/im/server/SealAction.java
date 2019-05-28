@@ -43,6 +43,8 @@ import cn.yunchuang.im.server.request.SetPortraitRequest;
 import cn.yunchuang.im.server.request.UpdateBaseUserInfoRequest;
 import cn.yunchuang.im.server.request.UpdateUserLocationRequest;
 import cn.yunchuang.im.server.request.VerifyCodeRequest;
+import cn.yunchuang.im.server.request.WdqbBalanceCoinsMultiRequest;
+import cn.yunchuang.im.server.request.WdqbBalanceCoinsSingleRequest;
 import cn.yunchuang.im.server.request.WdyhCreateOrderRequest;
 import cn.yunchuang.im.server.request.WdyhGetOrderDetailRequest;
 import cn.yunchuang.im.server.request.WdyhGetOrderLbRequest;
@@ -50,6 +52,7 @@ import cn.yunchuang.im.server.request.WdyhUpdateOrderStatusRequest;
 import cn.yunchuang.im.server.response.AddGroupMemberResponse;
 import cn.yunchuang.im.server.response.AddToBlackListResponse;
 import cn.yunchuang.im.server.response.AgreeFriendsResponse;
+import cn.yunchuang.im.server.response.BalanceCoinsResponse;
 import cn.yunchuang.im.server.response.BaseResponse;
 import cn.yunchuang.im.server.response.ChangePasswordResponse;
 import cn.yunchuang.im.server.response.CheckPhoneResponse;
@@ -752,7 +755,6 @@ public class SealAction extends BaseAction {
     public BaseResponse postWdyhUpdateOrderStatus(WdyhUpdateOrderStatusRequest wdyhUpdateOrderStatusRequest)
             throws HttpException {
 
-
         String url = getURL("user/wdyh_update_order_status");
         String json = JsonMananger.beanToJson(wdyhUpdateOrderStatusRequest);
         StringEntity entity = null;
@@ -770,6 +772,113 @@ public class SealAction extends BaseAction {
         }
         return response;
 
+    }
+
+    /**
+     * 余额和金币获取
+     *
+     * @return
+     * @throws HttpException
+     */
+    public BalanceCoinsResponse postMyBalanceCoinsGet()
+            throws HttpException {
+
+        String url = getURL("user/balance_coins_get");
+        String json = JsonMananger.beanToJson(new Object());
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(json, ENCODING);
+            entity.setContentType(CONTENT_TYPE);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String result = httpManager.post(mContext, url, entity, CONTENT_TYPE);
+        BalanceCoinsResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            NLog.e("BalanceCoinsResponse", result);
+            response = JsonMananger.jsonToBean(result, BalanceCoinsResponse.class);
+        }
+        return response;
+    }
+
+    /**
+     * 余额和金币操作，加减余额，加减金币，
+     * 其他接口也可能操作余额和金币，不是说所有的余额金币操作都要调用这个接口
+     *
+     * @param type
+     * @param balance
+     * @param coins
+     * @return
+     * @throws HttpException
+     */
+    public BalanceCoinsResponse postBalanceCoinsOperationSingle(int type, double balance, long coins)
+            throws HttpException {
+
+        String url = getURL("user/balance_coins_operation");
+        WdqbBalanceCoinsSingleRequest request = new WdqbBalanceCoinsSingleRequest();
+        request.setType(type);
+        request.setBalance(balance);
+        request.setCoins(coins);
+        String json = JsonMananger.beanToJson(request);
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(json, ENCODING);
+            entity.setContentType(CONTENT_TYPE);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String result = httpManager.post(mContext, url, entity, CONTENT_TYPE);
+        BalanceCoinsResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            NLog.e("BalanceCoinsResponse", result);
+            response = JsonMananger.jsonToBean(result, BalanceCoinsResponse.class);
+        }
+        return response;
+    }
+
+    /**
+     * 余额和金币操作，加减余额，加减金币，
+     * 其他接口也可能操作余额和金币，不是说所有的余额金币操作都要调用这个接口
+     * 这个接口与上个接口区别就是，这个接口既有付费方，也有收费方
+     *
+     * @param type         SealConstf中有详细说明
+     * @param myBalance
+     * @param myCoins
+     * @param otherUserId  另外一方的userId
+     * @param otherBalance
+     * @param otherCoins
+     * @return
+     * @throws HttpException
+     */
+    public BalanceCoinsResponse postBalanceCoinsOperationMulti(int type, double myBalance, long myCoins,
+                                                               String otherUserId, double otherBalance,
+                                                               long otherCoins)
+            throws HttpException {
+
+        String url = getURL("user/balance_coins_operation_multi");
+        WdqbBalanceCoinsMultiRequest request = new WdqbBalanceCoinsMultiRequest();
+
+        request.setType(type);
+        request.setMyBalance(myBalance);
+        request.setMyCoins(myCoins);
+        request.setOtherUserId(otherUserId);
+        request.setOtherBalance(otherBalance);
+        request.setOtherCoins(otherCoins);
+        String json = JsonMananger.beanToJson(request);
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(json, ENCODING);
+            entity.setContentType(CONTENT_TYPE);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String result = httpManager.post(mContext, url, entity, CONTENT_TYPE);
+        BalanceCoinsResponse response = null;
+        if (!TextUtils.isEmpty(result)) {
+            NLog.e("BalanceCoinsResponse", result);
+            response = JsonMananger.jsonToBean(result, BalanceCoinsResponse.class);
+        }
+        return response;
     }
 
     /**

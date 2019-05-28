@@ -30,6 +30,7 @@ import cn.yunchuang.im.server.utils.NToast;
 import cn.yunchuang.im.server.widget.LoadDialog;
 import cn.yunchuang.im.ui.adapter.ConversationListAdapterEx;
 import cn.yunchuang.im.ui.fragment.ContactsFragment;
+import cn.yunchuang.im.ui.fragment.ConversationListFragment_new;
 import cn.yunchuang.im.ui.fragment.HomepageFragment_new;
 import cn.yunchuang.im.ui.fragment.MineFragment_new;
 import cn.yunchuang.im.ui.widget.DragPointView;
@@ -60,13 +61,14 @@ public class MainActivity extends FragmentActivity implements
     /**
      * 会话列表的fragment
      */
-    private ConversationListFragment mConversationListFragment = null;
+    private ConversationListFragment mConversationListFragment = null; //这个fragment移到ConversationListFragment_new中了，这里先不删吧
     private boolean isDebug;
     private Context mContext;
     private Conversation.ConversationType[] mConversationsTypes = null;
     //其他fragment
-    private ContactsFragment mContactsFragment = null;
     private HomepageFragment_new mHomepageFragmentNew = null;
+    private ContactsFragment mContactsFragment = null;
+    private ConversationListFragment_new mConversationListNewFragment = null;
     private MineFragment_new mMineFragment = null;
 
     @Override
@@ -134,6 +136,7 @@ public class MainActivity extends FragmentActivity implements
         Fragment conversationList = initConversationList();
         mContactsFragment = new ContactsFragment();
         mHomepageFragmentNew = new HomepageFragment_new();
+        mConversationListNewFragment = new ConversationListFragment_new();
         mMineFragment = new MineFragment_new();
 
         mViewPager = (ViewPager) findViewById(R.id.main_viewpager);
@@ -142,10 +145,12 @@ public class MainActivity extends FragmentActivity implements
         mUnreadNumView.setOnClickListener(this);
         mUnreadNumView.setDragListencer(this);
 
-        mFragment.add(conversationList);
+//        mFragment.add(conversationList);
+        mFragment.add(mConversationListNewFragment);
         mFragment.add(mContactsFragment);
-//        mFragment.add(new DiscoverFragment());
         mFragment.add(mHomepageFragmentNew);
+//        mFragment.add(new DiscoverFragment());
+
         mFragment.add(mMineFragment);
         FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
@@ -269,22 +274,24 @@ public class MainActivity extends FragmentActivity implements
         switch (v.getId()) {
             case R.id.seal_chat:
                 if (mViewPager.getCurrentItem() == 0) {
-                    if (firstClick == 0) {
-                        firstClick = System.currentTimeMillis();
-                    } else {
-                        secondClick = System.currentTimeMillis();
-                    }
-                    RLog.i("MainActivity", "time = " + (secondClick - firstClick));
-                    if (secondClick - firstClick > 0 && secondClick - firstClick <= 800) {
-                        mConversationListFragment.focusUnreadItem();
-                        firstClick = 0;
-                        secondClick = 0;
-                    } else if (firstClick != 0 && secondClick != 0) {
-                        firstClick = 0;
-                        secondClick = 0;
-                    }
+                    //下面的代码是，点击两次焦点移到未读消息，这个功能可以去掉
+//                    if (firstClick == 0) {
+//                        firstClick = System.currentTimeMillis();
+//                    } else {
+//                        secondClick = System.currentTimeMillis();
+//                    }
+//                    RLog.i("MainActivity", "time = " + (secondClick - firstClick));
+//                    if (secondClick - firstClick > 0 && secondClick - firstClick <= 800) {
+//                        mConversationListFragment.focusUnreadItem();
+//                        firstClick = 0;
+//                        secondClick = 0;
+//                    } else if (firstClick != 0 && secondClick != 0) {
+//                        firstClick = 0;
+//                        secondClick = 0;
+//                    }
                 }
                 mViewPager.setCurrentItem(0, false);
+                mConversationListNewFragment.fragmentShow();
                 break;
             case R.id.seal_contact_list:
                 mViewPager.setCurrentItem(1, false);

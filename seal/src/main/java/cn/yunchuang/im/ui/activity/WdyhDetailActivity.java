@@ -105,7 +105,7 @@ public class WdyhDetailActivity extends BaseActivity implements View.OnClickList
         BaseBaseUtils.setTranslucentStatus(this);//状态栏透明
         setContentView(R.layout.activity_wdxq_xq);
         setHeadVisibility(View.GONE);
-        initView();
+        initView(getIntent());
     }
 
     @Override
@@ -117,12 +117,12 @@ public class WdyhDetailActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        initView();
+        initView(intent);
     }
 
-    private void initView() {
-        if (getIntent() != null && getIntent().getExtras() != null) {
-            wdyhOrderId = getIntent().getExtras().getString("wdyhOrderId");
+    private void initView(Intent intent) {
+        if (intent != null && intent.getExtras() != null) {
+            wdyhOrderId = intent.getExtras().getString("wdyhOrderId");
         }
 
         titleLayout = (FrameLayout) findViewById(R.id.activity_wdxq_xq_title_layout);

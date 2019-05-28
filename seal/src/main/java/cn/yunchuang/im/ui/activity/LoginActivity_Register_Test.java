@@ -71,7 +71,7 @@ public class LoginActivity_Register_Test extends BaseActivity implements View.On
     private boolean isBright = true;
     private boolean isCodeLogin = true;
 
-    private int EndNum = 5064;
+    private int EndNum = 5061;
     private String testPhoneString;
     private String testCodeString;
     private String testNickName;

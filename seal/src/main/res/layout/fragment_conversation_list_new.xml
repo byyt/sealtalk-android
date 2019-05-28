@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_F4F4F4"
+    android:orientation="vertical">
+
+    <!-- 高度动态计算，状态栏高度+48dp -->
+    <FrameLayout
+        android:id="@+id/fragment_conversation_list_new_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_common_new">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px96"
+            android:layout_gravity="bottom">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="消息"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_px36" />
+
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fragment_conversation_list_new_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</LinearLayout>

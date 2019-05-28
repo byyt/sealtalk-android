@@ -203,6 +203,11 @@
             android:name="cn.yunchuang.im.ui.activity.WdyhLbActivity"
             android:screenOrientation="portrait" />
 
+        <!-- 我的钱包 -->
+        <activity
+            android:name="cn.yunchuang.im.ui.activity.WdqbActivity"
+            android:screenOrientation="portrait" />
+
         <!--新消息提醒-->
         <activity
             android:name="cn.yunchuang.im.ui.activity.NewMessageRemindActivity"

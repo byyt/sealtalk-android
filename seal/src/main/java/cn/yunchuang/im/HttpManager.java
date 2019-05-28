@@ -9,9 +9,10 @@ import android.os.Looper;
 import cn.yunchuang.im.model.ShaixuanModel;
 import cn.yunchuang.im.model.ShaixuanOrderModel;
 import cn.yunchuang.im.server.SealAction;
+import cn.yunchuang.im.server.response.BalanceCoinsResponse;
 import cn.yunchuang.im.server.response.BaseResponse;
-import cn.yunchuang.im.server.response.GetWdyhOrderLbResponse;
 import cn.yunchuang.im.server.response.GetUserDetailOneResponse;
+import cn.yunchuang.im.server.response.GetWdyhOrderLbResponse;
 import cn.yunchuang.im.server.response.HomepageResponse;
 import cn.yunchuang.im.server.utils.NLog;
 import io.reactivex.Observable;
@@ -216,7 +217,7 @@ public class HttpManager {
                             homepageResponse = action.getNearByUsers(startIndex, pageSize, shaixuanModel);
                         } catch (Exception e) {
                             onCallBackFail(callback);
-                            NLog.e(TAG, "getRecommendUsers occurs Exception e=" + e.toString());
+                            NLog.e(TAG, "getNearByUsers occurs Exception e=" + e.toString());
                             return;
                         }
                         if (callback != null) {
@@ -251,7 +252,7 @@ public class HttpManager {
                             homepageResponse = action.getRateUsers(startIndex, pageSize, shaixuanModel);
                         } catch (Exception e) {
                             onCallBackFail(callback);
-                            NLog.e(TAG, "getRecommendUsers occurs Exception e=" + e.toString());
+                            NLog.e(TAG, "getRateUsers occurs Exception e=" + e.toString());
                             return;
                         }
                         if (callback != null) {
@@ -283,7 +284,7 @@ public class HttpManager {
                             getUserDetailOneResponse = action.getUserDetailOne(userId);
                         } catch (Exception e) {
                             onCallBackFail(callback);
-                            NLog.e(TAG, "getRecommendUsers occurs Exception e=" + e.toString());
+                            NLog.e(TAG, "getUserDetailOne occurs Exception e=" + e.toString());
                             return;
                         }
                         if (callback != null) {
@@ -318,11 +319,88 @@ public class HttpManager {
                             getWdyhOrderLbResponse = action.postWdyhLbList(startIndex, pageSize, shaixuanOrderModel);
                         } catch (Exception e) {
                             onCallBackFail(callback);
-                            NLog.e(TAG, "getRecommendUsers occurs Exception e=" + e.toString());
+                            NLog.e(TAG, "postWdyhLbList occurs Exception e=" + e.toString());
                             return;
                         }
                         if (callback != null) {
                             callback.onCallback(getWdyhOrderLbResponse);
+                        }
+                    }
+                });
+    }
+
+
+    /**
+     * 余额和金币操作请求
+     *
+     * @param type     到SealConst去看具体的值
+     * @param balance
+     * @param coins
+     * @param callback
+     * @return
+     */
+    public Disposable postBalanceCoinsOperationSingle(final int type, final double balance, final long coins,
+                                                      final ResultCallback<BalanceCoinsResponse> callback) {
+        return Observable.just(0)
+                .observeOn(Schedulers.io())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object object) throws Exception {
+                        BalanceCoinsResponse response = null;
+                        if (!isNetworkConnected()) {
+                            onCallBackFail(callback, "网络未连接");
+                            return;
+                        }
+                        try {
+                            response = action.postBalanceCoinsOperationSingle(type, balance, coins);
+                        } catch (Exception e) {
+                            onCallBackFail(callback);
+                            NLog.e(TAG, "postBalanceCoinsOperationSingle occurs Exception e=" + e.toString());
+                            return;
+                        }
+                        if (callback != null) {
+                            callback.onCallback(response);
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 余额和金币操作，加减余额，加减金币，
+     * 其他接口也可能操作余额和金币，不是说所有的余额金币操作都要调用这个接口
+     * 这个接口与上个接口区别就是，这个接口既有付费方，也有收费方
+     *
+     * @param type         SealConstf中有详细说明
+     * @param myBalance
+     * @param myCoins
+     * @param otherUserId  另外一方的userId
+     * @param otherBalance
+     * @param otherCoins
+     * @return
+     */
+    public Disposable postBalanceCoinsOperationMulti(final int type, final double myBalance, final long myCoins,
+                                                     final String otherUserId, final double otherBalance, final long otherCoins,
+                                                     final ResultCallback<BalanceCoinsResponse> callback) {
+        return Observable.just(0)
+                .observeOn(Schedulers.io())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object object) throws Exception {
+                        BalanceCoinsResponse response = null;
+                        if (!isNetworkConnected()) {
+                            onCallBackFail(callback, "网络未连接");
+                            return;
+                        }
+                        try {
+                            response = action.postBalanceCoinsOperationMulti(type, myBalance, myCoins, otherUserId,
+                                    otherBalance, otherCoins);
+                        } catch (Exception e) {
+                            onCallBackFail(callback);
+                            NLog.e(TAG, "postBalanceCoinsOperationMulti occurs Exception e=" + e.toString());
+                            return;
+                        }
+                        if (callback != null) {
+                            callback.onCallback(response);
                         }
                     }
                 });

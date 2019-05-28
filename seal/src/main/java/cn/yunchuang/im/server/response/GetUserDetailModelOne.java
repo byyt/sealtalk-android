@@ -18,6 +18,7 @@ public class GetUserDetailModelOne {
     private String xqah;
     private String freeImgList; //免费图片列表，是一个json数组的字符串
     private String skills;//技能，是一个json数组的字符串
+    private int identity;//身份，0：普通用户，1：达人
 
     public String getId() {
         return id;
@@ -154,4 +155,13 @@ public class GetUserDetailModelOne {
     public void setSkills(String skills) {
         this.skills = skills;
     }
+
+    public int getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(int identity) {
+        this.identity = identity;
+    }
+
 }

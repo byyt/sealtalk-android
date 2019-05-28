@@ -16,7 +16,7 @@ import java.util.List;
 import cn.yunchuang.im.SealCSEvaluateInfo;
 import cn.yunchuang.im.model.SealCSEvaluateItem;
 import cn.yunchuang.im.ui.activity.ReadReceiptDetailActivity;
-import cn.yunchuang.im.ui.adapter.MessageListAdapterSystem;
+import cn.yunchuang.im.message.YhmsMessageListAdapter;
 import cn.yunchuang.im.ui.widget.BottomEvaluateDialog;
 import io.rong.imkit.RongExtension;
 import io.rong.imkit.fragment.ConversationFragment;
@@ -184,6 +184,6 @@ public class ConversationFragmentSystem extends ConversationFragment {
 
     @Override
     public MessageListAdapter onResolveAdapter(Context context) {
-        return new MessageListAdapterSystem(context);
+        return new YhmsMessageListAdapter(context);
     }
 }

@@ -8,6 +8,8 @@ import static android.content.Context.MODE_PRIVATE;
 import static cn.yunchuang.im.sp.BasePref.KEY_CITY;
 import static cn.yunchuang.im.sp.BasePref.KEY_LATITUDE;
 import static cn.yunchuang.im.sp.BasePref.KEY_LONGITUDE;
+import static cn.yunchuang.im.sp.BasePref.KEY_MY_BALANCE;
+import static cn.yunchuang.im.sp.BasePref.KEY_MY_COINS;
 
 /**
  * Created by zhou_yuntao on 2019/3/30.
@@ -34,6 +36,28 @@ public class MeService {
         myLocation.setLatitude(Double.valueOf(BasePref.getString(KEY_LATITUDE, "0")));
         myLocation.setCity(BasePref.getString(KEY_CITY, ""));
         return myLocation;
+    }
+
+    public static void setMyBalance(double balance) {
+//        Ln.d("setMyBalance:" + balance);
+        BasePref.saveString(KEY_MY_BALANCE, String.valueOf(balance >= 0 ? balance : 0));
+    }
+
+    public static double getMyBalance() {
+        double myBalance = Double.valueOf(BasePref.getString(KEY_MY_BALANCE, "0"));
+//        Ln.d("getMyBalance:" + myBalance);
+        return myBalance;
+    }
+
+    public static void setMyCoin(long coins) {
+//        Ln.d("setMyCoin:" + coin);
+        BasePref.saveString(KEY_MY_COINS, String.valueOf(coins >= 0 ? coins : 0));
+    }
+
+    public static long getMyCoin() {
+        long myCoin = Long.valueOf(BasePref.getString(KEY_MY_COINS, "0"));
+//        Ln.d("getMyCoin:" + myCoin);
+        return myCoin;
     }
 
 }

@@ -1,66 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/rc_normal_bg"
     android:orientation="vertical">
 
-    <LinearLayout
+    <!-- 高度动态计算，状态栏高度+48dp -->
+    <FrameLayout
+        android:id="@+id/activity_conversation_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:id="@+id/ll_annouce"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:background="#FFF5ED"
-            android:clickable="true"
-            android:descendantFocusability="blocksDescendants"
-            android:paddingLeft="15dp">
-
-            <ImageView
-                android:id="@+id/iv_announce"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/rc_announce" />
-
-            <ImageView
-                android:id="@+id/iv_announce_arrow"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="15dp"
-                android:src="@drawable/rc_announce_arrow" />
-
-            <TextView
-                android:id="@+id/tv_announce_msg"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
-                android:layout_toLeftOf="@id/iv_announce_arrow"
-                android:layout_toRightOf="@id/iv_announce"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:lines="1"
-                android:textColor="#9D5438"
-                android:textSize="14sp" />
-        </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_common_new">
 
         <FrameLayout
-            android:id="@+id/rong_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+            android:layout_height="@dimen/px96"
+            android:layout_gravity="bottom">
 
-    <ImageView
-        android:id="@+id/img"
+            <ImageView
+                android:id="@+id/activity_conversation_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:paddingBottom="@dimen/px15"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30"
+                android:paddingTop="@dimen/px15"
+                android:src="@drawable/user_detail_back" />
+
+            <TextView
+                android:id="@+id/activity_conversation_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_px36"
+                tools:text="想约的项目" />
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/de_bg"
-        android:visibility="gone" />
-</FrameLayout>
+        android:background="@color/rc_normal_bg"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/ll_annouce"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="#FFF5ED"
+                android:clickable="true"
+                android:descendantFocusability="blocksDescendants"
+                android:paddingLeft="15dp">
+
+                <ImageView
+                    android:id="@+id/iv_announce"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/rc_announce" />
+
+                <ImageView
+                    android:id="@+id/iv_announce_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/rc_announce_arrow" />
+
+                <TextView
+                    android:id="@+id/tv_announce_msg"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toLeftOf="@id/iv_announce_arrow"
+                    android:layout_toRightOf="@id/iv_announce"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:lines="1"
+                    android:textColor="#9D5438"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <FrameLayout
+                android:id="@+id/rong_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/de_bg"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/activity_conversation_identity_tips_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/activity_conversation_identity_you_are_daren"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="您是达人，每收到一条消息，将会获得0.5元的收益"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_px24"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px1"
+                android:background="@color/color_E4E4E4" />
+
+            <TextView
+                android:id="@+id/activity_conversation_identity_he_is_daren"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="对方是达人，每发一条消息，会赠送对方1把钥匙"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_px24"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/activity_conversation_identity_error"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="信息获取出错"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_px24"
+                android:visibility="gone" />
+
+
+        </LinearLayout>
+
+    </FrameLayout>
+</LinearLayout>

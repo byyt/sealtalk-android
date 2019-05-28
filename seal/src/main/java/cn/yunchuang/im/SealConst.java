@@ -79,4 +79,29 @@ public class SealConst {
     public static final String MSZT_ORDER_STRING_QFQK = "去付全款";
     public static final String MSZT_ORDER_STRING_QR = "确认";
     public static final String MSZT_ORDER_STRING_QPJ = "去评价";
+
+    //身份信息
+    public static final int IDENTITY_TYPE_DAREN = 1;//身份信息：达人
+
+    //余额、金币相关，
+    //下面只是简单例子，应该再加个后缀，表示哪种操作100,200,300,400是基础值
+    //加余额
+    public static final int BALANCE_COINS_TYPE_ADD_BALANCE = 100;
+    //加余额，充值
+    public static final int BALANCE_COINS_TYPE_ADD_BALANCE_RECHARGE = 101;
+    //减余额
+    public static final int BALANCE_COINS_TYPE_MINUS_BALANCE = 200;
+    //自己减余额，发消息；付款用户花费；收款方收入
+    public static final int BALANCE_COINS_TYPE_CHAT_MESSAGE = 201;
+
+
+    public static final int BALANCE_COINS_TYPE_ADD_COINS = 300;//加金币，充值或转换
+    public static final int BALANCE_COINS_TYPE_MINUS_COINS = 400;//减金币，消费
+    public static final int BALANCE_COINS_NOT_ENOUGH_BALANCE = 555;//服务器返回余额不足的错误码
+    public static final int BALANCE_COINS_NOT_ENOUGH_COINS = 556;//服务器返回金币不足的错误码
+    //各项消费金额，额度
+    public static final double MINUS_BALANCE_ONE_CHAT_MESSAGE = 1.00;//每条消息付款用户花费1元
+    public static final double ADD_BALANCE_ONE_CHAT_MESSAGE = 0.5;//每条消息收款用户收入0.5元
+
+
 }

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_F4F4F4"
+    android:orientation="vertical">
+
+    <!-- 高度动态计算，状态栏高度+48dp -->
+    <FrameLayout
+        android:id="@+id/activity_wdqb_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_common_new">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px96"
+            android:layout_gravity="bottom">
+
+            <ImageView
+                android:id="@+id/activity_wdqb_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:paddingBottom="@dimen/px15"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30"
+                android:paddingTop="@dimen/px15"
+                android:src="@drawable/user_detail_back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="我的钱包"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_px36" />
+
+            <TextView
+                android:id="@+id/activity_wdqb_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:paddingBottom="@dimen/px15"
+                android:paddingEnd="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingStart="@dimen/px30"
+                android:paddingTop="@dimen/px15"
+                android:text="账单记录"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_px32" />
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/activity_wdqb_root_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/px20"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/activity_wdqb_balance_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px160"
+                    android:layout_marginEnd="@dimen/px10"
+                    android:layout_marginRight="@dimen/px10"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="账户余额"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_px36" />
+
+                    <TextView
+                        android:id="@+id/activity_wdqb_balance_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/px10"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_px36"
+                        tools:text="166元" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px160"
+                    android:layout_marginEnd="@dimen/px10"
+                    android:layout_marginRight="@dimen/px10"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="金币"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_px36" />
+
+                    <TextView
+                        android:id="@+id/activity_wdqb_coins_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/px10"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_px36"
+                        tools:text="88" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+
+</LinearLayout>
